@@ -104,13 +104,10 @@ export function Header({ activeSection, onNav }: { activeSection: string; onNav:
       <div className="max-w-6xl mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           <button onClick={() => onNav("home")} className="flex items-center gap-2">
-            <div className="w-9 h-9 rounded-lg bg-primary flex items-center justify-center">
-              <Icon name="Hash" size={18} className="text-white" />
+            <div className="w-9 h-9 rounded-lg bg-white border border-border flex items-center justify-center">
+              <Icon name="Phone" size={18} className="text-black" />
             </div>
-            <div className="text-left">
-              <div className="font-display text-base font-bold text-primary leading-tight">Короткий-Номер</div>
-              <div className="text-[10px] text-muted-foreground leading-tight font-body">.РФ</div>
-            </div>
+            <div className="font-display text-base font-bold text-black leading-tight tracking-wide">КОРОТКИЙ-НОМЕР.РФ</div>
           </button>
 
           <nav className="hidden lg:flex items-center gap-1">
