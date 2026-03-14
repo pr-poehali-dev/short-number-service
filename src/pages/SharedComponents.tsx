@@ -96,9 +96,7 @@ export function Header({ activeSection, onNav }: { activeSection: string; onNav:
     { id: "directory",  label: "Справочник" },
     { id: "operators",  label: "По операторам" },
     { id: "universal",  label: "Универсальные" },
-    { id: "procedures", label: "Процедуры" },
     { id: "faq",        label: "FAQ" },
-    { id: "contacts",   label: "Контакты" },
   ];
 
   return (

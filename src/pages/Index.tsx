@@ -25,9 +25,7 @@ export default function Index() {
         {section === "directory"  && <DirectorySection onSelect={setSelected} />}
         {section === "operators"  && <OperatorsSection onSelect={setSelected} />}
         {section === "universal"  && <UniversalSection onSelect={setSelected} />}
-        {section === "procedures" && <ProceduresSection />}
         {section === "faq"        && <FaqSection />}
-        {section === "contacts"   && <ContactsSection />}
       </main>
 
       <footer className="border-t border-border bg-white py-6 px-4">
