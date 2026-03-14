@@ -82,7 +82,7 @@ export function HomeSection({ onNav }: { onNav: (s: string) => void }) {
       </div>
 
       {/* Access banner */}
-      <div className="max-w-6xl mx-auto px-4 pb-12">
+      <div className="max-w-6xl mx-auto px-4 pb-6">
         <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-100 rounded-2xl p-6 md:p-8 flex flex-col md:flex-row items-center gap-6">
           <div className="flex-1">
             <h3 className="font-display text-xl font-bold text-foreground mb-2">Полный доступ к справочнику</h3>
@@ -97,6 +97,11 @@ export function HomeSection({ onNav }: { onNav: (s: string) => void }) {
             </a>
           </div>
         </div>
+      </div>
+
+      {/* Add/Edit number form */}
+      <div className="max-w-6xl mx-auto px-4 pb-12">
+        <NumberForm />
       </div>
     </div>
   );
@@ -482,7 +487,6 @@ export function ContactsSection() {
         ))}
       </div>
 
-      <NumberForm />
     </div>
   );
 }
