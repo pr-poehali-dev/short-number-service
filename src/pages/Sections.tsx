@@ -306,6 +306,157 @@ export function FaqSection() {
   );
 }
 
+function NumberForm() {
+  const [mode, setMode] = useState<"add" | "edit">("add");
+  const [search, setSearch] = useState("");
+  const [selected, setSelected] = useState<PhoneNumber | null>(null);
+  const [form, setForm] = useState({ number: "", name: "", description: "", procedure: "", category: "" });
+  const [submitted, setSubmitted] = useState(false);
+
+  const suggestions = mode === "edit" && search.length >= 1
+    ? NUMBERS.filter((n) =>
+        n.number.includes(search) ||
+        n.name.toLowerCase().includes(search.toLowerCase())
+      ).slice(0, 5)
+    : [];
+
+  function selectNumber(n: PhoneNumber) {
+    setSelected(n);
+    setSearch(n.number + " — " + n.name);
+    setForm({
+      number: n.number,
+      name: n.name,
+      description: n.description,
+      procedure: n.procedure ?? "",
+      category: n.category,
+    });
+  }
+
+  function handleSubmit() {
+    setSubmitted(true);
+    setTimeout(() => {
+      setSubmitted(false);
+      setForm({ number: "", name: "", description: "", procedure: "", category: "" });
+      setSearch("");
+      setSelected(null);
+    }, 3000);
+  }
+
+  const isValid = form.number.trim() && form.name.trim() && form.description.trim();
+
+  return (
+    <div className="bg-white border border-border rounded-2xl p-6">
+      <h3 className="font-display text-xl font-bold text-foreground mb-1">Добавить номер</h3>
+      <p className="text-sm text-muted-foreground font-body mb-4">Добавьте новый номер или исправьте описание существующего</p>
+
+      <div className="flex gap-2 mb-5">
+        {(["add", "edit"] as const).map((m) => (
+          <button
+            key={m}
+            onClick={() => { setMode(m); setSelected(null); setSearch(""); setForm({ number: "", name: "", description: "", procedure: "", category: "" }); }}
+            className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-body font-semibold transition-colors border ${
+              mode === m ? "bg-primary text-white border-primary" : "bg-white text-foreground border-border hover:border-primary/40"
+            }`}
+          >
+            <Icon name={m === "add" ? "Plus" : "Pencil"} size={14} />
+            {m === "add" ? "Новый номер" : "Изменить описание"}
+          </button>
+        ))}
+      </div>
+
+      {submitted ? (
+        <div className="flex flex-col items-center justify-center py-8 animate-fade-in">
+          <div className="w-14 h-14 rounded-full bg-green-100 flex items-center justify-center mb-3">
+            <Icon name="CheckCircle" size={28} className="text-green-600" />
+          </div>
+          <p className="font-display font-bold text-foreground text-lg">Спасибо!</p>
+          <p className="text-sm text-muted-foreground font-body mt-1">Мы рассмотрим вашу заявку в ближайшее время</p>
+        </div>
+      ) : (
+        <div className="space-y-3">
+          {mode === "edit" && (
+            <div className="relative">
+              <Icon name="Search" size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground" />
+              <input
+                value={search}
+                onChange={(e) => { setSearch(e.target.value); setSelected(null); setForm({ number: "", name: "", description: "", procedure: "", category: "" }); }}
+                placeholder="Найдите номер для редактирования..."
+                className="w-full pl-9 pr-4 py-3 border border-border rounded-xl font-body text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"
+              />
+              {suggestions.length > 0 && (
+                <div className="absolute top-full left-0 right-0 z-20 bg-white border border-border rounded-xl mt-1 shadow-lg overflow-hidden">
+                  {suggestions.map((n) => (
+                    <button
+                      key={n.id}
+                      onClick={() => selectNumber(n)}
+                      className="w-full text-left px-4 py-2.5 hover:bg-muted transition-colors flex items-center gap-3"
+                    >
+                      <span className="font-display font-bold text-primary text-sm w-16 flex-shrink-0">{n.number}</span>
+                      <span className="text-sm text-foreground font-body truncate">{n.name}</span>
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
+          {(mode === "add" || selected) && (
+            <>
+              <div className="grid grid-cols-2 gap-3">
+                <input
+                  value={form.number}
+                  onChange={(e) => setForm({ ...form, number: e.target.value })}
+                  placeholder="Короткий номер *"
+                  readOnly={mode === "edit" && !!selected}
+                  className={`px-4 py-3 border border-border rounded-xl font-body text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary ${mode === "edit" && selected ? "bg-muted text-muted-foreground" : ""}`}
+                />
+                <input
+                  value={form.category}
+                  onChange={(e) => setForm({ ...form, category: e.target.value })}
+                  placeholder="Категория"
+                  className="px-4 py-3 border border-border rounded-xl font-body text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"
+                />
+              </div>
+              <input
+                value={form.name}
+                onChange={(e) => setForm({ ...form, name: e.target.value })}
+                placeholder="Название / назначение *"
+                className="w-full px-4 py-3 border border-border rounded-xl font-body text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"
+              />
+              <textarea
+                rows={3}
+                value={form.description}
+                onChange={(e) => setForm({ ...form, description: e.target.value })}
+                placeholder="Описание *"
+                className="w-full px-4 py-3 border border-border rounded-xl font-body text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary resize-none"
+              />
+              <textarea
+                rows={2}
+                value={form.procedure}
+                onChange={(e) => setForm({ ...form, procedure: e.target.value })}
+                placeholder="Как воспользоваться (необязательно)"
+                className="w-full px-4 py-3 border border-border rounded-xl font-body text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary resize-none"
+              />
+              <button
+                onClick={handleSubmit}
+                disabled={!isValid}
+                className="w-full py-3 bg-primary text-primary-foreground rounded-xl font-body font-semibold hover:bg-primary/90 transition-colors flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed"
+              >
+                <Icon name={mode === "add" ? "Plus" : "Pencil"} size={16} />
+                {mode === "add" ? "Предложить номер" : "Отправить правку"}
+              </button>
+            </>
+          )}
+
+          {mode === "edit" && !selected && !suggestions.length && search.length > 0 && (
+            <p className="text-center text-sm text-muted-foreground font-body py-4">Ничего не найдено — попробуйте другой запрос</p>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
 export function ContactsSection() {
   return (
     <div className="max-w-3xl mx-auto px-4 py-8 animate-fade-in">
@@ -331,27 +482,7 @@ export function ContactsSection() {
         ))}
       </div>
 
-      <div className="bg-white border border-border rounded-2xl p-6">
-        <h3 className="font-display text-xl font-bold text-foreground mb-4">Предложить номер</h3>
-        <div className="space-y-3">
-          <input
-            placeholder="Короткий номер"
-            className="w-full px-4 py-3 border border-border rounded-xl font-body text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"
-          />
-          <input
-            placeholder="Название / назначение"
-            className="w-full px-4 py-3 border border-border rounded-xl font-body text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"
-          />
-          <textarea
-            rows={3}
-            placeholder="Описание и дополнительная информация"
-            className="w-full px-4 py-3 border border-border rounded-xl font-body text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary resize-none"
-          />
-          <button className="w-full py-3 bg-primary text-primary-foreground rounded-xl font-body font-semibold hover:bg-primary/90 transition-colors flex items-center justify-center gap-2">
-            <Icon name="Send" size={16} /> Отправить предложение
-          </button>
-        </div>
-      </div>
+      <NumberForm />
     </div>
   );
 }
