@@ -334,12 +334,12 @@ function HomeSection({ onNav }: { onNav: (s: string) => void }) {
             <p className="text-muted-foreground font-body">Подпишитесь на Telegram-канал или ВКонтакте-сообщество, чтобы получить доступ ко всем номерам, процедурам и обновлениям базы.</p>
           </div>
           <div className="flex gap-3 flex-shrink-0">
-            <button className="flex items-center gap-2 px-5 py-3 bg-[#2AABEE] text-white rounded-xl font-body font-semibold hover:bg-[#239cd8] transition-colors">
+            <a href="https://t.me/qrnumber" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 px-5 py-3 bg-[#2AABEE] text-white rounded-xl font-body font-semibold hover:bg-[#239cd8] transition-colors no-underline">
               <Icon name="Send" size={18} /> Telegram
-            </button>
-            <button className="flex items-center gap-2 px-5 py-3 bg-[#0077FF] text-white rounded-xl font-body font-semibold hover:bg-[#0066dd] transition-colors">
+            </a>
+            <a href="https://vk.com/qrnumber" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 px-5 py-3 bg-[#0077FF] text-white rounded-xl font-body font-semibold hover:bg-[#0066dd] transition-colors no-underline">
               <Icon name="Users" size={18} /> ВКонтакте
-            </button>
+            </a>
           </div>
         </div>
       </div>
@@ -559,8 +559,8 @@ function ContactsSection() {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
         {[
-          { icon: "Send",  title: "Telegram-канал", desc: "Новости и обновления базы", color: "bg-[#2AABEE]", link: "#" },
-          { icon: "Users", title: "ВКонтакте",      desc: "Сообщество и поддержка",   color: "bg-[#0077FF]", link: "#" },
+          { icon: "Send",  title: "Telegram-канал", desc: "Новости и обновления базы", color: "bg-[#2AABEE]", link: "https://t.me/qrnumber" },
+          { icon: "Users", title: "ВКонтакте",      desc: "Сообщество и поддержка",   color: "bg-[#0077FF]", link: "https://vk.com/qrnumber" },
         ].map((c) => (
           <a key={c.title} href={c.link}
             className="hover-scale bg-white border border-border rounded-xl p-5 flex items-center gap-4 no-underline"
