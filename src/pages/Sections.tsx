@@ -450,16 +450,7 @@ function NumberForm() {
                 <Icon name={mode === "add" ? "Plus" : "Pencil"} size={16} />
                 {mode === "add" ? "Предложить номер" : "Отправить правку"}
               </button>
-              <div className="bg-muted/60 rounded-xl p-3.5 border border-border mt-1">
-                <p className="text-xs font-body font-semibold text-muted-foreground mb-2 flex items-center gap-1.5">
-                  <Icon name="Smartphone" size={13} /> Как добавить ярлык на домашний экран
-                </p>
-                <div className="space-y-1.5 text-xs text-muted-foreground font-body">
-                  <p><span className="font-semibold text-foreground">iOS (Safari):</span> нажмите <span className="inline-flex items-center gap-0.5 font-semibold">«Поделиться» →</span> «На экран Домой»</p>
-                  <p><span className="font-semibold text-foreground">Android (Chrome):</span> меню <span className="font-semibold">⋮</span> → «Добавить на главный экран»</p>
-                </div>
-                <p className="text-xs text-primary font-body font-semibold mt-2">Ярлык называется «QR-номер»</p>
-              </div>
+
             </>
           )}
 
