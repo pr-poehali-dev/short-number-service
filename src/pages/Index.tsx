@@ -31,7 +31,6 @@ export default function Index() {
       <footer className="border-t border-border bg-white py-6 px-4">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-3 text-sm text-muted-foreground font-body">
           <div className="flex items-center gap-2">
-            <Icon name="Hash" size={16} className="text-primary" />
             <span className="font-display font-semibold text-foreground">
               короткий-комер.рф
             </span>
