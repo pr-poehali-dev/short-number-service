@@ -86,7 +86,7 @@ export function HomeSection({ onNav }: { onNav: (s: string) => void }) {
         <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-100 rounded-2xl p-6 md:p-8 flex flex-col md:flex-row items-center gap-6">
           <div className="flex-1">
             <h3 className="font-display text-xl font-bold text-foreground mb-2">Полный доступ к справочнику</h3>
-            <p className="text-muted-foreground font-body">Подпишитесь на Telegram-канал или ВКонтакте-сообщество, чтобы получить доступ ко всем номерам, процедурам и обновлениям базы.</p>
+            <p className="text-muted-foreground font-body">Подпишитесь на ТГ-канал или ВК-сообщество, чтобы узнавать новости в числе первых, получить доступ ко всем коротким номерам и обновлениям справочника.</p>
           </div>
           <div className="flex gap-3 flex-shrink-0">
             <a href="https://t.me/qrnumber" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 px-5 py-3 bg-[#2AABEE] text-white rounded-xl font-body font-semibold hover:bg-[#239cd8] transition-colors no-underline">
