@@ -1,0 +1,26 @@
+{
+  "tests": [
+    {
+      "name": "OPTIONS preflight",
+      "method": "OPTIONS",
+      "path": "/",
+      "expectedStatus": 200
+    },
+    {
+      "name": "Send suggestion (add mode)",
+      "method": "POST",
+      "path": "/",
+      "body": {
+        "mode": "add",
+        "number": "112",
+        "name": "Тест",
+        "description": "Тестовое описание",
+        "procedure": "",
+        "category": "Экстренные"
+      },
+      "expectedStatus": 200,
+      "expectedBody": {"ok": true},
+      "bodyMatcher": "partial"
+    }
+  ]
+}

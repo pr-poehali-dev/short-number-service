@@ -311,12 +311,15 @@ export function FaqSection() {
   );
 }
 
+const SEND_SUGGESTION_URL = "https://functions.poehali.dev/0c640a47-5d45-45cb-901c-c7ba1f48d5ea";
+
 function NumberForm() {
   const [mode, setMode] = useState<"add" | "edit">("add");
   const [search, setSearch] = useState("");
   const [selected, setSelected] = useState<PhoneNumber | null>(null);
   const [form, setForm] = useState({ number: "", name: "", description: "", procedure: "", category: "" });
-  const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [showModal, setShowModal] = useState(false);
 
   const suggestions = mode === "edit" && search.length >= 1
     ? NUMBERS.filter((n) =>
@@ -337,20 +340,45 @@ function NumberForm() {
     });
   }
 
-  function handleSubmit() {
-    setSubmitted(true);
-    setTimeout(() => {
-      setSubmitted(false);
+  async function handleSubmit() {
+    setLoading(true);
+    try {
+      await fetch(SEND_SUGGESTION_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ mode, ...form }),
+      });
+    } finally {
+      setLoading(false);
+      setShowModal(true);
       setForm({ number: "", name: "", description: "", procedure: "", category: "" });
       setSearch("");
       setSelected(null);
-    }, 3000);
+    }
   }
 
   const isValid = form.number.trim() && form.name.trim() && form.description.trim();
 
   return (
     <div className="bg-white border border-border rounded-2xl p-6">
+      {showModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 animate-fade-in" onClick={() => setShowModal(false)}>
+          <div className="bg-white rounded-2xl p-8 max-w-sm w-full mx-4 shadow-xl flex flex-col items-center gap-4" onClick={(e) => e.stopPropagation()}>
+            <div className="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center">
+              <Icon name="CheckCircle" size={32} className="text-green-600" />
+            </div>
+            <h3 className="font-display text-xl font-bold text-foreground text-center">Информация отправлена</h3>
+            <p className="text-sm text-muted-foreground font-body text-center">Спасибо! Мы рассмотрим вашу заявку в ближайшее время.</p>
+            <button
+              onClick={() => setShowModal(false)}
+              className="w-full py-3 bg-primary text-primary-foreground rounded-xl font-body font-semibold hover:bg-primary/90 transition-colors"
+            >
+              Закрыть
+            </button>
+          </div>
+        </div>
+      )}
+
       <h3 className="font-display text-xl font-bold text-foreground mb-1">Добавить номер</h3>
       <p className="text-sm text-muted-foreground font-body mb-4">Добавьте новый номер или исправьте описание существующего</p>
 
@@ -369,16 +397,7 @@ function NumberForm() {
         ))}
       </div>
 
-      {submitted ? (
-        <div className="flex flex-col items-center justify-center py-8 animate-fade-in">
-          <div className="w-14 h-14 rounded-full bg-green-100 flex items-center justify-center mb-3">
-            <Icon name="CheckCircle" size={28} className="text-green-600" />
-          </div>
-          <p className="font-display font-bold text-foreground text-lg">Спасибо!</p>
-          <p className="text-sm text-muted-foreground font-body mt-1">Мы рассмотрим вашу заявку в ближайшее время</p>
-        </div>
-      ) : (
-        <div className="space-y-3">
+      <div className="space-y-3">
           {mode === "edit" && (
             <div className="relative">
               <Icon name="Search" size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground" />
@@ -444,11 +463,15 @@ function NumberForm() {
               />
               <button
                 onClick={handleSubmit}
-                disabled={!isValid}
+                disabled={!isValid || loading}
                 className="w-full py-3 bg-primary text-primary-foreground rounded-xl font-body font-semibold hover:bg-primary/90 transition-colors flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed"
               >
-                <Icon name={mode === "add" ? "Plus" : "Pencil"} size={16} />
-                {mode === "add" ? "Предложить номер" : "Отправить правку"}
+                {loading ? (
+                  <Icon name="Loader" size={16} className="animate-spin" />
+                ) : (
+                  <Icon name={mode === "add" ? "Plus" : "Pencil"} size={16} />
+                )}
+                {loading ? "Отправка..." : mode === "add" ? "Предложить номер" : "Отправить правку"}
               </button>
 
             </>
@@ -458,7 +481,6 @@ function NumberForm() {
             <p className="text-center text-sm text-muted-foreground font-body py-4">Ничего не найдено — попробуйте другой запрос</p>
           )}
         </div>
-      )}
     </div>
   );
 }
