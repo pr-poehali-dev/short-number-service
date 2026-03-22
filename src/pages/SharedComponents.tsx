@@ -95,10 +95,10 @@ export function InstallModal({ onClose }: { onClose: () => void }) {
         <div className="flex items-start justify-between mb-4">
           <div className="flex items-center gap-3">
             <div className="w-12 h-12 rounded-xl bg-primary flex items-center justify-center flex-shrink-0">
-              <span className="font-display font-bold text-white text-xs leading-tight text-center">QR<br/>номер</span>
+              <span className="font-display font-bold text-white text-xs leading-tight text-center">2407<br/>РФ</span>
             </div>
             <div>
-              <h3 className="font-display font-bold text-foreground text-lg leading-tight">QR-номер</h3>
+              <h3 className="font-display font-bold text-foreground text-lg leading-tight">2407.рф</h3>
               <p className="text-xs text-muted-foreground font-body">Справочник коротких номеров</p>
             </div>
           </div>
@@ -133,7 +133,7 @@ export function InstallModal({ onClose }: { onClose: () => void }) {
           </div>
         </div>
 
-        <p className="text-xs text-center text-muted-foreground font-body mt-4">Ярлык будет называться <strong>«QR-номер»</strong></p>
+        <p className="text-xs text-center text-muted-foreground font-body mt-4">Ярлык будет называться <strong>«2407.рф»</strong></p>
       </div>
     </div>
   );
