@@ -95,7 +95,7 @@ export function InstallModal({ onClose }: { onClose: () => void }) {
         <div className="flex items-start justify-between mb-4">
           <div className="flex items-center gap-3">
             <div className="w-12 h-12 rounded-xl bg-primary flex items-center justify-center flex-shrink-0">
-              <span className="font-display font-bold text-white text-xs leading-tight text-center">2407<br/>РФ</span>
+              <span className="font-display font-bold text-white text-xs leading-tight text-center">2407</span>
             </div>
             <div>
               <h3 className="font-display font-bold text-foreground text-lg leading-tight">2407.рф</h3>
