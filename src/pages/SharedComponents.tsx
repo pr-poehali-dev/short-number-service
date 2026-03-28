@@ -156,9 +156,7 @@ export function Header({ activeSection, onNav }: { activeSection: string; onNav:
       <div className="max-w-6xl mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           <button onClick={() => onNav("home")} className="flex items-center gap-2">
-            <div className="w-9 h-9 rounded-lg bg-white border border-border flex items-center justify-center">
-              <span className="font-display text-black leading-none tracking-widest font-light text-xs">2407</span>
-            </div>
+
             <div className="font-display text-base font-bold text-black leading-tight tracking-wide">Справочник коротких номеров России</div>
           </button>
 
