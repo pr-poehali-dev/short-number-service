@@ -181,7 +181,7 @@ export function Header({ activeSection, onNav }: { activeSection: string; onNav:
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-primary/30 text-primary hover:bg-primary/5 transition-colors text-sm font-body font-medium"
             >
               <Icon name="Plus" size={15} />
-              <span className="hidden sm:inline">На экран</span>
+              <span className="hidden sm:inline">2407.РФ</span>
             </button>
             <button className="lg:hidden p-2 rounded-md hover:bg-muted" onClick={() => setMenuOpen(!menuOpen)}>
               <Icon name={menuOpen ? "X" : "Menu"} size={22} />
