@@ -217,7 +217,7 @@ export function HomeSection({ onNav }: { onNav: (s: string) => void }) {
             { icon: "RefreshCw",   count: "2026",               label: "Актуальность" },
           ].map((s) => (
             <div key={s.label} className="bg-white rounded-xl p-4 shadow-sm border border-border text-center hover-scale">
-              {s.icon ? <Icon name={s.icon as IconName} size={22} className="text-primary mx-auto mb-1" /> : <span className="block text-primary font-body font-light leading-none mx-auto mb-1 text-xl">N</span>}
+              {s.icon ? <Icon name={s.icon as IconName} size={19} className="text-primary mx-auto mb-1" /> : <span className="block text-primary font-body font-light leading-none mx-auto mb-1 text-xl">N</span>}
               <div className="font-display text-2xl font-bold text-foreground">{s.count}</div>
               <div className="text-xs text-muted-foreground font-body">{s.label}</div>
             </div>
