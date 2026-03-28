@@ -29,7 +29,6 @@ export default function Index() {
       <footer className="border-t border-border bg-white py-6 px-4">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-3 text-sm text-muted-foreground font-body">
           <div className="flex items-center gap-2">
-            <span className="font-display font-semibold text-foreground">2407.рф</span>
             <span>короткий-номер.рф</span>
           </div>
           <span>© 2026 · Все номера проверены вручную</span>
