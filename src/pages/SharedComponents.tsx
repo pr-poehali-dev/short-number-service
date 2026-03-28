@@ -159,7 +159,7 @@ export function Header({ activeSection, onNav }: { activeSection: string; onNav:
             <div className="w-9 h-9 rounded-lg bg-white border border-border flex items-center justify-center">
               <span className="font-display text-black leading-none tracking-widest font-light text-xs">2407</span>
             </div>
-            <div className="font-display text-base font-bold text-black leading-tight tracking-wide">2407.РФ</div>
+            <div className="font-display text-base font-bold text-black leading-tight tracking-wide">Справочник коротких номеров России</div>
           </button>
 
           <nav className="hidden lg:flex items-center gap-1">
