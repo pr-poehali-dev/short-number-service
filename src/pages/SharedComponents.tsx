@@ -157,7 +157,7 @@ export function Header({ activeSection, onNav }: { activeSection: string; onNav:
         <div className="flex items-center justify-between h-16">
           <button onClick={() => onNav("home")} className="flex items-center gap-2">
             <div className="w-9 h-9 rounded-lg bg-white border border-border flex items-center justify-center">
-              <span className="font-display text-[13px] font-bold text-black leading-none tracking-widest" style={{writingMode: "vertical-rl", textOrientation: "mixed", transform: "rotate(180deg)"}}>2407</span>
+              <span className="font-display text-[11px] font-bold text-black leading-none tracking-widest">2407</span>
             </div>
             <div className="font-display text-base font-bold text-black leading-tight tracking-wide">2407.РФ</div>
           </button>
