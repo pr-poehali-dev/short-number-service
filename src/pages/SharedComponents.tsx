@@ -157,7 +157,7 @@ export function Header({ activeSection, onNav }: { activeSection: string; onNav:
         <div className="flex items-center justify-between h-16">
           <button onClick={() => onNav("home")} className="flex items-center gap-2">
 
-            <div className="font-display text-base font-bold text-black leading-tight tracking-wide">Справочник коротких номеров России "2407.рф"</div>
+            <div className="font-display text-base font-bold text-black leading-tight tracking-wide">Справочник коротких номеров России "2407"</div>
           </button>
 
           <nav className="hidden lg:flex items-center gap-1">
