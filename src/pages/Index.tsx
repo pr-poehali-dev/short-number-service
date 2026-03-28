@@ -7,9 +7,7 @@ import {
   DirectorySection,
   OperatorsSection,
   UniversalSection,
-  ProceduresSection,
   FaqSection,
-  ContactsSection,
 } from "./Sections";
 
 export default function Index() {
