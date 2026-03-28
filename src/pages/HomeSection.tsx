@@ -211,7 +211,7 @@ export function HomeSection({ onNav }: { onNav: (s: string) => void }) {
           {[
             { icon: "Phone",       count: `${NUMBERS.length}`,  label: "Номера в базе" },
             { icon: "Wifi",        count: "4",                  label: "Операторы связи" },
-            { icon: "ShieldCheck", count: "5",                  label: "Экстренных служб" },
+            { icon: "ShieldCheck", count: "5",                  label: "Экстренные службы" },
             { icon: "RefreshCw",   count: LAST_UPDATED,         label: "Актуальность" },
           ].map((s) => (
             <div key={s.label} className="bg-white rounded-xl p-4 shadow-sm border border-border text-center hover-scale">
