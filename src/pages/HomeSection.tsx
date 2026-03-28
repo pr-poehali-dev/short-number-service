@@ -211,13 +211,13 @@ export function HomeSection({ onNav }: { onNav: (s: string) => void }) {
       <div className="max-w-6xl mx-auto px-4 -mt-8">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {[
-            { icon: "Hash",        count: `${NUMBERS.length}+`, label: "Номеров в базе" },
+            { icon: null,          count: `${NUMBERS.length}+`, label: "Номеров в базе" },
             { icon: "Wifi",        count: "5",                  label: "Операторов" },
             { icon: "ShieldCheck", count: "5",                  label: "Экстренных служб" },
             { icon: "RefreshCw",   count: "2026",               label: "Актуальность" },
           ].map((s) => (
             <div key={s.label} className="bg-white rounded-xl p-4 shadow-sm border border-border text-center hover-scale">
-              <Icon name={s.icon as IconName} size={22} className="text-primary mx-auto mb-1" />
+              {s.icon ? <Icon name={s.icon as IconName} size={22} className="text-primary mx-auto mb-1" /> : <span className="block text-primary font-display font-bold text-lg mx-auto mb-1">N</span>}
               <div className="font-display text-2xl font-bold text-foreground">{s.count}</div>
               <div className="text-xs text-muted-foreground font-body">{s.label}</div>
             </div>
