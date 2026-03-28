@@ -133,7 +133,7 @@ export function InstallModal({ onClose }: { onClose: () => void }) {
           </div>
         </div>
 
-        <p className="text-xs text-center text-muted-foreground font-body mt-4">Ярлык будет называться <strong>«2407.рф»</strong></p>
+        <p className="text-xs text-center text-muted-foreground font-body mt-4">Ярлык будет называться <strong>«Справочник»</strong></p>
       </div>
     </div>
   );
