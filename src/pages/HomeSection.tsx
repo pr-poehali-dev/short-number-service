@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Icon from "@/components/ui/icon";
-import { NUMBERS, PhoneNumber } from "./data";
+import { NUMBERS, LAST_UPDATED, PhoneNumber } from "./data";
 
 type IconName = Parameters<typeof Icon>[0]["name"];
 
@@ -214,7 +214,7 @@ export function HomeSection({ onNav }: { onNav: (s: string) => void }) {
             { icon: null,          count: `${NUMBERS.length}`,  label: "Номеров в базе" },
             { icon: "Wifi",        count: "5",                  label: "Операторов" },
             { icon: "ShieldCheck", count: "5",                  label: "Экстренных служб" },
-            { icon: "RefreshCw",   count: "2026",               label: "Актуальность" },
+            { icon: "RefreshCw",   count: LAST_UPDATED,         label: "Актуальность" },
           ].map((s) => (
             <div key={s.label} className="bg-white rounded-xl p-4 shadow-sm border border-border text-center hover-scale">
               {s.icon ? <Icon name={s.icon as IconName} size={19} className="text-primary mx-auto mb-1" /> : <span className="block text-primary font-body font-light leading-none mx-auto mb-1 text-xl">N</span>}

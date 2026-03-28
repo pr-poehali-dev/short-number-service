@@ -31,6 +31,8 @@ export const NUMBERS: PhoneNumber[] = [
   { id: 18, number: "669", name: "Автосервис Т2", description: "Голосовое меню Т2: баланс, тариф, управление услугами.", operator: "Т2", category: "Автосервис", procedure: "Бесплатно с номеров Т2." },
 ];
 
+export const LAST_UPDATED = "03.2026";
+
 export const OPERATOR_COLORS: Record<Operator, { bg: string; text: string; border: string }> = {
   "МТС":           { bg: "bg-red-50",    text: "text-red-700",    border: "border-red-200" },
   "Билайн":        { bg: "bg-yellow-50", text: "text-yellow-700", border: "border-yellow-200" },
