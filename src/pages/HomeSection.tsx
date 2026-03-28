@@ -183,9 +183,7 @@ export function HomeSection({ onNav }: { onNav: (s: string) => void }) {
       {/* Hero */}
       <div className="bg-gradient-to-br from-[hsl(var(--primary))] to-blue-700 text-white py-16 px-4">
         <div className="max-w-3xl mx-auto text-center">
-          <div className="inline-flex items-center gap-2 bg-white/15 rounded-full px-4 py-1.5 mb-6 text-sm font-body font-medium">
-            N Справочник коротких номеров России
-          </div>
+          <div className="inline-flex items-center gap-2 bg-white/15 rounded-full px-4 py-1.5 mb-6 text-sm font-body font-medium">Справочник коротких номеров России</div>
           <h1 className="font-display text-4xl md:text-5xl font-bold mb-4 leading-tight">
             Все короткие номера<br />в одном месте
           </h1>
