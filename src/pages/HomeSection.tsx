@@ -209,7 +209,7 @@ export function HomeSection({ onNav }: { onNav: (s: string) => void }) {
       <div className="max-w-6xl mx-auto px-4 -mt-8">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {[
-            { icon: "Phone",       count: `${NUMBERS.length}`,  label: "Номеров в базе" },
+            { icon: "Phone",       count: `${NUMBERS.length}`,  label: "Номера в базе" },
             { icon: "Wifi",        count: "4",                  label: "Операторов" },
             { icon: "ShieldCheck", count: "5",                  label: "Экстренных служб" },
             { icon: "RefreshCw",   count: LAST_UPDATED,         label: "Актуальность" },
