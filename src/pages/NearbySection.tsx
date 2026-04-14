@@ -140,7 +140,7 @@ export function NearbySection() {
     <div className="max-w-3xl mx-auto px-4 py-8 animate-fade-in">
       <div className="flex items-start justify-between mb-1 gap-3">
         <div>
-          <h2 className="font-display text-3xl font-bold text-foreground">Рядом с вами</h2>
+          <h2 className="font-display text-3xl font-bold text-foreground">- это еще и быстрый вопрос </h2>
           <p className="text-muted-foreground font-body mt-1">
             Коммерческие объекты в радиусе 300 м от вашего местоположения
           </p>
