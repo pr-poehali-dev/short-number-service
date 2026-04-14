@@ -151,7 +151,7 @@ export function Header({
 
   const navItems = [
     { id: "directory",  label: "Справочник" },
-    { id: "nearby",     label: "Сервис" },
+    { id: "nearby",     label: "Быстрый ответ" },
     { id: "faq",        label: "FAQ" },
   ];
 
