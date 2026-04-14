@@ -142,15 +142,12 @@ export function InstallModal({ onClose }: { onClose: () => void }) {
 export function Header({
   activeSection,
   onNav,
-  onSetDefault,
 }: {
   activeSection: string;
   onNav: (s: string) => void;
-  onSetDefault?: (s: string) => void;
 }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [installOpen, setInstallOpen] = useState(false);
-  const [defaultToast, setDefaultToast] = useState(false);
 
   const navItems = [
     { id: "home",       label: "Главная" },
@@ -158,13 +155,8 @@ export function Header({
     { id: "operators",  label: "По операторам" },
     { id: "universal",  label: "Универсальные" },
     { id: "faq",        label: "FAQ" },
+    { id: "nearby",     label: "Помощь 2407" },
   ];
-
-  function handleSetDefault(sectionId: string, label: string) {
-    onSetDefault?.(sectionId);
-    setDefaultToast(true);
-    setTimeout(() => setDefaultToast(false), 2500);
-  }
 
   return (
     <header className="sticky top-0 z-50 bg-white border-b border-border shadow-sm">
@@ -186,20 +178,6 @@ export function Header({
                 {item.label}
               </button>
             ))}
-            <button
-              onClick={() => {
-                onNav("nearby");
-                handleSetDefault("nearby", "Помощь оператора");
-              }}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-body font-medium transition-colors ${
-                activeSection === "nearby"
-                  ? "bg-emerald-600 text-white"
-                  : "text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200"
-              }`}
-            >
-              <Icon name="MapPin" size={14} />
-              Помощь 2407
-            </button>
           </nav>
 
           <div className="flex items-center gap-2">
@@ -240,15 +218,6 @@ export function Header({
               {item.label}
             </button>
           ))}
-          <button
-            onClick={() => { onNav("nearby"); handleSetDefault("nearby", "Помощь 2407"); setMenuOpen(false); }}
-            className={`w-full text-left px-5 py-3 text-sm font-body font-medium transition-colors flex items-center gap-2 ${
-              activeSection === "nearby" ? "bg-emerald-50 text-emerald-700" : "hover:bg-muted text-emerald-700"
-            }`}
-          >
-            <Icon name="MapPin" size={15} />
-            Помощь 2407
-          </button>
         </div>
       )}
     </header>

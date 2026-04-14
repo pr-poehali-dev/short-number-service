@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { PhoneNumber } from "./data";
 import { Header, NumberModal } from "./SharedComponents";
 import {
@@ -29,17 +29,13 @@ export default function Index() {
   const [selected, setSelected] = useState<PhoneNumber | null>(null);
 
   function handleNav(s: string) {
-    setSection(s);
-  }
-
-  function setAsDefault(s: string) {
     setCookie(DEFAULT_SECTION_COOKIE, s);
     setSection(s);
   }
 
   return (
     <div className="min-h-screen bg-background">
-      <Header activeSection={section} onNav={handleNav} onSetDefault={setAsDefault} />
+      <Header activeSection={section} onNav={handleNav} />
 
       <main className="pb-12">
         {section === "home" && <HomeSection onNav={handleNav} />}
