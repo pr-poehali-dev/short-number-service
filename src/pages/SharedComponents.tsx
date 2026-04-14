@@ -198,13 +198,6 @@ export function Header({
 
       {installOpen && <InstallModal onClose={() => setInstallOpen(false)} />}
 
-      {defaultToast && (
-        <div className="absolute top-16 right-4 z-50 bg-emerald-600 text-white text-sm font-body px-4 py-2 rounded-xl shadow-lg flex items-center gap-2 animate-fade-in">
-          <Icon name="Check" size={14} />
-          Раздел сохранён как стартовый
-        </div>
-      )}
-
       {menuOpen && (
         <div className="lg:hidden border-t border-border bg-white">
           {navItems.map((item) => (
