@@ -200,7 +200,7 @@ export function HomeSection({ onNav }: { onNav: (s: string) => void }) {
             <button
               onClick={() => onNav("nearby")}
               className="px-6 py-3 bg-white/15 text-white rounded-xl font-body font-semibold hover:bg-white/25 transition-colors flex items-center gap-2 justify-center border border-white/30"
-            ><Icon name="MapPin" size={18} /> Помощь 2407</button>
+            ><Icon name="MapPin" size={18} /> Быстрый ответ</button>
           </div>
         </div>
       </div>
