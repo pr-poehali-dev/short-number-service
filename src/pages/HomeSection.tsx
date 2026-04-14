@@ -195,7 +195,7 @@ export function HomeSection({ onNav }: { onNav: (s: string) => void }) {
               onClick={() => onNav("directory")}
               className="px-6 py-3 bg-white text-primary rounded-xl font-body font-semibold hover:bg-white/90 transition-colors flex items-center gap-2 justify-center"
             >
-              <Icon name="Search" size={18} /> Открыть справочник
+              <Icon name="Search" size={18} /> Справочник
             </button>
             <button
               onClick={() => onNav("nearby")}
