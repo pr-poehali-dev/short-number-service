@@ -187,7 +187,7 @@ export function NearbySection() {
           <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-4">
             <Icon name="MapPin" size={32} className="text-primary" />
           </div>
-          <h3 className="font-display text-xl font-bold text-foreground mb-2">Найти что рядом</h3>
+          <h3 className="font-display text-xl font-bold text-foreground mb-2">Найти полезное рядом</h3>
           <p className="text-muted-foreground font-body text-sm mb-6 max-w-xs mx-auto">
             Нажмите кнопку — браузер запросит доступ к геолокации и покажет заведения рядом с вами
           </p>
