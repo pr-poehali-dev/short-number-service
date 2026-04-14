@@ -188,9 +188,7 @@ export function NearbySection() {
             <Icon name="MapPin" size={32} className="text-primary" />
           </div>
           <h3 className="font-display text-xl font-bold text-foreground mb-2">Найти полезное рядом</h3>
-          <p className="text-muted-foreground font-body text-sm mb-6 max-w-xs mx-auto">
-            Нажмите кнопку — браузер запросит доступ к геолокации и покажет заведения рядом с вами
-          </p>
+          <p className="text-muted-foreground font-body text-sm mb-6 max-w-xs mx-[175px] text-justify">Нажмите на кнопку, разрешите геолокацию — нейросеть проанализирует ваш цифровой профиль (локально). Каждый сохраненный Вами обьект  сделает её ответы еще точнее и вот владельцы кафе, ресторанов и магазинов уже конкурируют, чтобы привлечь Ваше внимание.</p>
           <button
             onClick={findNearby}
             className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-xl font-body font-semibold hover:bg-primary/90 transition-colors"
