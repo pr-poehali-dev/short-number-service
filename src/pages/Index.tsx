@@ -1,5 +1,4 @@
-import { useState } from "react";
-import Icon from "@/components/ui/icon";
+import { useState, useEffect } from "react";
 import { PhoneNumber } from "./data";
 import { Header, NumberModal } from "./SharedComponents";
 import {
@@ -8,18 +7,43 @@ import {
   OperatorsSection,
   UniversalSection,
   FaqSection,
+  NearbySection,
 } from "./Sections";
 
+const DEFAULT_SECTION_COOKIE = "default_section";
+
+function getCookie(name: string): string | null {
+  const match = document.cookie.match(new RegExp("(?:^|; )" + name + "=([^;]*)"));
+  return match ? decodeURIComponent(match[1]) : null;
+}
+
+function setCookie(name: string, value: string, days = 365) {
+  const expires = new Date(Date.now() + days * 864e5).toUTCString();
+  document.cookie = `${name}=${encodeURIComponent(value)}; expires=${expires}; path=/`;
+}
+
 export default function Index() {
-  const [section, setSection] = useState("home");
+  const [section, setSection] = useState(() => {
+    return getCookie(DEFAULT_SECTION_COOKIE) || "home";
+  });
   const [selected, setSelected] = useState<PhoneNumber | null>(null);
+
+  function handleNav(s: string) {
+    setSection(s);
+  }
+
+  function setAsDefault(s: string) {
+    setCookie(DEFAULT_SECTION_COOKIE, s);
+    setSection(s);
+  }
 
   return (
     <div className="min-h-screen bg-background">
-      <Header activeSection={section} onNav={setSection} />
+      <Header activeSection={section} onNav={handleNav} onSetDefault={setAsDefault} />
 
       <main className="pb-12">
-        {section === "home" && <HomeSection onNav={setSection} />}
+        {section === "home" && <HomeSection onNav={handleNav} />}
+        {section === "nearby" && <NearbySection />}
         {section === "directory" && <DirectorySection onSelect={setSelected} />}
         {section === "operators" && <OperatorsSection onSelect={setSelected} />}
         {section === "universal" && <UniversalSection onSelect={setSelected} />}
