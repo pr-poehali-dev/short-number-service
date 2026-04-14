@@ -150,7 +150,6 @@ export function Header({
   const [installOpen, setInstallOpen] = useState(false);
 
   const navItems = [
-    { id: "home",       label: "Главная" },
     { id: "faq",        label: "FAQ" },
     { id: "nearby",     label: "Помощь 2407" },
   ];
