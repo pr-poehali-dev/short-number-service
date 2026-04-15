@@ -141,9 +141,7 @@ export function NearbySection() {
       <div className="flex items-start justify-between mb-1 gap-3">
         <div>
           <h2 className="font-display text-3xl font-bold text-foreground">- это еще и быстрый вопрос </h2>
-          <p className="text-muted-foreground font-body mt-1">
-            Коммерческие объекты в радиусе 300 м от вашего местоположения
-          </p>
+
         </div>
         <button
           onClick={() => { setShowPromptEditor(!showPromptEditor); if (!prompt) loadPrompt(); }}
