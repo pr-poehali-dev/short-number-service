@@ -91,6 +91,36 @@ export default function AdminPage() {
     setSaved(true);
   }
 
+  function handleExport() {
+    const json = JSON.stringify(numbers, null, 2);
+    const blob = new Blob([json], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `справочник-2407-${new Date().toISOString().slice(0, 10)}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  function handleImport(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      try {
+        const parsed = JSON.parse(ev.target?.result as string) as PhoneNumber[];
+        if (!Array.isArray(parsed) || !parsed[0]?.number) throw new Error("bad format");
+        setNumbers(parsed);
+        saveNumbers(parsed);
+        setSaved(true);
+      } catch {
+        alert("Ошибка: файл не является корректным JSON-справочником");
+      }
+    };
+    reader.readAsText(file);
+    e.target.value = "";
+  }
+
   const filtered = numbers.filter(
     (n) =>
       n.name.toLowerCase().includes(search.toLowerCase()) ||
@@ -179,6 +209,16 @@ export default function AdminPage() {
                 <Icon name="Check" size={14} /> Сохранено
               </span>
             )}
+            <button
+              onClick={handleExport}
+              className="flex items-center gap-1.5 text-sm px-3 py-1.5 rounded-lg border border-border text-muted-foreground hover:bg-muted font-body"
+            >
+              <Icon name="Download" size={14} /> Экспорт
+            </button>
+            <label className="flex items-center gap-1.5 text-sm px-3 py-1.5 rounded-lg border border-border text-muted-foreground hover:bg-muted font-body cursor-pointer">
+              <Icon name="Upload" size={14} /> Импорт
+              <input type="file" accept=".json" onChange={handleImport} className="hidden" />
+            </label>
             <button
               onClick={() => {
                 if (confirm("Сбросить все изменения и восстановить исходные данные?")) handleReset();
