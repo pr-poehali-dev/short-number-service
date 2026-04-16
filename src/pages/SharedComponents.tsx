@@ -31,6 +31,32 @@ export function NumberCard({ num, onClick }: { num: PhoneNumber; onClick: (n: Ph
   );
 }
 
+function generateVCard(num: PhoneNumber): string {
+  const lines = [
+    "BEGIN:VCARD",
+    "VERSION:3.0",
+    `FN:${num.name}`,
+    `N:${num.name};;;;`,
+    `TEL;TYPE=CELL:${num.number}`,
+    `NOTE:${num.description.replace(/\n/g, "\\n")} | Оператор: ${num.operator} | Категория: ${num.category}`,
+    "END:VCARD",
+  ];
+  return lines.join("\r\n");
+}
+
+function saveVCard(num: PhoneNumber) {
+  const vcardStr = generateVCard(num);
+  const blob = new Blob([vcardStr], { type: "text/vcard;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `${num.number}_${num.name.replace(/[^a-zA-Zа-яА-Я0-9]/g, "_")}.vcf`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
 export function NumberModal({ num, onClose }: { num: PhoneNumber; onClose: () => void }) {
   return (
     <div
@@ -75,13 +101,19 @@ export function NumberModal({ num, onClose }: { num: PhoneNumber; onClose: () =>
           </div>
         </div>
 
-        <div className="mt-5 pt-4 border-t border-border">
+        <div className="mt-5 pt-4 border-t border-border flex gap-3">
           <a
             href={`tel:${num.number}`}
-            className="flex items-center justify-center gap-2 w-full py-3 bg-primary text-white rounded-xl font-body font-semibold hover:bg-primary/90 transition-colors"
+            className="flex items-center justify-center gap-2 flex-1 py-3 bg-primary text-white rounded-xl font-body font-semibold hover:bg-primary/90 transition-colors"
           >
-            <Icon name="Phone" size={18} /> Позвонить: {num.number}
+            <Icon name="Phone" size={18} /> Позвонить
           </a>
+          <button
+            onClick={() => saveVCard(num)}
+            className="flex items-center justify-center gap-2 flex-1 py-3 bg-white border-2 border-primary text-primary rounded-xl font-body font-semibold hover:bg-primary/5 transition-colors"
+          >
+            <Icon name="UserPlus" size={18} /> Сохранить
+          </button>
         </div>
       </div>
     </div>
