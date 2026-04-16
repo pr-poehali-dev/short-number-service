@@ -72,7 +72,7 @@ function NumberForm() {
         </div>
       )}
 
-      <h3 className="font-display text-xl font-bold text-foreground mb-1">Добавить номер</h3>
+      <h3 className="font-display text-xl font-bold text-foreground mb-1">Добавьте в справочник свой номер</h3>
       <p className="text-sm text-muted-foreground font-body mb-4">Добавьте новый номер или исправьте описание существующего</p>
 
       <div className="flex gap-2 mb-5">
