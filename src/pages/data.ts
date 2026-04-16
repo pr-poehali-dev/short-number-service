@@ -8,6 +8,7 @@ export interface PhoneNumber {
   operator: Operator;
   category: string;
   procedure?: string;
+  organization?: string;
 }
 
 export const NUMBERS: PhoneNumber[] = [

@@ -38,7 +38,10 @@ function generateVCard(num: PhoneNumber): string {
     `FN:${num.name}`,
     `N:${num.name};;;;`,
     `TEL;TYPE=CELL:${num.number}`,
-    `NOTE:${num.description.replace(/\n/g, "\\n")} | Оператор: ${num.operator} | Категория: ${num.category}`,
+    `ORG:${num.organization ?? "Справочник 2407.рф"}`,
+    `CATEGORIES:${num.category}`,
+    `NOTE:${num.description.replace(/\n/g, "\\n")} | Оператор: ${num.operator}`,
+    "URL:https://2407.рф",
     "END:VCARD",
   ];
   return lines.join("\r\n");
