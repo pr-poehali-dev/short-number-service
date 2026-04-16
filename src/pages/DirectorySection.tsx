@@ -1,7 +1,8 @@
 import { useState } from "react";
 import Icon from "@/components/ui/icon";
-import { NUMBERS, OPERATOR_COLORS, PhoneNumber, Operator } from "./data";
+import { OPERATOR_COLORS, PhoneNumber, Operator } from "./data";
 import { NumberCard } from "./SharedComponents";
+import { loadNumbers } from "./AdminPage";
 
 type Tab = "all" | "operators" | "universal";
 
@@ -18,6 +19,8 @@ export function DirectorySection({ onSelect }: { onSelect: (n: PhoneNumber) => v
   ];
 
   const categories = ["Все", "Экстренные", "Поддержка", "Автосервис", "Безопасность", "Социальные", "Здоровье"];
+
+  const NUMBERS = loadNumbers();
 
   const filteredAll = NUMBERS.filter((n) => {
     const q = query.toLowerCase();
@@ -141,7 +144,7 @@ export function DirectorySection({ onSelect }: { onSelect: (n: PhoneNumber) => v
 
 export function OperatorsSection({ onSelect }: { onSelect: (n: PhoneNumber) => void }) {
   const [activeOp, setActiveOp] = useState<Operator>("МТС");
-  const filtered = NUMBERS.filter((n) => n.operator === activeOp);
+  const filtered = loadNumbers().filter((n) => n.operator === activeOp);
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-8 animate-fade-in">
@@ -178,7 +181,7 @@ export function OperatorsSection({ onSelect }: { onSelect: (n: PhoneNumber) => v
 }
 
 export function UniversalSection({ onSelect }: { onSelect: (n: PhoneNumber) => void }) {
-  const universal = NUMBERS.filter((n) => n.operator === "Универсальный");
+  const universal = loadNumbers().filter((n) => n.operator === "Универсальный");
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-8 animate-fade-in">
