@@ -198,7 +198,7 @@ export function Header({
             <div className="font-display text-base font-bold text-black leading-tight tracking-wide">Справочник коротких номеров России "2407"</div>
           </button>
 
-          <nav className="hidden lg:flex items-center gap-1">
+          <nav className="hidden md:flex items-center gap-1">
             {navItems.map((item) => (
               <button
                 key={item.id}
@@ -221,7 +221,7 @@ export function Header({
               <Icon name="Plus" size={15} />
               <span className="hidden sm:inline">2407.РФ</span>
             </button>
-            <button className="lg:hidden p-2 rounded-md hover:bg-muted" onClick={() => setMenuOpen(!menuOpen)}>
+            <button className="md:hidden p-2 rounded-md hover:bg-muted" onClick={() => setMenuOpen(!menuOpen)}>
               <Icon name={menuOpen ? "X" : "Menu"} size={22} />
             </button>
           </div>
@@ -231,7 +231,7 @@ export function Header({
       {installOpen && <InstallModal onClose={() => setInstallOpen(false)} />}
 
       {menuOpen && (
-        <div className="lg:hidden border-t border-border bg-white">
+        <div className="md:hidden border-t border-border bg-white">
           {navItems.map((item) => (
             <button
               key={item.id}
