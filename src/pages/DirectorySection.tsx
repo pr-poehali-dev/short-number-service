@@ -82,7 +82,7 @@ export function DirectorySection({ onSelect, initialCategory }: { onSelect: (n: 
   return (
     <div className="max-w-6xl mx-auto px-4 py-8 animate-fade-in">
       <h2 className="font-display text-3xl font-bold text-foreground mb-1">Важно знать - полезно сохранить </h2>
-      <p className="text-muted-foreground font-body mb-6">Нажмите на карточку, чтобы узнать подробности</p>
+      <p className="text-muted-foreground font-body mb-6">Нажмите на карточку, чтобы узнать подробности, использовать или сохранить</p>
 
       <div className="flex gap-2 mb-6 border-b border-border overflow-x-auto">
         {tabs.map((t) => (
