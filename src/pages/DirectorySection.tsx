@@ -6,10 +6,10 @@ import { loadNumbers } from "./AdminPage";
 
 type Tab = "all" | "operators" | "universal";
 
-export function DirectorySection({ onSelect }: { onSelect: (n: PhoneNumber) => void }) {
+export function DirectorySection({ onSelect, initialCategory }: { onSelect: (n: PhoneNumber) => void; initialCategory?: string }) {
   const [tab, setTab] = useState<Tab>("all");
   const [query, setQuery] = useState("");
-  const [category, setCategory] = useState("Все");
+  const [category, setCategory] = useState(initialCategory ?? "Все");
   const [activeOp, setActiveOp] = useState<Operator>("МТС");
 
   const tabs: { id: Tab; label: string; icon: string }[] = [

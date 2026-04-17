@@ -27,9 +27,11 @@ export default function Index() {
     return getCookie(DEFAULT_SECTION_COOKIE) || "home";
   });
   const [selected, setSelected] = useState<PhoneNumber | null>(null);
+  const [directoryCategory, setDirectoryCategory] = useState<string | undefined>(undefined);
 
-  function handleNav(s: string) {
+  function handleNav(s: string, category?: string) {
     setCookie(DEFAULT_SECTION_COOKIE, s);
+    setDirectoryCategory(category);
     setSection(s);
   }
 
@@ -40,7 +42,7 @@ export default function Index() {
       <main className="pb-12">
         {section === "home" && <HomeSection onNav={handleNav} />}
         {section === "nearby" && <NearbySection />}
-        {section === "directory" && <DirectorySection onSelect={setSelected} />}
+        {section === "directory" && <DirectorySection onSelect={setSelected} initialCategory={directoryCategory} />}
         {section === "operators" && <OperatorsSection onSelect={setSelected} />}
         {section === "universal" && <UniversalSection onSelect={setSelected} />}
         {section === "faq" && <FaqSection />}
