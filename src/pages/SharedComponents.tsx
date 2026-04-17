@@ -31,7 +31,7 @@ export function NumberCard({ num, onClick }: { num: PhoneNumber; onClick: (n: Ph
       )}
       <div className="flex-1 min-w-0">
         <div className="flex items-start justify-between gap-2 mb-1">
-          <h3 className="font-display font-semibold text-foreground text-base leading-tight">{num.name}</h3>
+          <h3 className="font-display font-semibold text-foreground text-base leading-tight truncate">{num.name}</h3>
           <OperatorBadge operator={num.operator} />
         </div>
         {!short && (
