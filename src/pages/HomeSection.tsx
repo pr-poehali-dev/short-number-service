@@ -73,7 +73,7 @@ function NumberForm() {
       )}
 
       <h3 className="font-display text-xl font-bold text-foreground mb-1">Станьте частью справочника</h3>
-      <p className="text-sm text-muted-foreground font-body mb-4">Добавьте желаемый номер или предложите описание существующего</p>
+      <p className="text-sm text-muted-foreground font-body mb-4">Добавьте короткий номер или предложите описание существующего</p>
 
       <div className="flex gap-2 mb-5">
         {(["add", "edit"] as const).map((m) => (
