@@ -164,7 +164,7 @@ function NumberForm() {
                 ) : (
                   <Icon name={mode === "add" ? "Plus" : "Pencil"} size={16} />
                 )}
-                {loading ? "Отправка..." : mode === "add" ? "Предложить номер" : "Отправить правку"}
+                {loading ? "Отправка..." : mode === "add" ? "Добавить номер" : "Отправить правку"}
               </button>
             </>
           )}
