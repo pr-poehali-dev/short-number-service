@@ -11,20 +11,32 @@ export function OperatorBadge({ operator }: { operator: Operator }) {
   );
 }
 
+const isShortNumber = (n: string) => n.replace(/\D/g, "").length <= 4;
+
 export function NumberCard({ num, onClick }: { num: PhoneNumber; onClick: (n: PhoneNumber) => void }) {
+  const short = isShortNumber(num.number);
   return (
     <button
       onClick={() => onClick(num)}
       className="number-card w-full text-left bg-white border border-border rounded-xl p-4 flex items-start gap-3 cursor-pointer"
     >
-      <div className="w-14 h-14 rounded-xl bg-primary flex items-center justify-center flex-shrink-0">
-        <span className="font-display font-bold text-white text-sm leading-tight text-center px-1">{num.number}</span>
-      </div>
+      {short ? (
+        <div className="w-14 h-14 rounded-xl bg-primary flex items-center justify-center flex-shrink-0">
+          <span className="font-display font-bold text-white text-sm leading-tight text-center px-1">{num.number}</span>
+        </div>
+      ) : (
+        <div className="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
+          <Icon name="Phone" size={22} className="text-primary" />
+        </div>
+      )}
       <div className="flex-1 min-w-0">
         <div className="flex items-start justify-between gap-2 mb-1">
           <h3 className="font-display font-semibold text-foreground text-base leading-tight">{num.name}</h3>
           <OperatorBadge operator={num.operator} />
         </div>
+        {!short && (
+          <p className="font-display font-bold text-primary text-sm mb-1 tracking-wide">{num.number}</p>
+        )}
         <p className="text-sm text-muted-foreground font-body line-clamp-2">{num.description}</p>
       </div>
     </button>
@@ -61,6 +73,7 @@ function saveVCard(num: PhoneNumber) {
 }
 
 export function NumberModal({ num, onClose }: { num: PhoneNumber; onClose: () => void }) {
+  const short = isShortNumber(num.number);
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50"
@@ -72,11 +85,20 @@ export function NumberModal({ num, onClose }: { num: PhoneNumber; onClose: () =>
       >
         <div className="flex items-start justify-between mb-5">
           <div className="flex items-center gap-3">
-            <div className="w-16 h-16 rounded-xl bg-primary flex items-center justify-center">
-              <span className="font-display font-bold text-white text-xl">{num.number}</span>
-            </div>
+            {short ? (
+              <div className="w-16 h-16 rounded-xl bg-primary flex items-center justify-center flex-shrink-0">
+                <span className="font-display font-bold text-white text-xl">{num.number}</span>
+              </div>
+            ) : (
+              <div className="w-16 h-16 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
+                <Icon name="Phone" size={26} className="text-primary" />
+              </div>
+            )}
             <div>
-              <h2 className="font-display text-xl font-bold text-foreground mb-1">{num.name}</h2>
+              <h2 className="font-display text-xl font-bold text-foreground mb-0.5">{num.name}</h2>
+              {!short && (
+                <p className="font-display font-bold text-primary text-base tracking-wide mb-0.5">{num.number}</p>
+              )}
               <OperatorBadge operator={num.operator} />
             </div>
           </div>
