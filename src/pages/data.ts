@@ -1,4 +1,4 @@
-export type Operator = "МТС" | "Билайн" | "МегаФон" | "Т2" | "Универсальный";
+export type Operator = "МТС" | "Билайн" | "МегаФон" | "Т2" | "Универсальный" | "Коммерческий";
 
 export interface PhoneNumber {
   id: number;
@@ -9,6 +9,8 @@ export interface PhoneNumber {
   category: string;
   procedure?: string;
   organization?: string;
+  deviceAccess?: "mobile" | "any";
+  industry?: string;
 }
 
 export const NUMBERS: PhoneNumber[] = [
@@ -30,6 +32,14 @@ export const NUMBERS: PhoneNumber[] = [
   { id: 16, number: "8-800-2000-122", name: "Телефон доверия для детей", description: "Федеральный детский телефон доверия. Бесплатно, анонимно, круглосуточно.", operator: "Универсальный", category: "Социальные" },
   { id: 17, number: "0921", name: "Автоинформатор МегаФон", description: "Автоматическая проверка баланса, тарифного плана и подключённых услуг МегаФон.", operator: "МегаФон", category: "Автоинформатор", procedure: "Бесплатно с номеров МегаФон." },
   { id: 18, number: "669", name: "Автоинформатор Т2", description: "Голосовое меню Т2: баланс, тариф, управление услугами.", operator: "Т2", category: "Автоинформатор", procedure: "Бесплатно с номеров Т2." },
+  { id: 19, number: "900",   name: "Сбербанк",        description: "Служба поддержки Сбербанка. Вопросы по картам, счетам, блокировкам и мошенничеству.", operator: "Коммерческий", category: "Коммерческие", organization: "Сбербанк",        industry: "Банк",      procedure: "Доступен со всех смартфонов бесплатно. Также доступен с обычного телефона.", deviceAccess: "any" },
+  { id: 20, number: "1000",  name: "ВТБ",             description: "Служба поддержки банка ВТБ. Консультации по продуктам, картам и операциям.", operator: "Коммерческий", category: "Коммерческие", organization: "ВТБ",             industry: "Банк",      procedure: "Доступен со всех смартфонов бесплатно. Также доступен с обычного телефона.", deviceAccess: "any" },
+  { id: 21, number: "*555",  name: "Аэрофлот",        description: "Справочно-информационный центр Аэрофлота. Бронирование, регистрация, информация о рейсах.", operator: "Коммерческий", category: "Коммерческие", organization: "Аэрофлот",        industry: "Транспорт", procedure: "Доступен со всех смартфонов.", deviceAccess: "mobile" },
+  { id: 22, number: "*8100", name: "Райффайзен Банк", description: "Горячая линия Райффайзен Банка. Поддержка клиентов по банковским услугам.", operator: "Коммерческий", category: "Коммерческие", organization: "Райффайзен Банк", industry: "Банк",      procedure: "Доступен со всех смартфонов.", deviceAccess: "mobile" },
+  { id: 23, number: "*1077", name: "МЕТРО Cash&Carry", description: "Служба поддержки клиентов торговой сети МЕТРО.", operator: "Коммерческий", category: "Коммерческие", organization: "МЕТРО Cash&Carry", industry: "Торговля",  procedure: "Доступен со всех смартфонов.", deviceAccess: "mobile" },
+  { id: 24, number: "*2345", name: "Л'Этуаль",        description: "Горячая линия парфюмерно-косметической сети Л'Этуаль.", operator: "Коммерческий", category: "Коммерческие", organization: "Л'Этуаль",        industry: "Торговля",  procedure: "Доступен со всех смартфонов.", deviceAccess: "mobile" },
+  { id: 25, number: "*390",  name: "Автодор",         description: "Информационная служба государственной компании Автодор. Вопросы по платным дорогам и транспондерам.", operator: "Коммерческий", category: "Коммерческие", organization: "Автодор",         industry: "Транспорт", procedure: "Доступен со всех смартфонов.", deviceAccess: "mobile" },
+  { id: 26, number: "*0701", name: "Газпромбанк",     description: "Служба поддержки Газпромбанка. Консультации по картам, кредитам и вкладам.", operator: "Коммерческий", category: "Коммерческие", organization: "Газпромбанк",     industry: "Банк",      procedure: "Доступен со всех смартфонов.", deviceAccess: "mobile" },
 ];
 
 export const LAST_UPDATED = "03.2026";
@@ -40,6 +50,7 @@ export const OPERATOR_COLORS: Record<Operator, { bg: string; text: string; borde
   "МегаФон":       { bg: "bg-green-50",  text: "text-green-700",  border: "border-green-200" },
   "Т2":            { bg: "bg-sky-50",    text: "text-sky-700",    border: "border-sky-200" },
   "Универсальный": { bg: "bg-purple-50", text: "text-purple-700", border: "border-purple-200" },
+  "Коммерческий":  { bg: "bg-amber-50",  text: "text-amber-700",  border: "border-amber-200" },
 };
 
 export const FAQ_ITEMS = [

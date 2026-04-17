@@ -6,8 +6,9 @@ const ADMIN_PIN = "2407";
 const STORAGE_KEY = "admin_numbers_v1";
 const SESSION_KEY = "admin_auth_v1";
 
-const OPERATORS: Operator[] = ["МТС", "Билайн", "МегаФон", "Т2", "Универсальный"];
-const CATEGORIES = ["Экстренные", "Поддержка", "Автосервис", "Безопасность", "Социальные", "Здоровье", "Коммерческие"];
+const OPERATORS: Operator[] = ["МТС", "Билайн", "МегаФон", "Т2", "Универсальный", "Коммерческий"];
+const CATEGORIES = ["Экстренные", "Поддержка", "Автоинформатор", "Безопасность", "Социальные", "Здоровье", "Коммерческие"];
+const INDUSTRIES = ["Банк", "Транспорт", "Торговля", "Страхование", "Медицина", "Государственные", "Другое"];
 
 export function loadNumbers(): PhoneNumber[] {
   try {
@@ -31,6 +32,8 @@ const empty = (): Omit<PhoneNumber, "id"> => ({
   category: "Поддержка",
   procedure: "",
   organization: "",
+  industry: "",
+  deviceAccess: undefined,
 });
 
 export default function AdminPage() {
@@ -408,6 +411,28 @@ function EditModal({
               {CATEGORIES.map((c) => <option key={c}>{c}</option>)}
             </select>
           </Field>
+
+          {form.category === "Коммерческие" && (
+            <div className="grid grid-cols-2 gap-3 p-3 rounded-xl bg-amber-50 border border-amber-200">
+              <Field label="Индустрия">
+                <select value={form.industry ?? ""} onChange={(e) => set("industry", e.target.value)} className={inputCls}>
+                  <option value="">— не выбрано —</option>
+                  {INDUSTRIES.map((i) => <option key={i}>{i}</option>)}
+                </select>
+              </Field>
+              <Field label="Доступность">
+                <select
+                  value={form.deviceAccess ?? ""}
+                  onChange={(e) => setForm((f) => ({ ...f, deviceAccess: e.target.value as "mobile" | "any" | undefined || undefined }))}
+                  className={inputCls}
+                >
+                  <option value="">— не указано —</option>
+                  <option value="mobile">Только смартфон</option>
+                  <option value="any">Смартфон + обычный телефон</option>
+                </select>
+              </Field>
+            </div>
+          )}
 
           <Field label="Описание *" required>
             <textarea

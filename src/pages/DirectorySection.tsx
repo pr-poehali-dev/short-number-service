@@ -4,18 +4,58 @@ import { OPERATOR_COLORS, PhoneNumber, Operator } from "./data";
 import { NumberCard } from "./SharedComponents";
 import { loadNumbers } from "./AdminPage";
 
-type Tab = "all" | "operators" | "universal";
+function CommercialCard({ num, onClick }: { num: PhoneNumber; onClick: (n: PhoneNumber) => void }) {
+  return (
+    <button
+      onClick={() => onClick(num)}
+      className="number-card w-full text-left bg-white border border-border rounded-xl p-4 flex items-start gap-3 cursor-pointer"
+    >
+      <div className="w-14 h-14 rounded-xl bg-amber-50 flex items-center justify-center flex-shrink-0 flex-col gap-0.5">
+        <span className="font-display font-bold text-amber-700 text-sm leading-tight text-center px-1">{num.number}</span>
+      </div>
+      <div className="flex-1 min-w-0">
+        <div className="flex items-start justify-between gap-2 mb-1">
+          <h3 className="font-display font-semibold text-foreground text-base leading-tight truncate">{num.name}</h3>
+          {num.industry && (
+            <span className="flex-shrink-0 text-xs px-2 py-0.5 rounded-full font-body font-medium border bg-amber-50 text-amber-700 border-amber-200">
+              {num.industry}
+            </span>
+          )}
+        </div>
+        <p className="text-sm text-muted-foreground font-body line-clamp-2 mb-1.5">{num.description}</p>
+        <div className="flex items-center gap-1.5">
+          {num.deviceAccess === "any" ? (
+            <span className="inline-flex items-center gap-1 text-xs text-green-700 bg-green-50 border border-green-200 rounded-full px-2 py-0.5 font-body">
+              <Icon name="CheckCircle" size={11} /> Смартфон и телефон
+            </span>
+          ) : (
+            <span className="inline-flex items-center gap-1 text-xs text-blue-700 bg-blue-50 border border-blue-200 rounded-full px-2 py-0.5 font-body">
+              <Icon name="Smartphone" size={11} /> Только смартфон
+            </span>
+          )}
+        </div>
+      </div>
+    </button>
+  );
+}
+
+type Tab = "all" | "operators" | "universal" | "commercial";
+
+const COMMERCIAL_INDUSTRIES = ["Все", "Банк", "Транспорт", "Торговля"];
 
 export function DirectorySection({ onSelect, initialCategory }: { onSelect: (n: PhoneNumber) => void; initialCategory?: string }) {
-  const [tab, setTab] = useState<Tab>("all");
+  const [tab, setTab] = useState<Tab>(() => initialCategory === "Коммерческие" ? "commercial" : "all");
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState(initialCategory ?? "Все");
   const [activeOp, setActiveOp] = useState<Operator>("МТС");
+  const [commIndustry, setCommIndustry] = useState("Все");
+  const [commDevice, setCommDevice] = useState<"all" | "mobile" | "any">("all");
 
   const tabs: { id: Tab; label: string; icon: string }[] = [
-    { id: "all",       label: "Все номера",      icon: "List" },
-    { id: "operators", label: "По операторам",   icon: "Wifi" },
-    { id: "universal", label: "Универсальные",   icon: "Globe" },
+    { id: "all",        label: "Все номера",      icon: "List" },
+    { id: "operators",  label: "По операторам",   icon: "Wifi" },
+    { id: "universal",  label: "Универсальные",   icon: "Globe" },
+    { id: "commercial", label: "Коммерческие",    icon: "Building2" },
   ];
 
   const categories = ["Все", "Экстренные", "Поддержка", "Автоинформатор", "Безопасность", "Социальные", "Здоровье"];
@@ -23,6 +63,7 @@ export function DirectorySection({ onSelect, initialCategory }: { onSelect: (n: 
   const NUMBERS = loadNumbers();
 
   const filteredAll = NUMBERS.filter((n) => {
+    if (n.category === "Коммерческие") return false;
     const q = query.toLowerCase();
     const matchQ = !q || n.number.includes(q) || n.name.toLowerCase().includes(q) || n.description.toLowerCase().includes(q) || n.operator.toLowerCase().includes(q);
     const matchC = category === "Все" || n.category === category;
@@ -32,17 +73,24 @@ export function DirectorySection({ onSelect, initialCategory }: { onSelect: (n: 
   const filteredOp = NUMBERS.filter((n) => n.operator === activeOp);
   const universal = NUMBERS.filter((n) => n.operator === "Универсальный");
 
+  const commercial = NUMBERS.filter((n) => {
+    if (n.category !== "Коммерческие") return false;
+    const matchI = commIndustry === "Все" || n.industry === commIndustry;
+    const matchD = commDevice === "all" || n.deviceAccess === commDevice;
+    return matchI && matchD;
+  });
+
   return (
     <div className="max-w-6xl mx-auto px-4 py-8 animate-fade-in">
       <h2 className="font-display text-3xl font-bold text-foreground mb-1">Справочник номеров</h2>
       <p className="text-muted-foreground font-body mb-6">Нажмите на карточку, чтобы узнать подробности</p>
 
-      <div className="flex gap-2 mb-6 border-b border-border">
+      <div className="flex gap-2 mb-6 border-b border-border overflow-x-auto">
         {tabs.map((t) => (
           <button
             key={t.id}
             onClick={() => setTab(t.id)}
-            className={`flex items-center gap-1.5 px-4 py-2.5 text-sm font-body font-medium border-b-2 transition-colors -mb-px ${
+            className={`flex items-center gap-1.5 px-4 py-2.5 text-sm font-body font-medium border-b-2 transition-colors -mb-px whitespace-nowrap ${
               tab === t.id
                 ? "border-primary text-primary"
                 : "border-transparent text-muted-foreground hover:text-foreground"
@@ -136,6 +184,55 @@ export function DirectorySection({ onSelect, initialCategory }: { onSelect: (n: 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             {universal.map((n) => <NumberCard key={n.id} num={n} onClick={onSelect} />)}
           </div>
+        </>
+      )}
+
+      {tab === "commercial" && (
+        <>
+          <div className="flex flex-col sm:flex-row gap-3 mb-6">
+            <div className="flex gap-2 flex-wrap">
+              {COMMERCIAL_INDUSTRIES.map((ind) => (
+                <button
+                  key={ind}
+                  onClick={() => setCommIndustry(ind)}
+                  className={`px-3 py-1.5 rounded-full text-sm font-body font-medium transition-colors ${
+                    commIndustry === ind ? "bg-amber-500 text-white" : "bg-white border border-border text-foreground hover:border-amber-300"
+                  }`}
+                >
+                  {ind}
+                </button>
+              ))}
+            </div>
+            <div className="flex gap-2 sm:ml-auto flex-wrap">
+              {([
+                { val: "all",    label: "Все устройства",    icon: "Smartphone" },
+                { val: "mobile", label: "Только смартфон",   icon: "Smartphone" },
+                { val: "any",    label: "Смартфон + телефон", icon: "Phone" },
+              ] as const).map((d) => (
+                <button
+                  key={d.val}
+                  onClick={() => setCommDevice(d.val)}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-body font-medium transition-colors border ${
+                    commDevice === d.val ? "bg-amber-50 border-amber-300 text-amber-700" : "bg-white border-border text-muted-foreground hover:border-amber-200"
+                  }`}
+                >
+                  <Icon name={d.icon as Parameters<typeof Icon>[0]["name"]} size={13} />
+                  {d.label}
+                </button>
+              ))}
+            </div>
+          </div>
+          <p className="text-sm text-muted-foreground font-body mb-4">Найдено: <strong>{commercial.length}</strong> номеров</p>
+          {commercial.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              {commercial.map((n) => <CommercialCard key={n.id} num={n} onClick={onSelect} />)}
+            </div>
+          ) : (
+            <div className="text-center py-16 text-muted-foreground font-body">
+              <Icon name="SearchX" size={40} className="mx-auto mb-3 opacity-40" />
+              <p>Номеров по выбранным фильтрам не найдено</p>
+            </div>
+          )}
         </>
       )}
     </div>
