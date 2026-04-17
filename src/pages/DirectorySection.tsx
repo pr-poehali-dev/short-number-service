@@ -18,7 +18,7 @@ export function DirectorySection({ onSelect }: { onSelect: (n: PhoneNumber) => v
     { id: "universal", label: "Универсальные",   icon: "Globe" },
   ];
 
-  const categories = ["Все", "Экстренные", "Поддержка", "Автосервис", "Безопасность", "Социальные", "Здоровье"];
+  const categories = ["Все", "Экстренные", "Поддержка", "Автоинформатор", "Безопасность", "Социальные", "Здоровье"];
 
   const NUMBERS = loadNumbers();
 
