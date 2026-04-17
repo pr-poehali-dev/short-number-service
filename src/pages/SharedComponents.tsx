@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Icon from "@/components/ui/icon";
 import { PhoneNumber, Operator, OPERATOR_COLORS } from "./data";
+import { ymGoal } from "@/lib/analytics";
 
 export function OperatorBadge({ operator }: { operator: Operator }) {
   const c = OPERATOR_COLORS[operator];
@@ -17,7 +18,7 @@ export function NumberCard({ num, onClick }: { num: PhoneNumber; onClick: (n: Ph
   const short = isShortNumber(num.number);
   return (
     <button
-      onClick={() => onClick(num)}
+      onClick={() => { onClick(num); ymGoal("card_open", { number: num.number, name: num.name, category: num.category, operator: num.operator }); }}
       className="number-card w-full text-left bg-white border border-border rounded-xl p-4 flex items-start gap-3 cursor-pointer"
     >
       {short ? (
@@ -129,12 +130,13 @@ export function NumberModal({ num, onClose }: { num: PhoneNumber; onClose: () =>
         <div className="mt-5 pt-4 border-t border-border flex gap-3">
           <a
             href={`tel:${num.number}`}
+            onClick={() => ymGoal("call_click", { number: num.number, name: num.name, category: num.category, operator: num.operator })}
             className="flex items-center justify-center gap-2 flex-1 py-3 bg-primary text-white rounded-xl font-body font-semibold hover:bg-primary/90 transition-colors"
           >
             <Icon name="Phone" size={18} /> Позвонить
           </a>
           <button
-            onClick={() => saveVCard(num)}
+            onClick={() => { saveVCard(num); ymGoal("vcard_save", { number: num.number, name: num.name }); }}
             className="flex items-center justify-center gap-2 flex-1 py-3 bg-white border-2 border-primary text-primary rounded-xl font-body font-semibold hover:bg-primary/5 transition-colors"
           >
             <Icon name="UserPlus" size={18} /> Сохранить

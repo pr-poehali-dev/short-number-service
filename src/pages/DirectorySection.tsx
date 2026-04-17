@@ -3,6 +3,7 @@ import Icon from "@/components/ui/icon";
 import { OPERATOR_COLORS, PhoneNumber, Operator } from "./data";
 import { NumberCard } from "./SharedComponents";
 import { loadNumbers } from "./AdminPage";
+import { ymGoal } from "@/lib/analytics";
 
 function CommercialCard({ num, onClick }: { num: PhoneNumber; onClick: (n: PhoneNumber) => void }) {
   return (
@@ -88,7 +89,7 @@ export function DirectorySection({ onSelect, initialCategory }: { onSelect: (n: 
         {tabs.map((t) => (
           <button
             key={t.id}
-            onClick={() => setTab(t.id)}
+            onClick={() => { setTab(t.id); ymGoal("directory_tab", { tab: t.id }); }}
             className={`flex items-center gap-1.5 px-4 py-2.5 text-sm font-body font-medium border-b-2 transition-colors -mb-px whitespace-nowrap ${
               tab === t.id
                 ? "border-primary text-primary"
@@ -121,7 +122,7 @@ export function DirectorySection({ onSelect, initialCategory }: { onSelect: (n: 
             {categories.map((c) => (
               <button
                 key={c}
-                onClick={() => setCategory(c)}
+                onClick={() => { setCategory(c); ymGoal("directory_category", { category: c }); }}
                 className={`px-3 py-1.5 rounded-full text-sm font-body font-medium transition-colors ${
                   category === c ? "bg-primary text-white" : "bg-white border border-border text-foreground hover:border-primary/40"
                 }`}
@@ -152,7 +153,7 @@ export function DirectorySection({ onSelect, initialCategory }: { onSelect: (n: 
               return (
                 <button
                   key={op}
-                  onClick={() => setActiveOp(op)}
+                  onClick={() => { setActiveOp(op); ymGoal("directory_operator", { operator: op }); }}
                   className={`px-5 py-2 rounded-xl text-sm font-body font-semibold transition-all border ${
                     activeOp === op ? `${c.bg} ${c.text} ${c.border} shadow-sm` : "bg-white border-border text-foreground hover:border-primary/30"
                   }`}
@@ -193,7 +194,7 @@ export function DirectorySection({ onSelect, initialCategory }: { onSelect: (n: 
               {COMMERCIAL_INDUSTRIES.map((ind) => (
                 <button
                   key={ind}
-                  onClick={() => setCommIndustry(ind)}
+                  onClick={() => { setCommIndustry(ind); ymGoal("directory_industry", { industry: ind }); }}
                   className={`px-3 py-1.5 rounded-full text-sm font-body font-medium transition-colors ${
                     commIndustry === ind ? "bg-amber-500 text-white" : "bg-white border border-border text-foreground hover:border-amber-300"
                   }`}

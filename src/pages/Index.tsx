@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { PhoneNumber } from "./data";
 import { Header, NumberModal } from "./SharedComponents";
+import { ymGoal } from "@/lib/analytics";
 import {
   HomeSection,
   DirectorySection,
@@ -29,10 +30,20 @@ export default function Index() {
   const [selected, setSelected] = useState<PhoneNumber | null>(null);
   const [directoryCategory, setDirectoryCategory] = useState<string | undefined>(undefined);
 
+  const SECTION_GOALS: Record<string, string> = {
+    home: "section_home",
+    nearby: "section_nearby",
+    directory: "section_directory",
+    operators: "section_operators",
+    universal: "section_universal",
+    faq: "section_faq",
+  };
+
   function handleNav(s: string, category?: string) {
     setCookie(DEFAULT_SECTION_COOKIE, s);
     setDirectoryCategory(category);
     setSection(s);
+    ymGoal(SECTION_GOALS[s] ?? "section_unknown", category ? { category } : undefined);
   }
 
   return (
