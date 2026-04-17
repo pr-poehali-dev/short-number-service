@@ -228,7 +228,7 @@ export function HomeSection({ onNav }: { onNav: (s: string, category?: string) =
         <h2 className="font-display text-2xl font-bold text-foreground mb-6">Быстрый доступ</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {[
-            { icon: "AlertTriangle", title: "Экстренные",          desc: "112, 101, 102, 103, 104",         section: "universal",  category: undefined,      color: "text-red-600",    bg: "bg-red-50" },
+            { icon: "AlertTriangle", title: "Экстренные",          desc: "112, 101, 102, 103, 104",         section: "directory", category: "Экстренные",  color: "text-red-600",    bg: "bg-red-50" },
             { icon: "Headphones",    title: "Поддержка операторов", desc: "МТС, Билайн, МегаФон, Т2",        section: "operators",  category: undefined,      color: "text-blue-600",   bg: "bg-blue-50" },
             { icon: "Heart",         title: "Социальные",           desc: "Психологическая помощь, здоровье", section: "directory", category: "Социальные",  color: "text-purple-600", bg: "bg-purple-50" },
           ].map((item) => (
