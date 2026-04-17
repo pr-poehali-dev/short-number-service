@@ -58,12 +58,11 @@ export function DirectorySection({ onSelect, initialCategory }: { onSelect: (n: 
     { id: "commercial", label: "Коммерческие",    icon: "Building2" },
   ];
 
-  const categories = ["Все", "Экстренные", "Поддержка", "Автоинформатор", "Безопасность", "Социальные", "Здоровье"];
+  const categories = ["Все", "Экстренные", "Поддержка", "Автоинформатор", "Безопасность", "Социальные", "Здоровье", "Коммерческие"];
 
   const NUMBERS = loadNumbers();
 
   const filteredAll = NUMBERS.filter((n) => {
-    if (n.category === "Коммерческие") return false;
     const q = query.toLowerCase();
     const matchQ = !q || n.number.includes(q) || n.name.toLowerCase().includes(q) || n.description.toLowerCase().includes(q) || n.operator.toLowerCase().includes(q);
     const matchC = category === "Все" || n.category === category;
