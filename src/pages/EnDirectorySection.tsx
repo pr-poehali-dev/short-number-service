@@ -160,9 +160,7 @@ export function EnDirectorySection({
 
       {tab === "universal" && (
         <>
-          <div className="inline-flex items-center gap-1.5 bg-purple-50 border border-purple-100 text-purple-700 text-xs font-body font-medium px-3 py-1.5 rounded-full mb-6">
-            <Icon name="CheckCircle" size={13} /> Available from all phones and operators, even without SIM
-          </div>
+          <div className="inline-flex items-center gap-1.5 bg-purple-50 border border-purple-100 text-purple-700 text-xs font-body font-medium px-3 py-1.5 rounded-full mb-6">Available from all phones and operators, even without SIM (112)</div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             {universal.map((n) => (
               <NumberCardEn key={n.id} num={n} enNum={getEn(n.id)} onClick={onSelect} />
