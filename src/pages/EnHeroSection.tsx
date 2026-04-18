@@ -5,9 +5,6 @@ export function EnHeroSection({ onBrowse }: { onBrowse: () => void }) {
     <>
       <section className="bg-gradient-to-br from-primary/5 via-background to-background py-12 px-4 border-b border-border">
         <div className="max-w-6xl mx-auto">
-          <div className="inline-flex items-center gap-1.5 bg-primary/10 text-primary text-xs font-body font-semibold px-3 py-1.5 rounded-full mb-4">
-            <Icon name="Globe" size={13} /> English version
-          </div>
           <h1 className="font-display font-bold text-4xl md:text-5xl text-foreground mb-3 leading-tight">
             Short Phone Numbers<br />of Russia
           </h1>
