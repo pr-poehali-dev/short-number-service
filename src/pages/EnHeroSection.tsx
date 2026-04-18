@@ -16,30 +16,6 @@ export function EnHeroSection() {
           </div>
         </div>
       </section>
-
-      <section className="max-w-6xl mx-auto px-4 py-6">
-        <p className="text-xs text-muted-foreground font-body uppercase tracking-wider mb-3">Emergency numbers — free from any phone</p>
-        <div className="flex flex-wrap gap-2">
-          {[
-            { number: "112", name: "Emergency" },
-            { number: "101", name: "Fire / EMERCOM" },
-            { number: "102", name: "Police" },
-            { number: "103", name: "Ambulance" },
-            { number: "104", name: "Gas" },
-          ].map((e) => (
-            <a
-              key={e.number}
-              href={`tel:${e.number}`}
-              className="flex items-center gap-2 px-4 py-2 bg-white border border-border rounded-xl hover:border-primary/40 transition-colors group"
-            >
-              <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center flex-shrink-0">
-                <span className="font-display font-bold text-white text-xs">{e.number}</span>
-              </div>
-              <span className="text-sm font-body text-foreground group-hover:text-primary transition-colors">{e.name}</span>
-            </a>
-          ))}
-        </div>
-      </section>
     </>
   );
 }
