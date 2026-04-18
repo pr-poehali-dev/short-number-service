@@ -4,6 +4,35 @@ import { OPERATOR_MAP_EN, CATEGORY_MAP_EN } from "./data-en";
 
 export const isShortNumber = (n: string) => n.replace(/\D/g, "").length <= 4;
 
+function generateVCard(num: PhoneNumber, name: string, description: string): string {
+  const lines = [
+    "BEGIN:VCARD",
+    "VERSION:3.0",
+    `FN:${name}`,
+    `N:${name};;;;`,
+    `TEL;TYPE=CELL:${num.number}`,
+    `ORG:${num.organization ?? "Directory 2407.rf"}`,
+    `CATEGORIES:${num.category}`,
+    `NOTE:${description.replace(/\n/g, "\\n")} | Operator: ${num.operator}`,
+    "URL:https://2407.xn--p1ai",
+    "END:VCARD",
+  ];
+  return lines.join("\r\n");
+}
+
+function saveVCard(num: PhoneNumber, name: string, description: string) {
+  const vcardStr = generateVCard(num, name, description);
+  const blob = new Blob([vcardStr], { type: "text/vcard;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `${num.number}_${name.replace(/[^a-zA-Z0-9]/g, "_")}.vcf`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
 export function OperatorBadgeEn({ operator }: { operator: string }) {
   const c = OPERATOR_COLORS[operator as keyof typeof OPERATOR_COLORS] ?? {
     bg: "bg-gray-50", text: "text-gray-700", border: "border-gray-200",
@@ -117,6 +146,12 @@ export function NumberModalEn({
           >
             <Icon name="Phone" size={18} /> Call
           </a>
+          <button
+            onClick={() => saveVCard(num, name, desc)}
+            className="flex items-center justify-center gap-2 flex-1 py-3 bg-white border-2 border-primary text-primary rounded-xl font-body font-semibold hover:bg-primary/5 transition-colors"
+          >
+            <Icon name="UserPlus" size={18} /> Save contact
+          </button>
         </div>
       </div>
     </div>
