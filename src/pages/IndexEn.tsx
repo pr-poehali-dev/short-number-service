@@ -189,22 +189,35 @@ export default function IndexEn() {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="bg-white border-b border-border sticky top-0 z-40 shadow-sm">
-        <div className="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
-              <span className="font-display font-bold text-white text-xs">2407</span>
-            </div>
-            <span className="font-display font-bold text-foreground text-lg">SHORT-NUMBER.RF</span>
-          </div>
-          <div className="flex items-center gap-3">
-            <Link
-              to="/"
-              className="text-sm font-body text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1"
-            >
-              <Icon name="Globe" size={14} /> РУС
+      <header className="sticky top-0 z-50 bg-white border-b border-border shadow-sm">
+        <div className="max-w-6xl mx-auto px-4">
+          <div className="flex items-center justify-between h-16">
+            <Link to="/" className="flex items-center gap-2">
+              <div className="font-display text-base font-bold text-black leading-tight tracking-wide">Short Phone Numbers of Russia "2407"</div>
             </Link>
-            <span className="text-xs px-2 py-0.5 rounded-full bg-primary/10 text-primary font-body font-semibold">EN</span>
+
+            <nav className="hidden md:flex items-center gap-1">
+              {(["Directory", "FAQ"] as const).map((label) => (
+                <button
+                  key={label}
+                  className="px-3 py-1.5 rounded-md text-sm font-body font-medium transition-colors text-foreground hover:bg-muted"
+                >
+                  {label}
+                </button>
+              ))}
+            </nav>
+
+            <div className="flex items-center gap-2">
+              <Link
+                to="/"
+                className="flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-body font-semibold text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+              >
+                <Icon name="Globe" size={12} /> РУС
+              </Link>
+              <span className="flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-body font-semibold text-primary bg-primary/10">
+                EN
+              </span>
+            </div>
           </div>
         </div>
       </header>
