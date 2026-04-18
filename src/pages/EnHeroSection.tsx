@@ -5,9 +5,6 @@ export function EnHeroSection({ onBrowse }: { onBrowse: () => void }) {
     <>
       <section className="bg-gradient-to-br from-primary/5 via-background to-background py-12 px-4 border-b border-border">
         <div className="max-w-6xl mx-auto">
-          <h1 className="font-display font-bold text-4xl md:text-5xl text-foreground mb-3 leading-tight">
-            Short Phone Numbers<br />of Russia
-          </h1>
           <p className="text-lg text-muted-foreground font-body mb-6 max-w-xl">The directory of short and service phone numbers: emergency services, operator support, banks, government services. All numbers verified manually.</p>
           <div className="flex flex-wrap gap-3">
             <button
