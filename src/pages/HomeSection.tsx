@@ -185,7 +185,7 @@ export function HomeSection({ onNav }: { onNav: (s: string, category?: string) =
         <div className="max-w-3xl mx-auto text-center">
 
           <h1 className="font-display text-4xl md:text-5xl font-bold mb-4 leading-tight">Короткие номера и быстрые ответы</h1>
-          <p className="text-white/80 font-body mb-8 max-w-sm mx-auto text-lg">Экстренные службы, техподдержка операторов, социальные и коммерческие сервисы — найдите нужный номер или ответ за секунды</p>
+          <p className="text-white/80 font-body mb-8 max-w-2xl mx-auto text-lg">Экстренные службы, техподдержка операторов, социальные и коммерческие сервисы — найдите нужный номер или ответ за секунды</p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <button
               onClick={() => onNav("directory")}
