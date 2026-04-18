@@ -11,7 +11,6 @@ import { EnInfoSection } from "./EnInfoSection";
 
 export default function IndexEn() {
   const [selected, setSelected] = useState<{ ru: PhoneNumber; en: PhoneNumberEn | undefined } | null>(null);
-  const [browseSignal, setBrowseSignal] = useState(0);
 
   const ruNumbers = loadNumbers();
   const enNumbers = loadNumbersEn();
@@ -54,10 +53,9 @@ export default function IndexEn() {
       </header>
 
       <main className="pb-12">
-        <EnHeroSection onBrowse={() => setBrowseSignal((s) => s + 1)} />
+        <EnHeroSection />
 
         <EnDirectorySection
-          key={browseSignal}
           ruNumbers={ruNumbers}
           getEn={getEn}
           onSelect={(ru, en) => setSelected({ ru, en })}
