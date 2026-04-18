@@ -184,9 +184,7 @@ export function HomeSection({ onNav }: { onNav: (s: string, category?: string) =
       <div className="bg-gradient-to-br from-[hsl(var(--primary))] to-blue-700 text-white py-16 px-4">
         <div className="max-w-3xl mx-auto text-center">
 
-          <h1 className="font-display text-4xl md:text-5xl font-bold mb-4 leading-tight">
-            Все короткие номера и быстрые ответы в одном месте
-          </h1>
+          <h1 className="font-display text-4xl md:text-5xl font-bold mb-4 leading-tight">Короткие номера и быстрые ответы</h1>
           <p className="text-white/80 text-lg font-body mb-8 max-w-xl mx-auto">Экстренные службы, поддержка операторов, социальные сервисы — найдите нужный номер или ответ за секунды</p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <button
