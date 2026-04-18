@@ -44,9 +44,7 @@ export default function IndexEn() {
               <Link
                 to="/"
                 className="flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-body font-semibold text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
-              >
-                <Icon name="Globe" size={12} /> РУС
-              </Link>
+              >RU</Link>
               <span className="flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-body font-semibold text-primary bg-primary/10">
                 EN
               </span>
