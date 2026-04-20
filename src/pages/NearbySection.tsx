@@ -1,13 +1,31 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Icon from "@/components/ui/icon";
 
 const NEARBY_URL = "https://functions.poehali.dev/d4b08b1e-6bd7-4d3b-81cf-02b5e4c6447f";
+const BOOKMARKS_KEY = "nearby_bookmarks";
 
 interface Place {
   name: string;
   type: string;
   description: string;
   distance_approx: number;
+  address?: string;
+  label?: string;
+  profile?: string;
+}
+
+interface Bookmark {
+  id: string;
+  savedAt: string;
+  lat: number;
+  lon: number;
+  name: string;
+  type: string;
+  description: string;
+  distance_approx: number;
+  address: string;
+  label: string;
+  profile: string;
 }
 
 const TYPE_ICONS: Record<string, string> = {
@@ -50,6 +68,23 @@ function distanceColor(d: number): string {
   return "text-orange-600 bg-orange-50 border-orange-200";
 }
 
+function loadBookmarks(): Bookmark[] {
+  try {
+    return JSON.parse(localStorage.getItem(BOOKMARKS_KEY) || "[]");
+  } catch {
+    return [];
+  }
+}
+
+function saveBookmarks(bms: Bookmark[]) {
+  localStorage.setItem(BOOKMARKS_KEY, JSON.stringify(bms));
+}
+
+function formatDate(iso: string): string {
+  const d = new Date(iso);
+  return d.toLocaleDateString("ru-RU", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" });
+}
+
 export function NearbySection() {
   const [status, setStatus] = useState<"idle" | "locating" | "loading" | "done" | "error">("idle");
   const [places, setPlaces] = useState<Place[]>([]);
@@ -59,6 +94,12 @@ export function NearbySection() {
   const [prompt, setPrompt] = useState("");
   const [promptLoading, setPromptLoading] = useState(false);
   const [promptSaved, setPromptSaved] = useState(false);
+  const [bookmarks, setBookmarks] = useState<Bookmark[]>(() => loadBookmarks());
+  const [savedId, setSavedId] = useState<string | null>(null);
+
+  useEffect(() => {
+    saveBookmarks(bookmarks);
+  }, [bookmarks]);
 
   async function loadPrompt() {
     try {
@@ -134,6 +175,37 @@ export function NearbySection() {
     );
   }
 
+  function addBookmark(p: Place) {
+    if (!coords) return;
+    const id = `${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
+    const bm: Bookmark = {
+      id,
+      savedAt: new Date().toISOString(),
+      lat: coords.lat,
+      lon: coords.lon,
+      name: p.name,
+      type: p.type,
+      description: p.description,
+      distance_approx: p.distance_approx,
+      address: p.address || "",
+      label: p.label || p.type,
+      profile: p.profile || "",
+    };
+    setBookmarks((prev) => [bm, ...prev]);
+    setSavedId(id);
+    setTimeout(() => setSavedId(null), 1800);
+  }
+
+  function removeBookmark(id: string) {
+    setBookmarks((prev) => prev.filter((b) => b.id !== id));
+  }
+
+  function isBookmarked(p: Place): boolean {
+    return bookmarks.some(
+      (b) => b.name === p.name && b.lat === coords?.lat && b.lon === coords?.lon
+    );
+  }
+
   const sorted = [...places].sort((a, b) => a.distance_approx - b.distance_approx);
 
   return (
@@ -141,7 +213,6 @@ export function NearbySection() {
       <div className="flex items-start justify-between mb-1 gap-3">
         <div>
           <h2 className="font-display text-foreground text-xl font-light">- это еще и быстрый вопрос, который можно задать кнопкой или коротким номером.</h2>
-
         </div>
         <button
           onClick={() => { setShowPromptEditor(!showPromptEditor); if (!prompt) loadPrompt(); }}
@@ -176,6 +247,64 @@ export function NearbySection() {
             <span className="text-xs text-amber-700 font-body">
               Используйте <code className="bg-amber-100 px-1 rounded">{"{lat}"}</code> и <code className="bg-amber-100 px-1 rounded">{"{lon}"}</code> для координат
             </span>
+          </div>
+        </div>
+      )}
+
+      {/* Закладки */}
+      {bookmarks.length > 0 && (
+        <div className="mb-6">
+          <div className="flex items-center gap-2 mb-3">
+            <Icon name="Bookmark" size={16} className="text-primary" />
+            <span className="font-display font-semibold text-foreground text-sm">Сохранённые закладки</span>
+            <span className="text-xs text-muted-foreground font-body">({bookmarks.length})</span>
+          </div>
+          <div className="space-y-2">
+            {bookmarks.map((bm) => (
+              <div key={bm.id} className="bg-white border border-border rounded-xl p-3 flex items-start gap-3">
+                <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <Icon name={getIcon(bm.type)} size={16} className="text-primary" fallback="Store" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="min-w-0">
+                      <p className="font-display font-semibold text-foreground text-sm leading-tight truncate">{bm.name}</p>
+                      <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 mt-0.5">
+                        {bm.label && (
+                          <span className="text-xs bg-primary/10 text-primary px-1.5 py-0.5 rounded font-body font-medium">{bm.label}</span>
+                        )}
+                        {bm.profile && (
+                          <span className="text-xs text-muted-foreground font-body">{bm.profile}</span>
+                        )}
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => removeBookmark(bm.id)}
+                      className="flex-shrink-0 w-6 h-6 flex items-center justify-center rounded-md hover:bg-red-50 text-muted-foreground hover:text-red-500 transition-colors"
+                      title="Удалить закладку"
+                    >
+                      <Icon name="X" size={14} />
+                    </button>
+                  </div>
+                  <div className="flex flex-wrap items-center gap-x-3 gap-y-0.5 mt-1">
+                    {bm.address && (
+                      <span className="text-xs text-muted-foreground font-body flex items-center gap-1">
+                        <Icon name="MapPin" size={10} className="flex-shrink-0" />
+                        {bm.address}
+                      </span>
+                    )}
+                    <span className="text-xs text-muted-foreground font-body flex items-center gap-1">
+                      <Icon name="Navigation" size={10} className="flex-shrink-0" />
+                      {bm.lat.toFixed(4)}, {bm.lon.toFixed(4)}
+                    </span>
+                    <span className="text-xs text-muted-foreground font-body flex items-center gap-1">
+                      <Icon name="Clock" size={10} className="flex-shrink-0" />
+                      {formatDate(bm.savedAt)}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       )}
@@ -247,23 +376,55 @@ export function NearbySection() {
           </div>
 
           <div className="space-y-3">
-            {sorted.map((p, i) => (
-              <div key={i} className="bg-white border border-border rounded-xl p-4 flex items-start gap-3">
-                <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
-                  <Icon name={getIcon(p.type)} size={20} className="text-primary" fallback="Store" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-start justify-between gap-2 mb-0.5">
-                    <h3 className="font-display font-semibold text-foreground text-base leading-tight">{p.name}</h3>
-                    <span className={`flex-shrink-0 text-xs px-2 py-0.5 rounded-full font-body font-medium border ${distanceColor(p.distance_approx)}`}>
-                      ~{p.distance_approx} м
-                    </span>
+            {sorted.map((p, i) => {
+              const alreadySaved = isBookmarked(p);
+              const justSaved = savedId !== null && bookmarks.find(b => b.id === savedId)?.name === p.name;
+              return (
+                <div key={i} className="bg-white border border-border rounded-xl p-4 flex items-start gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
+                    <Icon name={getIcon(p.type)} size={20} className="text-primary" fallback="Store" />
                   </div>
-                  <p className="text-xs text-primary font-body font-medium mb-1">{p.type}</p>
-                  <p className="text-sm text-muted-foreground font-body leading-snug">{p.description}</p>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-start justify-between gap-2 mb-0.5">
+                      <h3 className="font-display font-semibold text-foreground text-base leading-tight">{p.name}</h3>
+                      <div className="flex items-center gap-1.5 flex-shrink-0">
+                        <span className={`text-xs px-2 py-0.5 rounded-full font-body font-medium border ${distanceColor(p.distance_approx)}`}>
+                          ~{p.distance_approx} м
+                        </span>
+                        <button
+                          onClick={() => !alreadySaved && addBookmark(p)}
+                          disabled={alreadySaved}
+                          title={alreadySaved ? "Уже в закладках" : "Сохранить в закладки"}
+                          className={`w-7 h-7 flex items-center justify-center rounded-lg transition-colors ${
+                            alreadySaved
+                              ? "text-primary bg-primary/10 cursor-default"
+                              : "text-muted-foreground hover:text-primary hover:bg-primary/10 border border-border"
+                          }`}
+                        >
+                          <Icon name={justSaved || alreadySaved ? "BookmarkCheck" : "Bookmark"} size={14} />
+                        </button>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2 mb-1">
+                      <p className="text-xs text-primary font-body font-medium">{p.type}</p>
+                      {p.label && p.label !== p.type && (
+                        <span className="text-xs bg-muted text-muted-foreground px-1.5 py-0.5 rounded font-body">{p.label}</span>
+                      )}
+                    </div>
+                    {p.address && (
+                      <p className="text-xs text-muted-foreground font-body mb-1 flex items-center gap-1">
+                        <Icon name="MapPin" size={10} className="flex-shrink-0" />
+                        {p.address}
+                      </p>
+                    )}
+                    <p className="text-sm text-muted-foreground font-body leading-snug">{p.description}</p>
+                    {p.profile && (
+                      <p className="text-xs text-muted-foreground font-body mt-1 italic">{p.profile}</p>
+                    )}
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </>
       )}
