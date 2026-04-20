@@ -68,11 +68,29 @@ function distanceColor(d: number): string {
   return "text-orange-600 bg-orange-50 border-orange-200";
 }
 
+const EXAMPLE_BOOKMARK: Bookmark = {
+  id: "example_1",
+  savedAt: "2026-04-20T10:30:00.000Z",
+  lat: 55.7558,
+  lon: 37.6173,
+  name: "Кафе «Уют»",
+  type: "кафе",
+  description: "Уютное кафе с домашней кухней и свежей выпечкой. Работает с 8:00 до 22:00.",
+  distance_approx: 120,
+  address: "ул. Тверская, 14",
+  label: "Еда",
+  profile: "для семей, завтраки",
+};
+
 function loadBookmarks(): Bookmark[] {
   try {
-    return JSON.parse(localStorage.getItem(BOOKMARKS_KEY) || "[]");
+    const stored = JSON.parse(localStorage.getItem(BOOKMARKS_KEY) || "[]");
+    if (stored.length === 0) {
+      return [EXAMPLE_BOOKMARK];
+    }
+    return stored;
   } catch {
-    return [];
+    return [EXAMPLE_BOOKMARK];
   }
 }
 
