@@ -25,7 +25,10 @@ export default function IndexEn() {
         <div className="max-w-6xl mx-auto px-4">
           <div className="flex items-center justify-between h-16">
             <Link to="/" className="flex items-center gap-2">
-              <div className="font-display text-base font-bold text-black leading-tight tracking-wide">Short Phone Numbers of Russia "2407"</div>
+              <div className="font-display text-base font-bold text-black leading-tight tracking-wide">
+                <span className="md:hidden">2407.rf</span>
+                <span className="hidden md:inline">Short Phone Numbers of Russia "2407"</span>
+              </div>
             </Link>
 
             <nav className="hidden md:flex items-center gap-1">
