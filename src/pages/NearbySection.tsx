@@ -270,13 +270,23 @@ export function NearbySection() {
       )}
 
       {/* Закладки */}
-      {bookmarks.length > 0 && (
-        <div className="mb-6">
+      <div className="mb-6">
           <div className="flex items-center gap-2 mb-3">
             <Icon name="Bookmark" size={16} className="text-primary" />
             <span className="font-display font-semibold text-foreground text-sm">Сохранённые закладки</span>
-            <span className="text-xs text-muted-foreground font-body">({bookmarks.length})</span>
+            {bookmarks.length > 0 && (
+              <span className="text-xs text-muted-foreground font-body">({bookmarks.length})</span>
+            )}
           </div>
+          {bookmarks.length === 0 ? (
+            <div className="border-2 border-dashed border-border rounded-xl p-5 text-center">
+              <Icon name="BookmarkX" size={28} className="text-muted-foreground/40 mx-auto mb-2" />
+              <p className="text-sm font-body text-muted-foreground">Закладок пока нет</p>
+              <p className="text-xs font-body text-muted-foreground/70 mt-1 max-w-xs mx-auto">
+                Найдите объекты рядом и нажмите <Icon name="Bookmark" size={11} className="inline mx-0.5 relative -top-px" /> на карточке — место сохранится здесь до очистки кеша браузера
+              </p>
+            </div>
+          ) : (
           <div className="space-y-2">
             {bookmarks.map((bm) => (
               <div key={bm.id} className="bg-white border border-border rounded-xl p-3 flex items-start gap-3">
@@ -324,8 +334,8 @@ export function NearbySection() {
               </div>
             ))}
           </div>
+          )}
         </div>
-      )}
 
       {status === "idle" && (
         <div className="bg-white border border-border rounded-2xl p-8 text-center">
