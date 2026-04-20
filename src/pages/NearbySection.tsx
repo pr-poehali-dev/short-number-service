@@ -228,9 +228,7 @@ export function NearbySection() {
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-8 animate-fade-in">
-      <div className="mb-1">
-        <h2 className="font-display text-foreground text-xl font-light">- это еще и быстрый вопрос, который можно задать кнопкой или коротким номером.</h2>
-      </div>
+
 
       {showPromptEditor && (
         <div className="mb-6 bg-amber-50 border border-amber-200 rounded-2xl p-4">
