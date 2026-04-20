@@ -220,7 +220,10 @@ export function Header({
       <div className="max-w-6xl mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           <button onClick={() => onNav("home")} className="flex items-center gap-2">
-            <div className="font-display text-base font-bold text-black leading-tight tracking-wide">Справочник коротких номеров России "2407"</div>
+            <div className="font-display text-base font-bold text-black leading-tight tracking-wide">
+              <span className="md:hidden">2407.рф</span>
+              <span className="hidden md:inline">Справочник коротких номеров России "2407"</span>
+            </div>
           </button>
 
           <nav className="hidden md:flex items-center gap-1">
