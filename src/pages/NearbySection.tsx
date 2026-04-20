@@ -228,17 +228,8 @@ export function NearbySection() {
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-8 animate-fade-in">
-      <div className="flex items-start justify-between mb-1 gap-3">
-        <div>
-          <h2 className="font-display text-foreground text-xl font-light">- это еще и быстрый вопрос, который можно задать кнопкой или коротким номером.</h2>
-        </div>
-        <button
-          onClick={() => { setShowPromptEditor(!showPromptEditor); if (!prompt) loadPrompt(); }}
-          className="flex-shrink-0 p-2 rounded-lg hover:bg-muted border border-border transition-colors"
-          title="Настройки AI-промпта"
-        >
-          <Icon name="Settings2" size={18} className="text-muted-foreground" />
-        </button>
+      <div className="mb-1">
+        <h2 className="font-display text-foreground text-xl font-light">- это еще и быстрый вопрос, который можно задать кнопкой или коротким номером.</h2>
       </div>
 
       {showPromptEditor && (
@@ -338,7 +329,14 @@ export function NearbySection() {
         </div>
 
       {status === "idle" && (
-        <div className="bg-white border border-border rounded-2xl p-8 text-center">
+        <div className="relative bg-white border border-border rounded-2xl p-8 text-center">
+          <button
+            onClick={() => { setShowPromptEditor(!showPromptEditor); if (!prompt) loadPrompt(); }}
+            className="absolute top-3 right-3 p-2 rounded-lg hover:bg-muted border border-border transition-colors"
+            title="Настройки AI-промпта"
+          >
+            <Icon name="Settings2" size={18} className="text-muted-foreground" />
+          </button>
           <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-4">
             <Icon name="MapPin" size={32} className="text-primary" />
           </div>
