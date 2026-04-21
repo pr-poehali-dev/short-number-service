@@ -129,11 +129,26 @@ export function NearbySection() {
     setAdviceLoading(true);
     setAdviceError("");
     setAdvice("");
+
+    const getCoords = (): Promise<{ lat: number; lon: number } | null> =>
+      new Promise((resolve) => {
+        if (!navigator.geolocation) { resolve(null); return; }
+        navigator.geolocation.getCurrentPosition(
+          (pos) => resolve({ lat: pos.coords.latitude, lon: pos.coords.longitude }),
+          () => resolve(null),
+          { timeout: 8000, enableHighAccuracy: true }
+        );
+      });
+
     try {
+      const currentCoords = await getCoords();
       const res = await fetch(ANALYZE_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ bookmarks })
+        body: JSON.stringify({
+          bookmarks,
+          ...(currentCoords ?? {})
+        })
       });
       const data = await res.json();
       if (res.ok && data.advice) {
