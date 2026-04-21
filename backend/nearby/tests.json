@@ -8,6 +8,14 @@
       "expectedStatus": 400,
       "expectedBody": {"error": "lat and lon are required"},
       "bodyMatcher": "partial"
+    },
+    {
+      "name": "get_prompt action returns prompt",
+      "method": "POST",
+      "path": "/",
+      "body": {"_action": "get_prompt"},
+      "expectedStatus": 200,
+      "bodyMatcher": "partial"
     }
   ]
 }

@@ -233,14 +233,14 @@ export function NearbySection() {
       {showPromptEditor && (
         <div className="mb-6 bg-amber-50 border border-amber-200 rounded-2xl p-4">
           <p className="text-sm font-body font-semibold text-amber-800 mb-2 flex items-center gap-1.5">
-            <Icon name="Bot" size={14} /> Промпт для нейросети
+            <Icon name="Search" size={14} /> Категории поиска (2GIS)
           </p>
           <textarea
-            rows={6}
+            rows={3}
             value={prompt}
             onChange={(e) => setPrompt(e.target.value)}
             className="w-full px-3 py-2 border border-amber-300 rounded-xl font-body text-sm focus:outline-none focus:ring-2 focus:ring-amber-400/30 bg-white resize-none"
-            placeholder="Загружается..."
+            placeholder="кафе,ресторан,магазин,аптека,банк,супермаркет"
           />
           <div className="flex items-center gap-2 mt-2">
             <button
@@ -259,7 +259,7 @@ export function NearbySection() {
               Отменить
             </button>
             <span className="text-xs text-amber-700 font-body">
-              Используйте <code className="bg-amber-100 px-1 rounded">{"{lat}"}</code> и <code className="bg-amber-100 px-1 rounded">{"{lon}"}</code> для координат
+              Перечислите категории через запятую, например: <code className="bg-amber-100 px-1 rounded">кафе,аптека,банкомат</code>
             </span>
           </div>
         </div>
