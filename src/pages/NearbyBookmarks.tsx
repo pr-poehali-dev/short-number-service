@@ -26,9 +26,7 @@ export function NearbyBookmarks({ bookmarks, advice, adviceError, adviceLoading,
             {adviceLoading ? "Анализирую..." : "Что посетить?"}
           </button>
         )}
-        {bookmarks.length > 0 && (
-          <span className="text-xs text-muted-foreground font-body">({bookmarks.length})</span>
-        )}
+
       </div>
 
       {(advice || adviceError) && (
