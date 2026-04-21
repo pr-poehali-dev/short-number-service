@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import Icon from "@/components/ui/icon";
 
 const NEARBY_URL = "https://functions.poehali.dev/d4b08b1e-6bd7-4d3b-81cf-02b5e4c6447f";
+const ANALYZE_URL = "https://functions.poehali.dev/f314b7e4-d728-4c13-bfd3-c1962a5861fc";
 const BOOKMARKS_KEY = "nearby_bookmarks";
 
 interface Place {
@@ -114,6 +115,9 @@ export function NearbySection() {
   const [promptSaved, setPromptSaved] = useState(false);
   const [bookmarks, setBookmarks] = useState<Bookmark[]>(() => loadBookmarks());
   const [savedId, setSavedId] = useState<string | null>(null);
+  const [advice, setAdvice] = useState<string>("");
+  const [adviceLoading, setAdviceLoading] = useState(false);
+  const [adviceError, setAdviceError] = useState("");
 
   useEffect(() => {
     saveBookmarks(bookmarks);
@@ -218,6 +222,29 @@ export function NearbySection() {
     setBookmarks((prev) => prev.filter((b) => b.id !== id));
   }
 
+  async function analyzeBookmarks() {
+    setAdviceLoading(true);
+    setAdviceError("");
+    setAdvice("");
+    try {
+      const res = await fetch(ANALYZE_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ bookmarks })
+      });
+      const data = await res.json();
+      if (res.ok && data.advice) {
+        setAdvice(data.advice);
+      } else {
+        setAdviceError(data.error || "Не удалось получить рекомендацию");
+      }
+    } catch {
+      setAdviceError("Не удалось связаться с сервером");
+    } finally {
+      setAdviceLoading(false);
+    }
+  }
+
   function isBookmarked(p: Place): boolean {
     return bookmarks.some(
       (b) => b.name === p.name && b.lat === coords?.lat && b.lon === coords?.lon
@@ -271,9 +298,35 @@ export function NearbySection() {
             <Icon name="Bookmark" size={16} className="text-primary" />
             <span className="font-display font-semibold text-foreground text-sm">Сохранённые закладки</span>
             {bookmarks.length > 0 && (
+              <button
+                onClick={analyzeBookmarks}
+                disabled={adviceLoading}
+                className="ml-auto flex items-center gap-1.5 px-3 py-1.5 bg-primary text-primary-foreground rounded-lg text-xs font-body font-semibold hover:opacity-90 transition-opacity disabled:opacity-60"
+              >
+                <Icon name={adviceLoading ? "Loader" : "Sparkles"} size={13} className={adviceLoading ? "animate-spin" : ""} />
+                {adviceLoading ? "Анализирую..." : "Что посетить?"}
+              </button>
+            )}
+            {bookmarks.length > 0 && (
               <span className="text-xs text-muted-foreground font-body">({bookmarks.length})</span>
             )}
           </div>
+          {(advice || adviceError) && (
+            <div className={`mb-3 rounded-xl p-4 border ${adviceError ? "bg-red-50 border-red-200" : "bg-gradient-to-br from-primary/5 to-primary/10 border-primary/20"}`}>
+              {adviceError ? (
+                <p className="text-sm font-body text-red-600">{adviceError}</p>
+              ) : (
+                <>
+                  <div className="flex items-center gap-1.5 mb-2">
+                    <Icon name="Sparkles" size={14} className="text-primary" />
+                    <span className="text-xs font-body font-semibold text-primary">Рекомендация нейросети</span>
+                  </div>
+                  <p className="text-sm font-body text-foreground leading-relaxed">{advice}</p>
+                </>
+              )}
+            </div>
+          )}
+
           {bookmarks.length === 0 ? (
             <div className="border-2 border-dashed border-border rounded-xl p-5 text-center">
               <Icon name="BookmarkX" size={28} className="text-muted-foreground/40 mx-auto mb-2" />
