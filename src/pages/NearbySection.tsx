@@ -318,13 +318,18 @@ export function NearbySection() {
                       </span>
                     )}
                     <span className="text-xs text-muted-foreground font-body flex items-center gap-1">
-                      <Icon name="Navigation" size={10} className="flex-shrink-0" />
-                      {bm.lat.toFixed(4)}, {bm.lon.toFixed(4)}
-                    </span>
-                    <span className="text-xs text-muted-foreground font-body flex items-center gap-1">
                       <Icon name="Clock" size={10} className="flex-shrink-0" />
                       {formatDate(bm.savedAt)}
                     </span>
+                    <a
+                      href={`https://2gis.ru/search/${encodeURIComponent(bm.name + (bm.address ? ' ' + bm.address : ''))}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-xs text-blue-600 hover:text-blue-800 font-body flex items-center gap-1 hover:underline"
+                    >
+                      <Icon name="ExternalLink" size={10} className="flex-shrink-0" />
+                      Открыть в 2GIS
+                    </a>
                   </div>
                 </div>
               </div>
@@ -452,6 +457,15 @@ export function NearbySection() {
                     {p.profile && (
                       <p className="text-xs text-muted-foreground font-body mt-1 italic">{p.profile}</p>
                     )}
+                    <a
+                      href={`https://2gis.ru/search/${encodeURIComponent(p.name + (p.address ? ' ' + p.address : ''))}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1 text-xs text-blue-600 hover:text-blue-800 font-body mt-1.5 hover:underline"
+                    >
+                      <Icon name="ExternalLink" size={11} />
+                      Открыть в 2GIS
+                    </a>
                   </div>
                 </div>
               );
