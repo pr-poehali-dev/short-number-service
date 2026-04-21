@@ -251,6 +251,13 @@ export function NearbySection() {
               <Icon name={promptSaved ? "Check" : "Save"} size={14} />
               {promptSaved ? "Сохранено!" : "Сохранить"}
             </button>
+            <button
+              onClick={() => setShowPromptEditor(false)}
+              className="flex items-center gap-1.5 px-4 py-2 bg-white border border-amber-300 text-amber-700 rounded-xl text-sm font-body font-semibold hover:bg-amber-50 transition-colors"
+            >
+              <Icon name="X" size={14} />
+              Отменить
+            </button>
             <span className="text-xs text-amber-700 font-body">
               Используйте <code className="bg-amber-100 px-1 rounded">{"{lat}"}</code> и <code className="bg-amber-100 px-1 rounded">{"{lon}"}</code> для координат
             </span>
