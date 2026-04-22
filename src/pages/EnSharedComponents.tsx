@@ -126,7 +126,7 @@ export function NumberModalEn({
                 className="p-2 rounded-lg hover:bg-yellow-50 disabled:opacity-40 disabled:cursor-default transition-colors"
                 title={isFavorite ? "Already in favorites" : maxReached ? "Favorites full (max 6)" : "Add to favorites"}
               >
-                <Icon name="Plus" size={18} className={isFavorite ? "text-yellow-400" : "text-muted-foreground hover:text-yellow-500"} />
+                <Icon name="Star" size={18} className={isFavorite ? "text-yellow-400 fill-yellow-400" : "text-muted-foreground"} />
               </button>
             )}
             <button onClick={onClose} className="p-2 rounded-lg hover:bg-muted">

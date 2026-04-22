@@ -14,7 +14,7 @@ export function NearbyBookmarks({ bookmarks, advice, adviceError, adviceLoading,
   return (
     <div className="mb-6">
       <div className="flex items-center gap-2 mb-3">
-        <Icon name="Bookmark" size={16} className="text-primary" />
+        <Icon name="Star" size={16} className="text-yellow-400 fill-yellow-400" />
         <span className="font-display font-semibold text-foreground text-sm">Избранное</span>
         {bookmarks.length > 0 && (
           <button
