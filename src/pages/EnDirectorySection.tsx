@@ -60,9 +60,9 @@ export function EnDirectorySection({
   const commercial = ruNumbers.filter((n) => n.category === "Коммерческие");
 
   return (
-    <section id="directory" className="max-w-6xl mx-auto px-4 py-4 animate-fade-in">
+    <section id="directory" className="max-w-6xl mx-auto px-4 py-8 animate-fade-in">
       <h2 className="font-display text-2xl font-bold text-foreground mb-1">Directory</h2>
-      <p className="text-muted-foreground font-body mb-5 text-sm">Click a card to see details, call, or save the contact</p>
+      <p className="text-muted-foreground font-body mb-6 text-sm">Click a card to see details, call, or save the contact</p>
 
       <div className="flex gap-2 mb-6 border-b border-border overflow-x-auto">
         {tabs.map((t) => (
