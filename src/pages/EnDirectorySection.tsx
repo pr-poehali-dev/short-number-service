@@ -41,6 +41,10 @@ export function EnDirectorySection({
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState("All");
   const [activeOp, setActiveOp] = useState("МТС");
+  const [commIndustry, setCommIndustry] = useState("All");
+  const [commDevice, setCommDevice] = useState<"all" | "mobile" | "any">("all");
+
+  const COMMERCIAL_INDUSTRIES_EN = ["All", "Bank", "Transport", "Retail"];
 
   const filteredAll = ruNumbers.filter((n) => {
     const q = query.toLowerCase();
@@ -57,7 +61,17 @@ export function EnDirectorySection({
 
   const filteredOp = ruNumbers.filter((n) => n.operator === activeOp);
   const universal = ruNumbers.filter((n) => n.operator === "Универсальный");
-  const commercial = ruNumbers.filter((n) => n.category === "Коммерческие");
+  const INDUSTRY_MAP_REVERSE: Record<string, string> = Object.fromEntries(
+    Object.entries(INDUSTRY_MAP_EN).map(([ru, en]) => [en, ru])
+  );
+
+  const commercial = ruNumbers.filter((n) => {
+    if (n.category !== "Коммерческие") return false;
+    const ruIndustry = INDUSTRY_MAP_REVERSE[commIndustry] ?? commIndustry;
+    const matchI = commIndustry === "All" || n.industry === ruIndustry;
+    const matchD = commDevice === "all" || n.deviceAccess === commDevice;
+    return matchI && matchD;
+  });
 
   return (
     <section id="directory" className="max-w-6xl mx-auto px-4 py-8 animate-fade-in">
@@ -171,51 +185,89 @@ export function EnDirectorySection({
 
       {tab === "commercial" && (
         <>
-          <p className="text-sm text-muted-foreground font-body mb-5">
-            Short numbers of banks, transport, retail chains. Most require a smartphone.
-          </p>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            {commercial.map((n) => {
-              const en = getEn(n.id);
-              return (
+          <div className="flex flex-col sm:flex-row gap-3 mb-6">
+            <div className="flex gap-2 flex-wrap">
+              {COMMERCIAL_INDUSTRIES_EN.map((ind) => (
                 <button
-                  key={n.id}
-                  onClick={() => onSelect(n, en)}
-                  className="number-card w-full text-left bg-white border border-border rounded-xl p-4 flex items-start gap-3 cursor-pointer"
+                  key={ind}
+                  onClick={() => setCommIndustry(ind)}
+                  className={`px-3 py-1.5 rounded-full text-sm font-body font-medium transition-colors ${
+                    commIndustry === ind ? "bg-amber-500 text-white" : "bg-white border border-border text-foreground hover:border-amber-300"
+                  }`}
                 >
-                  <div className="w-14 h-14 rounded-xl bg-amber-50 flex items-center justify-center flex-shrink-0">
-                    <span className="font-display font-bold text-amber-700 text-sm leading-tight text-center px-1">{n.number}</span>
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-start justify-between gap-2 mb-1">
-                      <h3 className="font-display font-semibold text-foreground text-base leading-tight truncate">
-                        {en?.name ?? n.name}
-                      </h3>
-                      {n.industry && (
-                        <span className="flex-shrink-0 text-xs px-2 py-0.5 rounded-full font-body font-medium border bg-amber-50 text-amber-700 border-amber-200">
-                          {INDUSTRY_MAP_EN[n.industry] ?? n.industry}
-                        </span>
-                      )}
-                    </div>
-                    <p className="text-sm text-muted-foreground font-body line-clamp-2 mb-1.5">
-                      {en?.description ?? n.description}
-                    </p>
-                    <div className="flex items-center gap-1.5">
-                      {n.deviceAccess === "any" ? (
-                        <span className="inline-flex items-center gap-1 text-xs text-green-700 bg-green-50 border border-green-200 rounded-full px-2 py-0.5 font-body">
-                          <Icon name="CheckCircle" size={11} /> Smartphone & landline
-                        </span>
-                      ) : (
-                        <span className="inline-flex items-center gap-1 text-xs text-blue-700 bg-blue-50 border border-blue-200 rounded-full px-2 py-0.5 font-body">
-                          <Icon name="Smartphone" size={11} /> Smartphone only
-                        </span>
-                      )}
-                    </div>
-                  </div>
+                  {ind}
                 </button>
-              );
-            })}
+              ))}
+            </div>
+            <div className="flex gap-2 sm:ml-auto flex-wrap">
+              {([
+                { val: "all",    label: "All devices",          icon: "Smartphone" },
+                { val: "mobile", label: "Smartphone only",      icon: "Smartphone" },
+                { val: "any",    label: "Smartphone + landline", icon: "Phone" },
+              ] as const).map((d) => (
+                <button
+                  key={d.val}
+                  onClick={() => setCommDevice(d.val)}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-body font-medium transition-colors border ${
+                    commDevice === d.val ? "bg-amber-50 border-amber-300 text-amber-700" : "bg-white border-border text-muted-foreground hover:border-amber-200"
+                  }`}
+                >
+                  <Icon name={d.icon as Parameters<typeof Icon>[0]["name"]} size={13} />
+                  {d.label}
+                </button>
+              ))}
+            </div>
           </div>
+          <p className="text-sm text-muted-foreground font-body mb-4">Found: <strong>{commercial.length}</strong> numbers</p>
+          {commercial.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              {commercial.map((n) => {
+                const en = getEn(n.id);
+                return (
+                  <button
+                    key={n.id}
+                    onClick={() => onSelect(n, en)}
+                    className="number-card w-full text-left bg-white border border-border rounded-xl p-4 flex items-start gap-3 cursor-pointer"
+                  >
+                    <div className="w-14 h-14 rounded-xl bg-amber-50 flex items-center justify-center flex-shrink-0">
+                      <span className="font-display font-bold text-amber-700 text-sm leading-tight text-center px-1">{n.number}</span>
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-start justify-between gap-2 mb-1">
+                        <h3 className="font-display font-semibold text-foreground text-base leading-tight truncate">
+                          {en?.name ?? n.name}
+                        </h3>
+                        {n.industry && (
+                          <span className="flex-shrink-0 text-xs px-2 py-0.5 rounded-full font-body font-medium border bg-amber-50 text-amber-700 border-amber-200">
+                            {INDUSTRY_MAP_EN[n.industry] ?? n.industry}
+                          </span>
+                        )}
+                      </div>
+                      <p className="text-sm text-muted-foreground font-body line-clamp-2 mb-1.5">
+                        {en?.description ?? n.description}
+                      </p>
+                      <div className="flex items-center gap-1.5">
+                        {n.deviceAccess === "any" ? (
+                          <span className="inline-flex items-center gap-1 text-xs text-green-700 bg-green-50 border border-green-200 rounded-full px-2 py-0.5 font-body">
+                            <Icon name="CheckCircle" size={11} /> Smartphone & landline
+                          </span>
+                        ) : (
+                          <span className="inline-flex items-center gap-1 text-xs text-blue-700 bg-blue-50 border border-blue-200 rounded-full px-2 py-0.5 font-body">
+                            <Icon name="Smartphone" size={11} /> Smartphone only
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          ) : (
+            <div className="text-center py-16 text-muted-foreground font-body">
+              <Icon name="SearchX" size={40} className="mx-auto mb-3 opacity-40" />
+              <p>No numbers found for selected filters</p>
+            </div>
+          )}
         </>
       )}
     </section>
