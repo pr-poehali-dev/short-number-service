@@ -10,6 +10,9 @@ import {
   FaqSection,
   NearbySection,
 } from "./Sections";
+import { FavoritesBar } from "./FavoritesBar";
+import { useFavorites } from "./useFavorites";
+import { loadNumbers } from "./AdminPage";
 
 const DEFAULT_SECTION_COOKIE = "default_section";
 
@@ -29,6 +32,13 @@ export default function Index() {
   });
   const [selected, setSelected] = useState<PhoneNumber | null>(null);
   const [directoryCategory, setDirectoryCategory] = useState<string | undefined>(undefined);
+  const { favorites, addFavorite, removeFavorite, isFavorite } = useFavorites();
+  const ruNumbers = loadNumbers();
+
+  function openById(id: number) {
+    const num = ruNumbers.find((n) => n.id === id);
+    if (num) setSelected(num);
+  }
 
   const SECTION_GOALS: Record<string, string> = {
     home: "section_home",
@@ -51,7 +61,12 @@ export default function Index() {
       <Header activeSection={section} onNav={handleNav} />
 
       <main className="pb-12">
-        {section === "home" && <HomeSection onNav={handleNav} />}
+        {section === "home" && (
+          <>
+            <HomeSection onNav={handleNav} />
+            <FavoritesBar favorites={favorites} onRemove={removeFavorite} onSelect={openById} />
+          </>
+        )}
         {section === "nearby" && <NearbySection />}
         {section === "directory" && <DirectorySection onSelect={setSelected} initialCategory={directoryCategory} />}
         {section === "operators" && <OperatorsSection onSelect={setSelected} />}
@@ -69,7 +84,12 @@ export default function Index() {
       </footer>
 
       {selected && (
-        <NumberModal num={selected} onClose={() => setSelected(null)} />
+        <NumberModal
+          num={selected}
+          onClose={() => setSelected(null)}
+          onAddFavorite={() => addFavorite(selected)}
+          isFavorite={isFavorite(selected.id)}
+        />
       )}
     </div>
   );
