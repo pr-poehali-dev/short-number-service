@@ -10,7 +10,6 @@ import {
   FaqSection,
   NearbySection,
 } from "./Sections";
-import { FavoritesBar } from "./FavoritesBar";
 import { useFavorites } from "./useFavorites";
 import { loadNumbers } from "./AdminPage";
 
@@ -61,14 +60,17 @@ export default function Index() {
       <Header activeSection={section} onNav={handleNav} />
 
       <main className="pb-12">
-        {section === "home" && (
-          <>
-            <HomeSection onNav={handleNav} />
-            <FavoritesBar favorites={favorites} onRemove={removeFavorite} onSelect={openById} />
-          </>
-        )}
+        {section === "home" && <HomeSection onNav={handleNav} />}
         {section === "nearby" && <NearbySection />}
-        {section === "directory" && <DirectorySection onSelect={setSelected} initialCategory={directoryCategory} />}
+        {section === "directory" && (
+          <DirectorySection
+            onSelect={setSelected}
+            initialCategory={directoryCategory}
+            favorites={favorites}
+            onRemoveFavorite={removeFavorite}
+            onSelectFavorite={openById}
+          />
+        )}
         {section === "operators" && <OperatorsSection onSelect={setSelected} />}
         {section === "universal" && <UniversalSection onSelect={setSelected} />}
         {section === "faq" && <FaqSection />}

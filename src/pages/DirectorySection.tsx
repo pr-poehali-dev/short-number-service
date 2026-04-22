@@ -4,6 +4,8 @@ import { OPERATOR_COLORS, PhoneNumber, Operator } from "./data";
 import { NumberCard } from "./SharedComponents";
 import { loadNumbers } from "./AdminPage";
 import { ymGoal } from "@/lib/analytics";
+import { FavoritesBar } from "./FavoritesBar";
+import { Favorite } from "./useFavorites";
 
 function CommercialCard({ num, onClick }: { num: PhoneNumber; onClick: (n: PhoneNumber) => void }) {
   return (
@@ -44,7 +46,7 @@ type Tab = "all" | "operators" | "universal" | "commercial";
 
 const COMMERCIAL_INDUSTRIES = ["Все", "Банк", "Транспорт", "Торговля"];
 
-export function DirectorySection({ onSelect, initialCategory }: { onSelect: (n: PhoneNumber) => void; initialCategory?: string }) {
+export function DirectorySection({ onSelect, initialCategory, favorites = [], onRemoveFavorite, onSelectFavorite }: { onSelect: (n: PhoneNumber) => void; initialCategory?: string; favorites?: Favorite[]; onRemoveFavorite?: (id: number) => void; onSelectFavorite?: (id: number) => void }) {
   const [tab, setTab] = useState<Tab>(() => initialCategory === "Коммерческие" ? "commercial" : "all");
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState(initialCategory ?? "Все");
@@ -81,7 +83,11 @@ export function DirectorySection({ onSelect, initialCategory }: { onSelect: (n: 
   });
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-8 animate-fade-in">
+    <div className="animate-fade-in">
+      {onRemoveFavorite && onSelectFavorite && (
+        <FavoritesBar favorites={favorites} onRemove={onRemoveFavorite} onSelect={onSelectFavorite} />
+      )}
+    <div className="max-w-6xl mx-auto px-4 py-8">
       <h2 className="font-display text-3xl font-bold text-foreground mb-1">Важно знать - полезно сохранить </h2>
       <p className="text-muted-foreground font-body mb-6">Нажмите на карточку, чтобы узнать подробности, использовать или сохранить</p>
 
@@ -235,6 +241,7 @@ export function DirectorySection({ onSelect, initialCategory }: { onSelect: (n: 
           )}
         </>
       )}
+    </div>
     </div>
   );
 }
