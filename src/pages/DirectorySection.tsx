@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import Icon from "@/components/ui/icon";
 import { OPERATOR_COLORS, PhoneNumber, Operator } from "./data";
 import { NumberCard } from "./SharedComponents";
@@ -63,7 +63,7 @@ export function DirectorySection({ onSelect, initialCategory, favorites = [], on
 
   const categories = ["Все", "Экстренные", "Поддержка", "Автоинформатор", "Безопасность", "Социальные", "Здоровье", "Коммерческие"];
 
-  const NUMBERS = loadNumbers();
+  const NUMBERS = useMemo(() => loadNumbers(), []);
 
   const filteredAll = NUMBERS.filter((n) => {
     const q = query.toLowerCase();

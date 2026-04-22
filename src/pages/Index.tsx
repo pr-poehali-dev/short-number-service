@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { PhoneNumber } from "./data";
 import { Header, NumberModal } from "./SharedComponents";
 import { ymGoal } from "@/lib/analytics";
@@ -32,7 +32,7 @@ export default function Index() {
   const [selected, setSelected] = useState<PhoneNumber | null>(null);
   const [directoryCategory, setDirectoryCategory] = useState<string | undefined>(undefined);
   const { favorites, addFavorite, removeFavorite, isFavorite, maxReached } = useFavorites();
-  const ruNumbers = loadNumbers();
+  const ruNumbers = useMemo(() => loadNumbers(), []);
 
   function openById(id: number) {
     const num = ruNumbers.find((n) => n.id === id);

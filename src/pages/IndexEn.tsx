@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import Icon from "@/components/ui/icon";
 import { PhoneNumber } from "./data";
 import { loadNumbers } from "./AdminPage";
@@ -14,8 +14,8 @@ import { useFavoritesEn } from "./useFavoritesEn";
 export default function IndexEn() {
   const [selected, setSelected] = useState<{ ru: PhoneNumber; en: PhoneNumberEn | undefined } | null>(null);
 
-  const ruNumbers = loadNumbers();
-  const enNumbers = loadNumbersEn();
+  const ruNumbers = useMemo(() => loadNumbers(), []);
+  const enNumbers = useMemo(() => loadNumbersEn(), []);
   const { favorites, addFavorite, removeFavorite, isFavorite, maxReached } = useFavoritesEn();
 
   function getEn(id: number) {
