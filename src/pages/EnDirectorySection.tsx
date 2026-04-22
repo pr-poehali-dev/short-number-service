@@ -60,7 +60,7 @@ export function EnDirectorySection({
   const commercial = ruNumbers.filter((n) => n.category === "Коммерческие");
 
   return (
-    <section className="max-w-6xl mx-auto px-4 py-4 animate-fade-in">
+    <section id="directory" className="max-w-6xl mx-auto px-4 py-4 animate-fade-in">
       <h2 className="font-display text-2xl font-bold text-foreground mb-1">Directory</h2>
       <p className="text-muted-foreground font-body mb-5 text-sm">Click a card to see details, call, or save the contact</p>
 

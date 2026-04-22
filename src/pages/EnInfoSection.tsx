@@ -7,7 +7,7 @@ export function EnInfoSection() {
 
   return (
     <>
-      <section className="max-w-6xl mx-auto px-4 py-8 border-t border-border mt-4">
+      <section id="faq" className="max-w-6xl mx-auto px-4 py-8 border-t border-border mt-4">
         <h2 className="font-display text-2xl font-bold text-foreground mb-6">Frequently Asked Questions</h2>
         <div className="space-y-3">
           {FAQ_ITEMS_EN.map((item, i) => (

@@ -35,6 +35,7 @@ export default function IndexEn() {
               {(["Directory", "FAQ"] as const).map((label) => (
                 <button
                   key={label}
+                  onClick={() => document.getElementById(label.toLowerCase())?.scrollIntoView({ behavior: "smooth" })}
                   className="px-3 py-1.5 rounded-md text-sm font-body font-medium transition-colors text-foreground hover:bg-muted"
                 >
                   {label}
