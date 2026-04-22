@@ -42,15 +42,22 @@ export default function IndexEn() {
             </Link>
 
             <nav className="hidden md:flex items-center gap-1">
-              {(["Directory", "FAQ"] as const).map((label) => (
-                <button
-                  key={label}
-                  onClick={() => document.getElementById(label.toLowerCase())?.scrollIntoView({ behavior: "smooth" })}
-                  className="px-3 py-1.5 rounded-md text-sm font-body font-medium transition-colors text-foreground hover:bg-muted"
-                >
-                  {label}
-                </button>
-              ))}
+              <Link
+                to="/"
+                onClick={() => {
+                  const expires = new Date(Date.now() + 365 * 864e5).toUTCString();
+                  document.cookie = `default_section=${encodeURIComponent("nearby")}; expires=${expires}; path=/`;
+                }}
+                className="px-3 py-1.5 rounded-md text-sm font-body font-medium transition-colors text-foreground hover:bg-muted"
+              >
+                Quick Response (RUS)
+              </Link>
+              <button
+                onClick={() => document.getElementById("faq")?.scrollIntoView({ behavior: "smooth" })}
+                className="px-3 py-1.5 rounded-md text-sm font-body font-medium transition-colors text-foreground hover:bg-muted"
+              >
+                FAQ
+              </button>
             </nav>
 
             <div className="flex items-center gap-2">
