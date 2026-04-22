@@ -8,7 +8,7 @@ export interface FavoriteEn {
   name: string;
 }
 
-const STORAGE_KEY = "en_favorites";
+const STORAGE_KEY = "favorites";
 const MAX_FAVORITES = 6;
 
 function load(): FavoriteEn[] {

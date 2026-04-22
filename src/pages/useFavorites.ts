@@ -7,7 +7,7 @@ export interface Favorite {
   name: string;
 }
 
-const STORAGE_KEY = "ru_favorites";
+const STORAGE_KEY = "favorites";
 const MAX_FAVORITES = 6;
 
 function load(): Favorite[] {

@@ -74,7 +74,7 @@ function saveVCard(num: PhoneNumber) {
   URL.revokeObjectURL(url);
 }
 
-export function NumberModal({ num, onClose, onAddFavorite, isFavorite }: { num: PhoneNumber; onClose: () => void; onAddFavorite?: () => void; isFavorite?: boolean }) {
+export function NumberModal({ num, onClose, onAddFavorite, isFavorite, maxReached }: { num: PhoneNumber; onClose: () => void; onAddFavorite?: () => void; isFavorite?: boolean; maxReached?: boolean }) {
   const short = isShortNumber(num.number);
   return (
     <div
@@ -108,9 +108,9 @@ export function NumberModal({ num, onClose, onAddFavorite, isFavorite }: { num: 
             {onAddFavorite && (
               <button
                 onClick={onAddFavorite}
-                disabled={isFavorite}
+                disabled={isFavorite || maxReached}
                 className="p-2 rounded-lg hover:bg-yellow-50 disabled:opacity-40 disabled:cursor-default transition-colors"
-                title={isFavorite ? "Уже в избранном" : "Добавить в избранное"}
+                title={isFavorite ? "Уже в избранном" : maxReached ? "Избранное заполнено (макс. 6)" : "Добавить в избранное"}
               >
                 <Icon name="Plus" size={18} className={isFavorite ? "text-yellow-400" : "text-muted-foreground"} />
               </button>

@@ -81,13 +81,14 @@ export function NumberCardEn({ num, enNum, onClick }: {
 }
 
 export function NumberModalEn({
-  num, enNum, onClose, onAddFavorite, isFavorite,
+  num, enNum, onClose, onAddFavorite, isFavorite, maxReached,
 }: {
   num: PhoneNumber;
   enNum: { name: string; description: string; procedure?: string } | undefined;
   onClose: () => void;
   onAddFavorite?: () => void;
   isFavorite?: boolean;
+  maxReached?: boolean;
 }) {
   const short = isShortNumber(num.number);
   const name = enNum?.name ?? num.name;
@@ -121,9 +122,9 @@ export function NumberModalEn({
             {onAddFavorite && (
               <button
                 onClick={onAddFavorite}
-                disabled={isFavorite}
+                disabled={isFavorite || maxReached}
                 className="p-2 rounded-lg hover:bg-yellow-50 disabled:opacity-40 disabled:cursor-default transition-colors"
-                title={isFavorite ? "Already in favorites" : "Add to favorites"}
+                title={isFavorite ? "Already in favorites" : maxReached ? "Favorites full (max 6)" : "Add to favorites"}
               >
                 <Icon name="Plus" size={18} className={isFavorite ? "text-yellow-400" : "text-muted-foreground hover:text-yellow-500"} />
               </button>

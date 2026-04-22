@@ -16,7 +16,7 @@ export default function IndexEn() {
 
   const ruNumbers = loadNumbers();
   const enNumbers = loadNumbersEn();
-  const { favorites, addFavorite, removeFavorite, isFavorite } = useFavoritesEn();
+  const { favorites, addFavorite, removeFavorite, isFavorite, maxReached } = useFavoritesEn();
 
   function getEn(id: number) {
     return enNumbers.find((e) => e.id === id);
@@ -101,10 +101,9 @@ export default function IndexEn() {
           num={selected.ru}
           enNum={selected.en}
           onClose={() => setSelected(null)}
-          onAddFavorite={() => {
-            addFavorite(selected.ru, selected.en);
-          }}
+          onAddFavorite={() => addFavorite(selected.ru, selected.en)}
           isFavorite={isFavorite(selected.ru.id)}
+          maxReached={maxReached}
         />
       )}
     </div>

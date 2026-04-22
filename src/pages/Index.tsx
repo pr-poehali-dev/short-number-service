@@ -31,7 +31,7 @@ export default function Index() {
   });
   const [selected, setSelected] = useState<PhoneNumber | null>(null);
   const [directoryCategory, setDirectoryCategory] = useState<string | undefined>(undefined);
-  const { favorites, addFavorite, removeFavorite, isFavorite } = useFavorites();
+  const { favorites, addFavorite, removeFavorite, isFavorite, maxReached } = useFavorites();
   const ruNumbers = loadNumbers();
 
   function openById(id: number) {
@@ -91,6 +91,7 @@ export default function Index() {
           onClose={() => setSelected(null)}
           onAddFavorite={() => addFavorite(selected)}
           isFavorite={isFavorite(selected.id)}
+          maxReached={maxReached}
         />
       )}
     </div>
