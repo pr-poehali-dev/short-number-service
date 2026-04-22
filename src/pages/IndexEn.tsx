@@ -8,15 +8,25 @@ import { NumberModalEn } from "./EnSharedComponents";
 import { EnHeroSection } from "./EnHeroSection";
 import { EnDirectorySection } from "./EnDirectorySection";
 import { EnInfoSection } from "./EnInfoSection";
+import { EnFavoritesBar } from "./EnFavoritesBar";
+import { useFavoritesEn } from "./useFavoritesEn";
 
 export default function IndexEn() {
   const [selected, setSelected] = useState<{ ru: PhoneNumber; en: PhoneNumberEn | undefined } | null>(null);
 
   const ruNumbers = loadNumbers();
   const enNumbers = loadNumbersEn();
+  const { favorites, addFavorite, removeFavorite, isFavorite } = useFavoritesEn();
 
   function getEn(id: number) {
     return enNumbers.find((e) => e.id === id);
+  }
+
+  function openById(id: number) {
+    const ru = ruNumbers.find((n) => n.id === id);
+    if (!ru) return;
+    const en = getEn(id);
+    setSelected({ ru, en });
   }
 
   return (
@@ -59,6 +69,12 @@ export default function IndexEn() {
       <main className="pb-12">
         <EnHeroSection />
 
+        <EnFavoritesBar
+          favorites={favorites}
+          onRemove={removeFavorite}
+          onSelect={openById}
+        />
+
         <EnDirectorySection
           ruNumbers={ruNumbers}
           getEn={getEn}
@@ -85,6 +101,10 @@ export default function IndexEn() {
           num={selected.ru}
           enNum={selected.en}
           onClose={() => setSelected(null)}
+          onAddFavorite={() => {
+            addFavorite(selected.ru, selected.en);
+          }}
+          isFavorite={isFavorite(selected.ru.id)}
         />
       )}
     </div>

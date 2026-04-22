@@ -81,11 +81,13 @@ export function NumberCardEn({ num, enNum, onClick }: {
 }
 
 export function NumberModalEn({
-  num, enNum, onClose,
+  num, enNum, onClose, onAddFavorite, isFavorite,
 }: {
   num: PhoneNumber;
   enNum: { name: string; description: string; procedure?: string } | undefined;
   onClose: () => void;
+  onAddFavorite?: () => void;
+  isFavorite?: boolean;
 }) {
   const short = isShortNumber(num.number);
   const name = enNum?.name ?? num.name;
@@ -115,9 +117,21 @@ export function NumberModalEn({
               <OperatorBadgeEn operator={num.operator} />
             </div>
           </div>
-          <button onClick={onClose} className="p-2 rounded-lg hover:bg-muted">
-            <Icon name="X" size={18} className="text-muted-foreground" />
-          </button>
+          <div className="flex items-center gap-1">
+            {onAddFavorite && (
+              <button
+                onClick={onAddFavorite}
+                disabled={isFavorite}
+                className="p-2 rounded-lg hover:bg-yellow-50 disabled:opacity-40 disabled:cursor-default transition-colors"
+                title={isFavorite ? "Already in favorites" : "Add to favorites"}
+              >
+                <Icon name="Plus" size={18} className={isFavorite ? "text-yellow-400" : "text-muted-foreground hover:text-yellow-500"} />
+              </button>
+            )}
+            <button onClick={onClose} className="p-2 rounded-lg hover:bg-muted">
+              <Icon name="X" size={18} className="text-muted-foreground" />
+            </button>
+          </div>
         </div>
 
         <div className="space-y-4">
