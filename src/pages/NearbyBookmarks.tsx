@@ -15,7 +15,7 @@ export function NearbyBookmarks({ bookmarks, advice, adviceError, adviceLoading,
     <div className="mb-6">
       <div className="flex items-center gap-2 mb-3">
         <Icon name="Bookmark" size={16} className="text-primary" />
-        <span className="font-display font-semibold text-foreground text-sm">Сохранённые закладки</span>
+        <span className="font-display font-semibold text-foreground text-sm">Избранное</span>
         {bookmarks.length > 0 && (
           <button
             onClick={onAnalyze}
