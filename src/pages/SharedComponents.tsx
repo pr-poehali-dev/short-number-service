@@ -183,7 +183,7 @@ export function InstallModal({ onClose, pwaPrompt }: { onClose: () => void; pwaP
             </div>
             <div>
               <h3 className="font-display font-bold text-foreground text-lg leading-tight">2407.рф</h3>
-              <p className="text-xs text-muted-foreground font-body">Справочник коротких номеров</p>
+              <p className="text-xs text-muted-foreground font-body">Работает, как приложение.</p>
             </div>
           </div>
           <button onClick={onClose} className="p-2 rounded-lg hover:bg-muted">
