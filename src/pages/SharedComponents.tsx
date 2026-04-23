@@ -1,8 +1,13 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Icon from "@/components/ui/icon";
 import { PhoneNumber, Operator, OPERATOR_COLORS } from "./data";
 import { ymGoal } from "@/lib/analytics";
+
+interface BeforeInstallPromptEvent extends Event {
+  prompt(): Promise<void>;
+  userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>;
+}
 
 export function OperatorBadge({ operator }: { operator: Operator }) {
   const c = OPERATOR_COLORS[operator];
@@ -160,7 +165,14 @@ export function NumberModal({ num, onClose, onAddFavorite, isFavorite, maxReache
   );
 }
 
-export function InstallModal({ onClose }: { onClose: () => void }) {
+export function InstallModal({ onClose, pwaPrompt }: { onClose: () => void; pwaPrompt?: BeforeInstallPromptEvent | null }) {
+  const handlePwaInstall = async () => {
+    if (!pwaPrompt) return;
+    pwaPrompt.prompt();
+    await pwaPrompt.userChoice;
+    onClose();
+  };
+
   return (
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4 bg-black/50" onClick={onClose}>
       <div className="bg-white rounded-2xl max-w-sm w-full p-6 shadow-2xl animate-fade-in" onClick={(e) => e.stopPropagation()}>
@@ -179,7 +191,23 @@ export function InstallModal({ onClose }: { onClose: () => void }) {
           </button>
         </div>
 
-        <p className="text-sm font-body text-muted-foreground mb-4">Добавьте ярлык на домашний экран — открывать сайт станет так же удобно, как обычное приложение.</p>
+        {pwaPrompt && (
+          <div className="mb-4 bg-primary/5 border border-primary/20 rounded-xl p-4">
+            <p className="text-sm font-body font-semibold text-foreground mb-1 flex items-center gap-2">
+              <Icon name="Download" size={15} className="text-primary" /> Установить как приложение
+            </p>
+            <p className="text-xs text-muted-foreground font-body mb-3">Работает без интернета, открывается без браузера — как обычное приложение.</p>
+            <button
+              onClick={handlePwaInstall}
+              className="w-full bg-primary text-white rounded-lg py-2 text-sm font-body font-semibold hover:bg-primary/90 transition-colors"
+            >
+              Установить приложение
+            </button>
+          </div>
+        )}
+
+        <p className="text-sm font-body font-semibold text-foreground mb-2">Добавить закладку на экран</p>
+        <p className="text-xs text-muted-foreground font-body mb-3">Открывается в браузере, требует интернет при первом запуске.</p>
 
         <div className="space-y-3">
           <div className="bg-blue-50 border border-blue-100 rounded-xl p-3.5">
@@ -205,7 +233,7 @@ export function InstallModal({ onClose }: { onClose: () => void }) {
           </div>
         </div>
 
-        <p className="text-xs text-center text-muted-foreground font-body mt-4">Ярлык будет называться <strong>«Справочник»</strong></p>
+        <p className="text-xs text-center text-muted-foreground font-body mt-4">Закладка будет называться <strong>«Справочник»</strong></p>
       </div>
     </div>
   );
@@ -220,6 +248,16 @@ export function Header({
 }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [installOpen, setInstallOpen] = useState(false);
+  const [pwaPrompt, setPwaPrompt] = useState<BeforeInstallPromptEvent | null>(null);
+
+  useEffect(() => {
+    const handler = (e: Event) => {
+      e.preventDefault();
+      setPwaPrompt(e as BeforeInstallPromptEvent);
+    };
+    window.addEventListener('beforeinstallprompt', handler);
+    return () => window.removeEventListener('beforeinstallprompt', handler);
+  }, []);
 
   const navItems = [
     { id: "directory",  label: "Справочник" },
@@ -274,7 +312,7 @@ export function Header({
         </div>
       </div>
 
-      {installOpen && <InstallModal onClose={() => setInstallOpen(false)} />}
+      {installOpen && <InstallModal onClose={() => setInstallOpen(false)} pwaPrompt={pwaPrompt} />}
 
       {menuOpen && (
         <div className="md:hidden border-t border-border bg-white">
