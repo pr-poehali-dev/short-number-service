@@ -135,7 +135,7 @@ def handler(event: dict, context) -> dict:
             'radius': radius,
             'type': 'branch',
             'fields': fields,
-            'page_size': 40,
+            'page_size': 10,
             'locale': 'ru_RU',
         })
 

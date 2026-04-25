@@ -16,6 +16,15 @@
       "body": {"_action": "get_prompt"},
       "expectedStatus": 200,
       "bodyMatcher": "partial"
+    },
+    {
+      "name": "Поиск мест в центре Санкт-Петербурга",
+      "method": "POST",
+      "path": "/",
+      "body": {"lat": 59.9343, "lon": 30.3351},
+      "expectedStatus": 200,
+      "expectedBody": {"lat": 59.9343, "lon": 30.3351},
+      "bodyMatcher": "partial"
     }
   ]
 }
