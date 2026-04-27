@@ -73,13 +73,19 @@ export function NearbyBookmarks({ bookmarks, advice, adviceError, adviceLoading,
                       )}
                     </div>
                   </div>
-                  <button
-                    onClick={() => onRemove(bm.id)}
-                    className="flex-shrink-0 w-6 h-6 flex items-center justify-center rounded-md hover:bg-red-50 text-muted-foreground hover:text-red-500 transition-colors"
-                    title="Удалить закладку"
-                  >
-                    <Icon name="X" size={14} />
-                  </button>
+                  <div className="flex flex-col items-end gap-1 flex-shrink-0">
+                    <button
+                      onClick={() => onRemove(bm.id)}
+                      className="w-6 h-6 flex items-center justify-center rounded-md hover:bg-red-50 text-muted-foreground hover:text-red-500 transition-colors"
+                      title="Удалить закладку"
+                    >
+                      <Icon name="X" size={14} />
+                    </button>
+                    <span className="text-[10px] text-muted-foreground/60 font-body flex items-center gap-0.5">
+                      <Icon name="Clock" size={9} className="flex-shrink-0" />
+                      {formatDate(bm.savedAt)}
+                    </span>
+                  </div>
                 </div>
                 <div className="flex flex-wrap items-center gap-x-3 gap-y-0.5 mt-1">
                   {bm.address && (
@@ -88,10 +94,6 @@ export function NearbyBookmarks({ bookmarks, advice, adviceError, adviceLoading,
                       {bm.address}
                     </span>
                   )}
-                  <span className="text-xs text-muted-foreground font-body flex items-center gap-1">
-                    <Icon name="Clock" size={10} className="flex-shrink-0" />
-                    {formatDate(bm.savedAt)}
-                  </span>
                   <a
                     href={`https://2gis.ru/search/${encodeURIComponent(bm.name + (bm.address ? ' ' + bm.address : ''))}`}
                     target="_blank"
