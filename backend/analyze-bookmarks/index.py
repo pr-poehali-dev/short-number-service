@@ -1,7 +1,7 @@
 import json
 import os
 import math
-import urllib.request
+import requests
 
 
 SYSTEM_PROMPT = """Ты — персональный помощник по выбору мест для посещения.
@@ -83,29 +83,26 @@ def handler(event: dict, context) -> dict:
         "\n\nКуда мне лучше зайти прямо сейчас?"
     )
 
-    api_key = os.environ.get('OPENAI_API_KEY', '')
-    request_data = json.dumps({
-        'model': 'gpt-4o-mini',
-        'messages': [
-            {'role': 'system', 'content': SYSTEM_PROMPT},
-            {'role': 'user', 'content': user_message}
-        ],
-        'temperature': 0.7,
-        'max_tokens': 400
-    }).encode('utf-8')
-
-    req = urllib.request.Request(
-        'https://api.openai.com/v1/chat/completions',
-        data=request_data,
+    api_key = os.environ.get('POLZA_AI_API_KEY', '')
+    response = requests.post(
+        'https://api.polza.ai/api/v1/chat/completions',
         headers={
             'Authorization': f'Bearer {api_key}',
             'Content-Type': 'application/json'
         },
-        method='POST'
+        json={
+            'model': 'openai/gpt-4o-mini',
+            'messages': [
+                {'role': 'system', 'content': SYSTEM_PROMPT},
+                {'role': 'user', 'content': user_message}
+            ],
+            'temperature': 0.7,
+            'max_tokens': 400
+        },
+        timeout=25
     )
-
-    with urllib.request.urlopen(req, timeout=25) as resp:
-        ai_response = json.loads(resp.read().decode('utf-8'))
+    response.raise_for_status()
+    ai_response = response.json()
 
     advice = ai_response['choices'][0]['message']['content'].strip()
 
