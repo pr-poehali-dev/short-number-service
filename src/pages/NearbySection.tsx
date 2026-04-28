@@ -10,12 +10,12 @@ const ANALYZE_URL = "https://functions.poehali.dev/f314b7e4-d728-4c13-bfd3-c1962
 const IS_IFRAME = window.self !== window.top;
 
 const MOCK_PLACES: Place[] = [
-  { name: "Кофейня «Бодрость»", type: "кафе", description: "Кофейня. Сегодня: 08:00–22:00", distance_approx: 85, address: "ул. Ленина, 12", label: "кафе", profile: "Кофейня" },
-  { name: "Аптека Здоровье", type: "аптека", description: "Аптека. Сегодня: 09:00–21:00", distance_approx: 140, address: "пр. Мира, 5", label: "аптека", profile: "Аптека" },
-  { name: "Супермаркет «Пятёрочка»", type: "супермаркет", description: "Супермаркет. Сегодня: 08:00–23:00", distance_approx: 210, address: "ул. Советская, 3", label: "супермаркет", profile: "Супермаркет" },
-  { name: "Ресторан «Причал»", type: "ресторан", description: "Ресторан. Сегодня: 12:00–00:00", distance_approx: 320, address: "набережная, 1", label: "ресторан", profile: "Ресторан" },
-  { name: "Банк ВТБ", type: "банк", description: "Банк. Сегодня: 09:00–18:00", distance_approx: 380, address: "пл. Победы, 7", label: "банк", profile: "Банк" },
-  { name: "Салон красоты «Лотос»", type: "салон", description: "Салон красоты. Сегодня: 10:00–20:00", distance_approx: 450, address: "ул. Цветочная, 9", label: "салон", profile: "Салон красоты" },
+  { name: "Кофейня «Бодрость»", type: "кафе", description: "Кофейня. Сегодня: 08:00–22:00", distance_approx: 85, city: "Москва", address: "ул. Ленина, 12", label: "кафе", profile: "для семей, завтраки" },
+  { name: "Аптека Здоровье", type: "аптека", description: "Аптека. Сегодня: 09:00–21:00", distance_approx: 140, city: "Москва", address: "пр. Мира, 5" },
+  { name: "Супермаркет «Пятёрочка»", type: "супермаркет", description: "Супермаркет. Сегодня: 08:00–23:00", distance_approx: 210, city: "Москва", address: "ул. Советская, 3" },
+  { name: "Ресторан «Причал»", type: "ресторан", description: "Ресторан. Сегодня: 12:00–00:00", distance_approx: 320, city: "Москва", address: "набережная, 1", profile: "морепродукты, живая музыка" },
+  { name: "Банк ВТБ", type: "банк", description: "Банк. Сегодня: 09:00–18:00", distance_approx: 380, city: "Москва", address: "пл. Победы, 7" },
+  { name: "Салон красоты «Лотос»", type: "салон красоты", description: "Салон красоты. Сегодня: 10:00–20:00", distance_approx: 450, city: "Москва", address: "ул. Цветочная, 9", profile: "маникюр, наращивание" },
 ];
 
 export function NearbySection() {
@@ -162,6 +162,7 @@ export function NearbySection() {
       description: p.description,
       distance_approx: p.distance_approx,
       address: p.address || "",
+      city: p.city || "",
       label: p.label || p.type,
       profile: p.profile || "",
     };

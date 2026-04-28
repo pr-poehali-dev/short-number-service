@@ -166,21 +166,31 @@ export function NearbyResults({
                       </div>
                     </div>
                     {/* Строка 2: категория / специализация */}
-                    <div className="flex items-center gap-1.5 mb-0.5 min-w-0">
-                      <p className="text-xs text-primary font-body font-medium truncate">{p.type}</p>
-                      {p.label && p.label !== p.type && (
-                        <span className="text-xs bg-muted text-muted-foreground px-1.5 py-0.5 rounded font-body truncate">{p.label}</span>
-                      )}
-                      {p.profile && (
-                        <span className="text-xs text-muted-foreground font-body truncate italic">{p.profile}</span>
-                      )}
-                    </div>
+                    {(() => {
+                      const spec = [p.label, p.profile]
+                        .filter(Boolean)
+                        .map(s => s!.toLowerCase())
+                        .filter(s => s !== p.type.toLowerCase())
+                        .join(", ");
+                      return (
+                        <div className="flex items-center gap-1.5 mb-0.5 min-w-0">
+                          <p className="text-xs text-primary font-body font-medium truncate">{p.type}</p>
+                          {spec ? (
+                            <span className="text-xs bg-muted text-muted-foreground px-1.5 py-0.5 rounded font-body truncate">{spec}</span>
+                          ) : (
+                            <span className="text-xs text-border font-body select-none">· · ·</span>
+                          )}
+                        </div>
+                      );
+                    })()}
                     {/* Строка 3: адрес + ссылка 2GIS */}
                     <div className="flex items-center gap-2 min-w-0">
-                      {p.address && (
+                      {(p.city || p.address) && (
                         <p className="text-xs text-muted-foreground font-body flex items-center gap-1 truncate min-w-0">
                           <Icon name="MapPin" size={10} className="flex-shrink-0" />
-                          <span className="truncate">{p.address}</span>
+                          <span className="truncate">
+                            {[p.city, p.address].filter(Boolean).join(", ")}
+                          </span>
                         </p>
                       )}
                       <a

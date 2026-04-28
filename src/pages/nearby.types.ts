@@ -4,6 +4,7 @@ export interface Place {
   description: string;
   distance_approx: number;
   address?: string;
+  city?: string;
   label?: string;
   profile?: string;
 }
@@ -18,6 +19,7 @@ export interface Bookmark {
   description: string;
   distance_approx: number;
   address: string;
+  city?: string;
   label: string;
   profile: string;
 }
