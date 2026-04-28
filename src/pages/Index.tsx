@@ -81,7 +81,7 @@ export default function Index() {
           <div className="flex items-center gap-2">
             <span>{section === "nearby" ? "быстрый-ответ.рф / 2407.рф" : "короткий-номер.рф / 2407.рф"}</span>
           </div>
-          <span>© 2026 · Все номера проверены вручную</span>
+          <span>© 2026 · Помогаем принимать решения</span>
         </div>
       </footer>
 
