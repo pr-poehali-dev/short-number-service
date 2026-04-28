@@ -96,10 +96,7 @@ export default function IndexEn() {
           <div className="flex items-center gap-2">
             <span>short-number.rf / 2407.rf</span>
           </div>
-          <div className="flex items-center gap-4">
-            <Link to="/" className="hover:text-foreground transition-colors">Русская версия</Link>
-            <span>© 2026 · All numbers verified manually</span>
-          </div>
+          <span>© 2026 · All numbers verified manually</span>
         </div>
       </footer>
 
