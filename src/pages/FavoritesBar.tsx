@@ -21,7 +21,7 @@ export function FavoritesBar({ favorites, onRemove, onSelect }: Props) {
           <Icon name="Star" size={24} className="text-muted-foreground/30 mx-auto mb-1.5" />
           <p className="text-sm font-body text-muted-foreground">Избранных номеров пока нет</p>
           <p className="text-xs font-body text-muted-foreground/60 mt-0.5">
-            Откройте карточку номера и нажмите <Icon name="Plus" size={11} className="inline mx-0.5 relative -top-px" />, чтобы сохранить здесь. До 6 номеров.
+            Откройте карточку номера и нажмите <Icon name="Star" size={11} className="inline mx-0.5 relative -top-px" />, чтобы сохранить здесь. До 6 номеров.
           </p>
         </div>
       ) : (

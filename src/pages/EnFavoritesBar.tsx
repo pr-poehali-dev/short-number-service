@@ -21,7 +21,7 @@ export function EnFavoritesBar({ favorites, onRemove, onSelect }: Props) {
           <Icon name="Star" size={24} className="text-muted-foreground/30 mx-auto mb-1.5" />
           <p className="text-sm font-body text-muted-foreground">No favorites yet</p>
           <p className="text-xs font-body text-muted-foreground/60 mt-0.5">
-            Open a number card and tap <Icon name="Plus" size={11} className="inline mx-0.5 relative -top-px" /> to save here. Up to 6 numbers.
+            Open a number card and tap <Icon name="Star" size={11} className="inline mx-0.5 relative -top-px" /> to save here. Up to 6 numbers.
           </p>
         </div>
       ) : (
