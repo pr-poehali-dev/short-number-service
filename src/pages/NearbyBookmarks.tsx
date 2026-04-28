@@ -96,7 +96,7 @@ export function NearbyBookmarks({ bookmarks, advice, adviceError, adviceLoading,
                       className="text-xs text-blue-600 hover:text-blue-800 font-body flex items-center gap-1 hover:underline"
                     >
                       <Icon name="ExternalLink" size={10} className="flex-shrink-0" />
-                      Открыть в 2GIS
+                      <span className="hidden sm:inline">Открыть в </span>2GIS
                     </a>
                   </div>
                   <span className="text-xs text-muted-foreground font-body flex items-center gap-1 flex-shrink-0">
