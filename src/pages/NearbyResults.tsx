@@ -10,6 +10,7 @@ interface Props {
   bookmarks: Bookmark[];
   savedId: string | null;
   onFind: () => void;
+  onReset: () => void;
   onAddBookmark: (p: Place) => void;
   onOpenSettings: () => void;
   isBookmarked: (p: Place) => boolean;
@@ -23,6 +24,7 @@ export function NearbyResults({
   bookmarks,
   savedId,
   onFind,
+  onReset,
   onAddBookmark,
   onOpenSettings,
   isBookmarked,
@@ -63,7 +65,14 @@ export function NearbyResults({
       )}
 
       {status === "error" && (
-        <div className="bg-red-50 border border-red-200 rounded-2xl p-6 text-center">
+        <div className="relative bg-red-50 border border-red-200 rounded-2xl p-6 text-center">
+          <button
+            onClick={onReset}
+            className="absolute top-3 right-3 p-1.5 rounded-lg hover:bg-red-100 text-red-400 hover:text-red-600 transition-colors"
+            title="Закрыть"
+          >
+            <Icon name="X" size={16} />
+          </button>
           <Icon name="AlertCircle" size={32} className="text-red-500 mx-auto mb-3" />
           <p className="font-body text-red-700 font-semibold mb-4">{errorMsg}</p>
           <button

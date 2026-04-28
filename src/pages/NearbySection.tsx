@@ -209,6 +209,7 @@ export function NearbySection() {
         bookmarks={bookmarks}
         savedId={savedId}
         onFind={findNearby}
+        onReset={() => setStatus("idle")}
         onAddBookmark={addBookmark}
         onOpenSettings={() => { setShowPromptEditor(!showPromptEditor); if (!prompt) loadPrompt(); }}
         isBookmarked={isBookmarked}
