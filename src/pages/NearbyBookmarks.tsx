@@ -81,26 +81,28 @@ export function NearbyBookmarks({ bookmarks, advice, adviceError, adviceLoading,
                     <Icon name="X" size={14} />
                   </button>
                 </div>
-                <div className="flex flex-wrap items-center gap-x-3 gap-y-0.5 mt-1">
-                  {bm.address && (
-                    <span className="text-xs text-muted-foreground font-body flex items-center gap-1">
-                      <Icon name="MapPin" size={10} className="flex-shrink-0" />
-                      {bm.address}
-                    </span>
-                  )}
-                  <span className="text-xs text-muted-foreground font-body flex items-center gap-1">
+                <div className="flex items-center justify-between gap-2 mt-1">
+                  <div className="flex flex-wrap items-center gap-x-3 gap-y-0.5">
+                    {bm.address && (
+                      <span className="text-xs text-muted-foreground font-body flex items-center gap-1">
+                        <Icon name="MapPin" size={10} className="flex-shrink-0" />
+                        {bm.address}
+                      </span>
+                    )}
+                    <a
+                      href={`https://2gis.ru/search/${encodeURIComponent(bm.name + (bm.address ? ' ' + bm.address : ''))}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-xs text-blue-600 hover:text-blue-800 font-body flex items-center gap-1 hover:underline"
+                    >
+                      <Icon name="ExternalLink" size={10} className="flex-shrink-0" />
+                      Открыть в 2GIS
+                    </a>
+                  </div>
+                  <span className="text-xs text-muted-foreground font-body flex items-center gap-1 flex-shrink-0">
                     <Icon name="Clock" size={10} className="flex-shrink-0" />
                     {formatDate(bm.savedAt)}
                   </span>
-                  <a
-                    href={`https://2gis.ru/search/${encodeURIComponent(bm.name + (bm.address ? ' ' + bm.address : ''))}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-xs text-blue-600 hover:text-blue-800 font-body flex items-center gap-1 hover:underline"
-                  >
-                    <Icon name="ExternalLink" size={10} className="flex-shrink-0" />
-                    Открыть в 2GIS
-                  </a>
                 </div>
               </div>
             </div>
