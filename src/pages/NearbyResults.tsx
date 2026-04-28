@@ -144,8 +144,9 @@ export function NearbyResults({
                     <Icon name={getIcon(p.type)} size={20} className="text-primary" fallback="Store" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-start justify-between gap-2 mb-0.5">
-                      <h3 className="font-display font-semibold text-foreground text-base leading-tight">{p.name}</h3>
+                    {/* Строка 1: название + дистанция + закладка */}
+                    <div className="flex items-center justify-between gap-2 mb-0.5">
+                      <h3 className="font-display font-semibold text-foreground text-base leading-tight truncate">{p.name}</h3>
                       <div className="flex items-center gap-1.5 flex-shrink-0">
                         <span className={`text-xs px-2 py-0.5 rounded-full font-body font-medium border ${distanceColor(p.distance_approx)}`}>
                           ~{p.distance_approx} м
@@ -164,31 +165,34 @@ export function NearbyResults({
                         </button>
                       </div>
                     </div>
-                    <div className="flex items-center gap-2 mb-1">
-                      <p className="text-xs text-primary font-body font-medium">{p.type}</p>
+                    {/* Строка 2: категория / специализация */}
+                    <div className="flex items-center gap-1.5 mb-0.5 min-w-0">
+                      <p className="text-xs text-primary font-body font-medium truncate">{p.type}</p>
                       {p.label && p.label !== p.type && (
-                        <span className="text-xs bg-muted text-muted-foreground px-1.5 py-0.5 rounded font-body">{p.label}</span>
+                        <span className="text-xs bg-muted text-muted-foreground px-1.5 py-0.5 rounded font-body truncate">{p.label}</span>
+                      )}
+                      {p.profile && (
+                        <span className="text-xs text-muted-foreground font-body truncate italic">{p.profile}</span>
                       )}
                     </div>
-                    {p.address && (
-                      <p className="text-xs text-muted-foreground font-body mb-1 flex items-center gap-1">
-                        <Icon name="MapPin" size={10} className="flex-shrink-0" />
-                        {p.address}
-                      </p>
-                    )}
-                    <p className="text-sm text-muted-foreground font-body leading-snug">{p.description}</p>
-                    {p.profile && (
-                      <p className="text-xs text-muted-foreground font-body mt-1 italic">{p.profile}</p>
-                    )}
-                    <a
-                      href={`https://2gis.ru/search/${encodeURIComponent(p.name + (p.address ? ' ' + p.address : ''))}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 text-xs text-blue-600 hover:text-blue-800 font-body mt-1.5 hover:underline"
-                    >
-                      <Icon name="ExternalLink" size={11} />
-                      Открыть в 2GIS
-                    </a>
+                    {/* Строка 3: адрес + ссылка 2GIS */}
+                    <div className="flex items-center gap-2 min-w-0">
+                      {p.address && (
+                        <p className="text-xs text-muted-foreground font-body flex items-center gap-1 truncate min-w-0">
+                          <Icon name="MapPin" size={10} className="flex-shrink-0" />
+                          <span className="truncate">{p.address}</span>
+                        </p>
+                      )}
+                      <a
+                        href={`https://2gis.ru/search/${encodeURIComponent(p.name + (p.address ? ' ' + p.address : ''))}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1 text-xs text-blue-600 hover:text-blue-800 font-body flex-shrink-0 hover:underline"
+                      >
+                        <Icon name="ExternalLink" size={11} />
+                        2GIS
+                      </a>
+                    </div>
                   </div>
                 </div>
               );
