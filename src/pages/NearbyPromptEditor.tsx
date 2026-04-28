@@ -39,7 +39,7 @@ export function NearbyPromptEditor({ prompt, promptLoading, promptSaved, onPromp
         </button>
 
         <span className="text-xs text-amber-700 font-body">
-          Перечислите категории через запятую, например: <code className="bg-amber-100 px-1 rounded">кафе,аптека,банкомат</code>
+          Перечислите свои категории, например: <code className="bg-amber-100 px-1 rounded">кафе,банк,парк</code>
         </span>
       </div>
     </div>
