@@ -5,6 +5,7 @@ import { Bookmark } from "@/pages/nearby.types";
 interface Props {
   status: "idle" | "locating" | "loading" | "done" | "error";
   sorted: Place[];
+  hiddenCount: number;
   coords: { lat: number; lon: number } | null;
   errorMsg: string;
   bookmarks: Bookmark[];
@@ -22,6 +23,7 @@ interface Props {
 export function NearbyResults({
   status,
   sorted,
+  hiddenCount,
   coords,
   errorMsg,
   bookmarks,
@@ -117,10 +119,10 @@ export function NearbyResults({
             <div className="flex items-center gap-2">
               <Icon name="CheckCircle" size={16} className="text-green-600" />
               <span className="text-sm font-body text-muted-foreground">
-                Найдено объектов: <strong className="text-foreground">{sorted.length}</strong>
-                {coords && (
-                  <span className="ml-2 text-xs opacity-60">
-                    ({coords.lat.toFixed(4)}, {coords.lon.toFixed(4)})
+                Найдено: <strong className="text-foreground">{sorted.length}</strong>
+                {hiddenCount > 0 && (
+                  <span className="ml-1.5 text-xs text-primary/70 font-body">
+                    · ещё {hiddenCount} в избранном
                   </span>
                 )}
               </span>

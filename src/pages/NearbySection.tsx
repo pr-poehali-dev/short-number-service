@@ -222,6 +222,7 @@ export function NearbySection() {
   const sorted = [...places]
     .filter(p => !bookmarks.some(b => b.name === p.name))
     .sort((a, b) => a.distance_approx - b.distance_approx);
+  const hiddenCount = places.length - sorted.length;
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-8 animate-fade-in">
@@ -248,6 +249,7 @@ export function NearbySection() {
       <NearbyResults
         status={status}
         sorted={sorted}
+        hiddenCount={hiddenCount}
         coords={coords}
         errorMsg={errorMsg}
         bookmarks={bookmarks}
