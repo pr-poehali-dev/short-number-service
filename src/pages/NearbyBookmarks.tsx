@@ -23,7 +23,7 @@ export function NearbyBookmarks({ bookmarks, advice, adviceError, adviceLoading,
             className="ml-auto flex items-center gap-1.5 px-3 py-1.5 bg-primary text-primary-foreground rounded-lg text-xs font-body font-semibold hover:opacity-90 transition-opacity disabled:opacity-60"
           >
             <Icon name={adviceLoading ? "Loader" : "Sparkles"} size={13} className={adviceLoading ? "animate-spin" : ""} />
-            {adviceLoading ? "Анализирую..." : "Что посетить?"}
+            {adviceLoading ? "Анализирую..." : "Что посетить сегодня?"}
           </button>
         )}
 
