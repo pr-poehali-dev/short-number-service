@@ -46,10 +46,7 @@ export function NearbyResults({
           <button
             onClick={onFind}
             className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-xl font-body font-semibold hover:bg-primary/90 transition-colors"
-          >
-            <Icon name="Locate" size={18} />
-            Добавить в "Избранное"
-          </button>
+          >Показать интересное рядом</button>
         </div>
       )}
 
