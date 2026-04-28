@@ -291,12 +291,14 @@ export function Header({
           </nav>
 
           <div className="flex items-center gap-2">
-            <Link
-              to="/en"
-              className="flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-body font-semibold text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
-            >
-              <Icon name="Globe" size={12} /> EN
-            </Link>
+            {activeSection !== "nearby" && (
+              <Link
+                to="/en"
+                className="flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-body font-semibold text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+              >
+                <Icon name="Globe" size={12} /> EN
+              </Link>
+            )}
             <button
               onClick={() => setInstallOpen(true)}
               title="Добавить на домашний экран"
