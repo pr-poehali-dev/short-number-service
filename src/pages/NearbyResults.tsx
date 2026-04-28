@@ -126,11 +126,11 @@ export function NearbyResults({
               </span>
             </div>
             <button
-              onClick={onFind}
+              onClick={onReset}
               className="flex items-center gap-1.5 px-3 py-1.5 border border-border rounded-lg text-sm font-body hover:bg-muted transition-colors"
             >
-              <Icon name="RefreshCw" size={14} />
-              Обновить
+              <Icon name="X" size={14} />
+              Сбросить
             </button>
           </div>
 

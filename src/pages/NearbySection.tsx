@@ -219,7 +219,9 @@ export function NearbySection() {
     );
   }
 
-  const sorted = [...places].sort((a, b) => a.distance_approx - b.distance_approx);
+  const sorted = [...places]
+    .filter(p => !bookmarks.some(b => b.name === p.name))
+    .sort((a, b) => a.distance_approx - b.distance_approx);
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-8 animate-fade-in">

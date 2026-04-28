@@ -125,7 +125,7 @@ def handler(event: dict, context) -> dict:
         search_query = row[0] if row else "кафе,ресторан,магазин,аптека,банк,супермаркет"
 
         api_key = os.environ['TWOGIS_API_KEY']
-        radius = 500
+        radius = 300
         fields = "items.point,items.address,items.rubrics,items.name,items.schedule"
 
         categories = [c.strip() for c in search_query.split(',') if c.strip()]
