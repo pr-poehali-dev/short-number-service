@@ -21,6 +21,7 @@ export function NearbySection() {
   const [advice, setAdvice] = useState<string>("");
   const [adviceLoading, setAdviceLoading] = useState(false);
   const [adviceError, setAdviceError] = useState("");
+  const [manualCoords, setManualCoords] = useState("");
 
   useEffect(() => {
     saveBookmarks(bookmarks);
@@ -70,29 +71,7 @@ export function NearbySection() {
 
     navigator.geolocation.getCurrentPosition(
       async (pos) => {
-        const lat = pos.coords.latitude;
-        const lon = pos.coords.longitude;
-        setCoords({ lat, lon });
-        setStatus("loading");
-
-        try {
-          const res = await fetch(NEARBY_URL, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ lat, lon })
-          });
-          const data = await res.json();
-          if (res.ok && data.places) {
-            setPlaces(data.places);
-            setStatus("done");
-          } else {
-            setErrorMsg(data.error || "Ошибка получения данных");
-            setStatus("error");
-          }
-        } catch {
-          setErrorMsg("Не удалось связаться с сервером");
-          setStatus("error");
-        }
+        await searchByCoords(pos.coords.latitude, pos.coords.longitude);
       },
       (err) => {
         if (err.code === 1) {
@@ -104,8 +83,42 @@ export function NearbySection() {
         }
         setStatus("error");
       },
-      { timeout: 10000, enableHighAccuracy: true }
+      { timeout: 10000, enableHighAccuracy: false }
     );
+  }
+
+  async function searchByCoords(lat: number, lon: number) {
+    setCoords({ lat, lon });
+    setStatus("loading");
+    setPlaces([]);
+    setErrorMsg("");
+    try {
+      const res = await fetch(NEARBY_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ lat, lon })
+      });
+      const data = await res.json();
+      if (res.ok && data.places) {
+        setPlaces(data.places);
+        setStatus("done");
+      } else {
+        setErrorMsg(data.error || "Ошибка получения данных");
+        setStatus("error");
+      }
+    } catch {
+      setErrorMsg("Не удалось связаться с сервером");
+      setStatus("error");
+    }
+  }
+
+  async function findByManualCoords() {
+    const parts = manualCoords.replace(/\s/g, '').split(',');
+    if (parts.length !== 2) return;
+    const lat = parseFloat(parts[0]);
+    const lon = parseFloat(parts[1]);
+    if (isNaN(lat) || isNaN(lon)) return;
+    await searchByCoords(lat, lon);
   }
 
   function addBookmark(p: Place) {
@@ -213,6 +226,9 @@ export function NearbySection() {
         onAddBookmark={addBookmark}
         onOpenSettings={() => { setShowPromptEditor(!showPromptEditor); if (!prompt) loadPrompt(); }}
         isBookmarked={isBookmarked}
+        manualCoords={manualCoords}
+        onManualCoordsChange={setManualCoords}
+        onFindByManualCoords={findByManualCoords}
       />
     </div>
   );
