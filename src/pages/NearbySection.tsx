@@ -73,17 +73,27 @@ export function NearbySection() {
       async (pos) => {
         await searchByCoords(pos.coords.latitude, pos.coords.longitude);
       },
-      (err) => {
+      async (err) => {
         if (err.code === 1) {
           setErrorMsg("Доступ к геолокации запрещён. Нажмите на значок 🔒 в адресной строке браузера и разрешите определение местоположения для этого сайта.");
-        } else if (err.code === 2) {
-          setErrorMsg("Не удалось определить местоположение. Проверьте, что GPS или Wi-Fi включены.");
+          setStatus("error");
+        } else if (err.code === 3) {
+          navigator.geolocation.getCurrentPosition(
+            async (pos) => {
+              await searchByCoords(pos.coords.latitude, pos.coords.longitude);
+            },
+            () => {
+              setErrorMsg("Превышено время ожидания геолокации. Попробуйте ещё раз или введите координаты вручную.");
+              setStatus("error");
+            },
+            { timeout: 20000, enableHighAccuracy: false, maximumAge: 300000 }
+          );
         } else {
-          setErrorMsg("Превышено время ожидания геолокации. Попробуйте ещё раз.");
+          setErrorMsg("Не удалось определить местоположение. Проверьте, что GPS или Wi-Fi включены.");
+          setStatus("error");
         }
-        setStatus("error");
       },
-      { timeout: 10000, enableHighAccuracy: false }
+      { timeout: 10000, enableHighAccuracy: false, maximumAge: 60000 }
     );
   }
 
