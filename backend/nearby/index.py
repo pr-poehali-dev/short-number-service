@@ -145,6 +145,9 @@ def handler(event: dict, context) -> dict:
         with urllib.request.urlopen(req, timeout=20) as resp:
             data = json.loads(resp.read().decode('utf-8'))
 
+        print(f"2GIS raw response: {json.dumps(data, ensure_ascii=False)[:2000]}")
+        print(f"2GIS request url: {url}")
+
         items = data.get('result', {}).get('items', [])
 
         places = []
