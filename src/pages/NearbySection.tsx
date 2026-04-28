@@ -7,6 +7,17 @@ import { NearbyResults } from "@/pages/NearbyResults";
 const NEARBY_URL = "https://functions.poehali.dev/d4b08b1e-6bd7-4d3b-81cf-02b5e4c6447f";
 const ANALYZE_URL = "https://functions.poehali.dev/f314b7e4-d728-4c13-bfd3-c1962a5861fc";
 
+const IS_IFRAME = window.self !== window.top;
+
+const MOCK_PLACES: Place[] = [
+  { name: "Кофейня «Бодрость»", type: "кафе", description: "Кофейня. Сегодня: 08:00–22:00", distance_approx: 85, address: "ул. Ленина, 12", label: "кафе", profile: "Кофейня" },
+  { name: "Аптека Здоровье", type: "аптека", description: "Аптека. Сегодня: 09:00–21:00", distance_approx: 140, address: "пр. Мира, 5", label: "аптека", profile: "Аптека" },
+  { name: "Супермаркет «Пятёрочка»", type: "супермаркет", description: "Супермаркет. Сегодня: 08:00–23:00", distance_approx: 210, address: "ул. Советская, 3", label: "супермаркет", profile: "Супермаркет" },
+  { name: "Ресторан «Причал»", type: "ресторан", description: "Ресторан. Сегодня: 12:00–00:00", distance_approx: 320, address: "набережная, 1", label: "ресторан", profile: "Ресторан" },
+  { name: "Банк ВТБ", type: "банк", description: "Банк. Сегодня: 09:00–18:00", distance_approx: 380, address: "пл. Победы, 7", label: "банк", profile: "Банк" },
+  { name: "Салон красоты «Лотос»", type: "салон", description: "Салон красоты. Сегодня: 10:00–20:00", distance_approx: 450, address: "ул. Цветочная, 9", label: "салон", profile: "Салон красоты" },
+];
+
 export function NearbySection() {
   const [status, setStatus] = useState<"idle" | "locating" | "loading" | "done" | "error">("idle");
   const [places, setPlaces] = useState<Place[]>([]);
@@ -62,6 +73,13 @@ export function NearbySection() {
     setStatus("locating");
     setPlaces([]);
     setErrorMsg("");
+
+    if (IS_IFRAME) {
+      setCoords({ lat: 55.7558, lon: 37.6173 });
+      setPlaces(MOCK_PLACES);
+      setStatus("done");
+      return;
+    }
 
     if (!navigator.geolocation) {
       setErrorMsg("Геолокация не поддерживается вашим браузером.");
