@@ -62,6 +62,12 @@ export function NearbySection() {
     setPlaces([]);
     setErrorMsg("");
 
+    if (!navigator.geolocation) {
+      setErrorMsg("Геолокация не поддерживается вашим браузером.");
+      setStatus("error");
+      return;
+    }
+
     navigator.geolocation.getCurrentPosition(
       async (pos) => {
         const lat = pos.coords.latitude;
@@ -89,11 +95,13 @@ export function NearbySection() {
         }
       },
       (err) => {
-        setErrorMsg(
-          err.code === 1
-            ? "Доступ к геолокации запрещён. Разрешите его в настройках браузера."
-            : "Не удалось определить вашу геопозицию."
-        );
+        if (err.code === 1) {
+          setErrorMsg("Доступ к геолокации запрещён. Нажмите на значок 🔒 в адресной строке браузера и разрешите определение местоположения для этого сайта.");
+        } else if (err.code === 2) {
+          setErrorMsg("Не удалось определить местоположение. Проверьте, что GPS или Wi-Fi включены.");
+        } else {
+          setErrorMsg("Превышено время ожидания геолокации. Попробуйте ещё раз.");
+        }
         setStatus("error");
       },
       { timeout: 10000, enableHighAccuracy: true }

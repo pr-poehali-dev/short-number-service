@@ -54,7 +54,7 @@ export function NearbyResults({
         <div className="bg-white border border-border rounded-2xl p-8 text-center">
           <div className="w-12 h-12 rounded-full border-4 border-primary border-t-transparent animate-spin mx-auto mb-4" />
           <p className="font-body text-foreground font-semibold">
-            {status === "locating" ? "Определяем местоположение…" : "Запрашиваем данные у ИИ…"}
+            {status === "locating" ? "Определяем местоположение…" : "Ищем объекты рядом…"}
           </p>
           {status === "loading" && (
             <p className="text-sm text-muted-foreground font-body mt-1">Это может занять 5–15 секунд</p>
