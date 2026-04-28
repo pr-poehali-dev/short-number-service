@@ -128,27 +128,34 @@ def handler(event: dict, context) -> dict:
         radius = 500
         fields = "items.point,items.address,items.rubrics,items.name,items.schedule"
 
-        params = urllib.parse.urlencode({
-            'key': api_key,
-            'q': search_query,
-            'point': f"{lon},{lat}",
-            'radius': radius,
-            'type': 'branch',
-            'fields': fields,
-            'page_size': 10,
-            'locale': 'ru_RU',
-        })
+        categories = [c.strip() for c in search_query.split(',') if c.strip()]
 
-        url = f"https://catalog.api.2gis.com/3.0/items?{params}"
-        req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
+        seen_names = set()
+        items = []
 
-        with urllib.request.urlopen(req, timeout=20) as resp:
-            data = json.loads(resp.read().decode('utf-8'))
-
-        print(f"2GIS raw response: {json.dumps(data, ensure_ascii=False)[:2000]}")
-        print(f"2GIS request url: {url}")
-
-        items = data.get('result', {}).get('items', [])
+        for category in categories:
+            params = urllib.parse.urlencode({
+                'key': api_key,
+                'q': category,
+                'point': f"{lon},{lat}",
+                'radius': radius,
+                'type': 'branch',
+                'fields': fields,
+                'page_size': 5,
+                'locale': 'ru_RU',
+            })
+            url = f"https://catalog.api.2gis.com/3.0/items?{params}"
+            req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
+            try:
+                with urllib.request.urlopen(req, timeout=10) as resp:
+                    data = json.loads(resp.read().decode('utf-8'))
+                for item in data.get('result', {}).get('items', []):
+                    name = item.get('name', '')
+                    if name not in seen_names:
+                        seen_names.add(name)
+                        items.append(item)
+            except Exception as e:
+                print(f"2GIS error for '{category}': {e}")
 
         places = []
         for item in items:
