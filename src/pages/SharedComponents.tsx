@@ -176,7 +176,7 @@ export function NumberModal({ num, onClose, onAddFavorite, isFavorite, maxReache
           </button>
           <button
             onClick={handleShare}
-            className="flex items-center justify-center w-12 h-12 my-auto bg-white border-2 border-border text-muted-foreground rounded-xl hover:border-primary hover:text-primary transition-colors flex-shrink-0"
+            className="flex items-center justify-center w-12 h-12 my-auto bg-white text-muted-foreground rounded-xl hover:text-primary transition-colors flex-shrink-0"
             title={copied ? "Скопировано!" : "Поделиться"}
           >
             <Icon name={copied ? "Check" : "Share2"} size={18} className={copied ? "text-green-500" : ""} />
