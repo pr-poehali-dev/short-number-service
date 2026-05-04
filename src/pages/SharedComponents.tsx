@@ -86,7 +86,7 @@ export function NumberModal({ num, onClose, onAddFavorite, isFavorite, maxReache
   async function handleShare() {
     const text = `${num.name} — ${num.number}\n${num.description}\n\n📞 Справочник «2407.рф»`;
     if (navigator.share) {
-      await navigator.share({ title: num.name, text });
+      await navigator.share({ text });
       ymGoal("share_native", { number: num.number });
     } else {
       await navigator.clipboard.writeText(text);
