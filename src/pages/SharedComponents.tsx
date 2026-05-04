@@ -169,20 +169,17 @@ export function NumberModal({ num, onClose, onAddFavorite, isFavorite, maxReache
             <Icon name="Phone" size={18} /> Позвонить
           </a>
           <button
-            onClick={handleShare}
-            className="flex items-center justify-center gap-1.5 px-4 py-3 bg-white border-2 border-border text-muted-foreground rounded-xl font-body font-semibold hover:border-primary hover:text-primary transition-colors"
-            title="Поделиться"
+            onClick={() => { saveVCard(num); ymGoal("vcard_save", { number: num.number, name: num.name }); }}
+            className="flex items-center justify-center gap-2 flex-1 py-3 bg-white border-2 border-primary text-primary rounded-xl font-body font-semibold hover:bg-primary/5 transition-colors"
           >
-            <Icon name={copied ? "Check" : "Share2"} size={18} className={copied ? "text-green-500" : ""} />
-            <span className="text-sm">{copied ? "Скопировано" : "Поделиться"}</span>
+            <Icon name="UserPlus" size={18} /> Сохранить
           </button>
           <button
-            onClick={() => { saveVCard(num); ymGoal("vcard_save", { number: num.number, name: num.name }); }}
-            className="flex items-center justify-center gap-1.5 px-4 py-3 bg-white border-2 border-primary text-primary rounded-xl font-body font-semibold hover:bg-primary/5 transition-colors"
-            title="Сохранить контакт"
+            onClick={handleShare}
+            className="flex items-center justify-center w-12 h-12 my-auto bg-white border-2 border-border text-muted-foreground rounded-xl hover:border-primary hover:text-primary transition-colors flex-shrink-0"
+            title={copied ? "Скопировано!" : "Поделиться"}
           >
-            <Icon name="UserPlus" size={18} />
-            <span className="text-sm">Сохранить</span>
+            <Icon name={copied ? "Check" : "Share2"} size={18} className={copied ? "text-green-500" : ""} />
           </button>
         </div>
       </div>
