@@ -1,23 +1,19 @@
-const CACHE_NAME = 'spravochnik-v1';
-const STATIC_ASSETS = [
-  '/',
-  '/index.html',
-  '/icon-192.svg',
-  '/icon-512.svg',
-  '/manifest.json',
-];
+const CACHE_VERSION = 'v3';
+const CACHE_NAME = `spravochnik-${CACHE_VERSION}`;
+const FONT_CACHE = 'fonts-v1';
 
 self.addEventListener('install', (event) => {
-  event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(STATIC_ASSETS))
-  );
   self.skipWaiting();
 });
 
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((keys) =>
-      Promise.all(keys.filter((k) => k !== CACHE_NAME).map((k) => caches.delete(k)))
+      Promise.all(
+        keys
+          .filter((k) => k !== CACHE_NAME && k !== FONT_CACHE)
+          .map((k) => caches.delete(k))
+      )
     )
   );
   self.clients.claim();
@@ -26,19 +22,12 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   const url = new URL(event.request.url);
 
-  // Пропускаем внешние запросы к API и CDN без кеширования
-  if (
-    event.request.method !== 'GET' ||
-    url.origin.includes('poehali.dev') && url.pathname.includes('/api/') ||
-    url.origin.includes('fonts.googleapis.com') && false
-  ) {
-    return;
-  }
+  if (event.request.method !== 'GET') return;
 
-  // Шрифты — кеш на год
+  // Шрифты — кеш навсегда
   if (url.origin.includes('fonts.googleapis.com') || url.origin.includes('fonts.gstatic.com')) {
     event.respondWith(
-      caches.open('fonts-v1').then((cache) =>
+      caches.open(FONT_CACHE).then((cache) =>
         cache.match(event.request).then((cached) => {
           if (cached) return cached;
           return fetch(event.request).then((res) => {
@@ -51,23 +40,36 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // Остальное — сначала кеш, потом сеть (offline-first)
-  event.respondWith(
-    caches.match(event.request).then((cached) => {
-      if (cached) return cached;
-      return fetch(event.request)
+  // HTML и JS/CSS — сначала сеть, кеш только при офлайне
+  if (
+    event.request.destination === 'document' ||
+    event.request.destination === 'script' ||
+    event.request.destination === 'style'
+  ) {
+    event.respondWith(
+      fetch(event.request)
         .then((res) => {
-          if (res.ok && event.request.url.startsWith(self.location.origin)) {
+          if (res.ok) {
             const clone = res.clone();
             caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone));
           }
           return res;
         })
-        .catch(() => {
-          if (event.request.destination === 'document') {
-            return caches.match('/index.html');
-          }
+        .catch(() => caches.match(event.request).then((cached) => cached || caches.match('/index.html')))
+    );
+    return;
+  }
+
+  // Остальное (иконки, картинки) — кеш с обновлением в фоне
+  event.respondWith(
+    caches.open(CACHE_NAME).then((cache) =>
+      cache.match(event.request).then((cached) => {
+        const networkFetch = fetch(event.request).then((res) => {
+          if (res.ok) cache.put(event.request, res.clone());
+          return res;
         });
-    })
+        return cached || networkFetch;
+      })
+    )
   );
 });
