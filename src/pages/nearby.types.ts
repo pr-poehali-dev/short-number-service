@@ -80,9 +80,10 @@ export const EXAMPLE_BOOKMARK: Bookmark = {
   type: "кафе",
   description: "Уютное кафе с домашней кухней и свежей выпечкой. Работает с 8:00 до 22:00.",
   distance_approx: 120,
+  city: "Москва",
   address: "ул. Тверская, 14",
-  label: "Еда",
-  profile: "для семей, завтраки",
+  label: "кафе",
+  profile: "завтраки, для семей",
 };
 
 export function loadBookmarks(): Bookmark[] {
