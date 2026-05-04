@@ -188,6 +188,15 @@ def handler(event: dict, context) -> dict:
 
             rubric_name = rubrics[0].get('name', '') if rubrics else ''
 
+            # profile — дополнительные рубрики (2-я и далее), или 1-я если не совпадает с типом
+            extra_rubrics = [r.get('name', '') for r in rubrics[1:] if r.get('name')]
+            if extra_rubrics:
+                profile = ", ".join(extra_rubrics)
+            elif rubric_name and rubric_name.lower() != obj_type.lower():
+                profile = rubric_name
+            else:
+                profile = ""
+
             places.append({
                 'name': item.get('name', 'Без названия'),
                 'type': obj_type,
@@ -195,7 +204,7 @@ def handler(event: dict, context) -> dict:
                 'distance_approx': distance,
                 'address': address,
                 'label': obj_type,
-                'profile': rubric_name,
+                'profile': profile,
             })
 
         places.sort(key=lambda x: x['distance_approx'])
