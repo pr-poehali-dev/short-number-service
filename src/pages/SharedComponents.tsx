@@ -81,6 +81,21 @@ function saveVCard(num: PhoneNumber) {
 
 export function NumberModal({ num, onClose, onAddFavorite, isFavorite, maxReached }: { num: PhoneNumber; onClose: () => void; onAddFavorite?: () => void; isFavorite?: boolean; maxReached?: boolean }) {
   const short = isShortNumber(num.number);
+  const [copied, setCopied] = useState(false);
+
+  async function handleShare() {
+    const text = `${num.name} — ${num.number}\n${num.description}`;
+    const url = `https://короткий-номер.рф`;
+    if (navigator.share) {
+      await navigator.share({ title: num.name, text, url });
+      ymGoal("share_native", { number: num.number });
+    } else {
+      await navigator.clipboard.writeText(`${text}\n${url}`);
+      setCopied(true);
+      ymGoal("share_copy", { number: num.number });
+      setTimeout(() => setCopied(false), 2000);
+    }
+  }
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50"
@@ -145,7 +160,7 @@ export function NumberModal({ num, onClose, onAddFavorite, isFavorite, maxReache
           </div>
         </div>
 
-        <div className="mt-5 pt-4 border-t border-border flex gap-3">
+        <div className="mt-5 pt-4 border-t border-border flex gap-2">
           <a
             href={`tel:${num.number}`}
             onClick={() => ymGoal("call_click", { number: num.number, name: num.name, category: num.category, operator: num.operator })}
@@ -154,10 +169,20 @@ export function NumberModal({ num, onClose, onAddFavorite, isFavorite, maxReache
             <Icon name="Phone" size={18} /> Позвонить
           </a>
           <button
-            onClick={() => { saveVCard(num); ymGoal("vcard_save", { number: num.number, name: num.name }); }}
-            className="flex items-center justify-center gap-2 flex-1 py-3 bg-white border-2 border-primary text-primary rounded-xl font-body font-semibold hover:bg-primary/5 transition-colors"
+            onClick={handleShare}
+            className="flex items-center justify-center gap-1.5 px-4 py-3 bg-white border-2 border-border text-muted-foreground rounded-xl font-body font-semibold hover:border-primary hover:text-primary transition-colors"
+            title="Поделиться"
           >
-            <Icon name="UserPlus" size={18} /> Сохранить
+            <Icon name={copied ? "Check" : "Share2"} size={18} className={copied ? "text-green-500" : ""} />
+            <span className="text-sm">{copied ? "Скопировано" : "Поделиться"}</span>
+          </button>
+          <button
+            onClick={() => { saveVCard(num); ymGoal("vcard_save", { number: num.number, name: num.name }); }}
+            className="flex items-center justify-center gap-1.5 px-4 py-3 bg-white border-2 border-primary text-primary rounded-xl font-body font-semibold hover:bg-primary/5 transition-colors"
+            title="Сохранить контакт"
+          >
+            <Icon name="UserPlus" size={18} />
+            <span className="text-sm">Сохранить</span>
           </button>
         </div>
       </div>
