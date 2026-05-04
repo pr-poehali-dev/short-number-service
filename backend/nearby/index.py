@@ -205,6 +205,7 @@ def handler(event: dict, context) -> dict:
                 'address': address,
                 'label': obj_type,
                 'profile': profile,
+                'hours': schedule_str,
             })
 
         places.sort(key=lambda x: x['distance_approx'])

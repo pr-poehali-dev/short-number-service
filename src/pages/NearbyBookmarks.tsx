@@ -72,20 +72,21 @@ export function NearbyBookmarks({ bookmarks, advice, adviceError, adviceLoading,
                     <Icon name="X" size={14} />
                   </button>
                 </div>
-                {/* Строка 2: категория / специализация */}
+                {/* Строка 2: категория / специализация / часы */}
                 {(() => {
-                  const spec = [bm.label, bm.profile]
-                    .filter(Boolean)
-                    .map(s => s!.toLowerCase())
-                    .filter(s => s !== bm.type.toLowerCase())
-                    .join(", ");
+                  const typeLabel = bm.type.charAt(0).toUpperCase() + bm.type.slice(1);
+                  const spec = bm.profile && bm.profile.toLowerCase() !== bm.type.toLowerCase() ? bm.profile : "";
                   return (
-                    <div className="flex items-center gap-1.5 mb-0.5 min-w-0">
-                      <p className="text-xs text-primary font-body font-medium truncate">{bm.type}</p>
-                      {spec ? (
-                        <span className="text-xs bg-muted text-muted-foreground px-1.5 py-0.5 rounded font-body truncate">{spec}</span>
-                      ) : (
-                        <span className="text-xs text-border font-body select-none">· · ·</span>
+                    <div className="flex items-center gap-1.5 mb-0.5 min-w-0 flex-wrap">
+                      <p className="text-xs text-primary font-body font-medium">{typeLabel}</p>
+                      {spec && (
+                        <span className="text-xs bg-muted text-muted-foreground px-1.5 py-0.5 rounded font-body">{spec}</span>
+                      )}
+                      {bm.hours && (
+                        <span className="text-xs text-muted-foreground font-body flex items-center gap-0.5">
+                          <Icon name="Clock" size={10} className="flex-shrink-0" />
+                          {bm.hours.replace("Сегодня: ", "")}
+                        </span>
                       )}
                     </div>
                   );

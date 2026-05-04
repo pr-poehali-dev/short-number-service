@@ -7,6 +7,7 @@ export interface Place {
   city?: string;
   label?: string;
   profile?: string;
+  hours?: string;
 }
 
 export interface Bookmark {
@@ -22,6 +23,7 @@ export interface Bookmark {
   city?: string;
   label: string;
   profile: string;
+  hours?: string;
 }
 
 export const TYPE_ICONS: Record<string, string> = {
@@ -84,6 +86,7 @@ export const EXAMPLE_BOOKMARK: Bookmark = {
   address: "ул. Тверская, 14",
   label: "кафе",
   profile: "завтраки, для семей",
+  hours: "08:00–22:00",
 };
 
 export function loadBookmarks(): Bookmark[] {
