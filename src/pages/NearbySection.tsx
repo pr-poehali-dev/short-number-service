@@ -245,6 +245,7 @@ export function NearbySection() {
         adviceLoading={adviceLoading}
         onRemove={removeBookmark}
         onAnalyze={analyzeBookmarks}
+        onDismissAdvice={() => { setAdvice(""); setAdviceError(""); }}
       />
 
       <NearbyResults

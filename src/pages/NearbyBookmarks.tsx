@@ -9,6 +9,7 @@ interface Props {
   adviceLoading: boolean;
   onRemove: (id: string) => void;
   onAnalyze: () => void;
+  onDismissAdvice?: () => void;
 }
 
 function BookmarkCard({ bm, onRemove }: { bm: Bookmark; onRemove: (id: string) => void }) {
@@ -108,7 +109,7 @@ function GroupCard({ group, onRemove }: { group: BookmarkGroup; onRemove: (id: s
   );
 }
 
-export function NearbyBookmarks({ bookmarks, advice, adviceError, adviceLoading, onRemove, onAnalyze }: Props) {
+export function NearbyBookmarks({ bookmarks, advice, adviceError, adviceLoading, onRemove, onAnalyze, onDismissAdvice }: Props) {
   const useGroups = bookmarks.length > 3;
   const groups = useGroups ? groupBookmarks(bookmarks) : [];
 
@@ -131,17 +132,30 @@ export function NearbyBookmarks({ bookmarks, advice, adviceError, adviceLoading,
 
       {(advice || adviceError) && (
         <div className={`mb-3 rounded-xl p-4 border ${adviceError ? "bg-red-50 border-red-200" : "bg-gradient-to-br from-primary/5 to-primary/10 border-primary/20"}`}>
-          {adviceError ? (
-            <p className="text-sm font-body text-red-600">{adviceError}</p>
-          ) : (
-            <>
-              <div className="flex items-center gap-1.5 mb-2">
-                <Icon name="Sparkles" size={14} className="text-primary" />
-                <span className="text-xs font-body font-semibold text-primary">Рекомендация нейросети</span>
-              </div>
-              <p className="text-sm font-body text-foreground leading-relaxed">{advice}</p>
-            </>
-          )}
+          <div className="flex items-start justify-between gap-2">
+            <div className="flex-1 min-w-0">
+              {adviceError ? (
+                <p className="text-sm font-body text-red-600">{adviceError}</p>
+              ) : (
+                <>
+                  <div className="flex items-center gap-1.5 mb-2">
+                    <Icon name="Sparkles" size={14} className="text-primary" />
+                    <span className="text-xs font-body font-semibold text-primary">Рекомендация нейросети</span>
+                  </div>
+                  <p className="text-sm font-body text-foreground leading-relaxed">{advice}</p>
+                </>
+              )}
+            </div>
+            {onDismissAdvice && (
+              <button
+                onClick={onDismissAdvice}
+                className="flex-shrink-0 w-6 h-6 flex items-center justify-center rounded-md hover:bg-black/10 text-muted-foreground hover:text-foreground transition-colors mt-0.5"
+                title="Закрыть"
+              >
+                <Icon name="X" size={14} />
+              </button>
+            )}
+          </div>
         </div>
       )}
 
