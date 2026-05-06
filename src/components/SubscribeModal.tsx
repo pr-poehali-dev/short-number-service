@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Icon from "@/components/ui/icon";
+import { ymGoal } from "@/lib/analytics";
 
 interface Props {
   mode: "subscribe" | "plans";
@@ -17,10 +18,20 @@ export default function SubscribeModal({ mode, cooldownHours = 24, onConfirmSubs
   const [step, setStep] = useState<"main" | "confirm">("main");
   const [clicked, setClicked] = useState<string | null>(null);
 
+  useEffect(() => {
+    ymGoal(mode === "subscribe" ? "subscribe_modal_shown" : "plans_modal_shown", { mode });
+  }, [mode]);
+
   function handleChannelClick(name: string, url: string) {
+    ymGoal("subscribe_channel_click", { channel: name });
     window.open(url, "_blank");
     setClicked(name);
     setStep("confirm");
+  }
+
+  function handleConfirmSubscribe() {
+    ymGoal("subscribe_confirmed", { channel: clicked ?? "unknown" });
+    onConfirmSubscribe();
   }
 
   if (mode === "plans") {
@@ -49,6 +60,7 @@ export default function SubscribeModal({ mode, cooldownHours = 24, onConfirmSubs
                     href={ch.url}
                     target="_blank"
                     rel="noopener noreferrer"
+                    onClick={() => ymGoal("plans_channel_click", { channel: ch.name })}
                     className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-white text-sm font-body font-semibold transition-colors ${ch.color}`}
                   >
                     <Icon name={ch.icon} size={15} />
@@ -120,7 +132,7 @@ export default function SubscribeModal({ mode, cooldownHours = 24, onConfirmSubs
               </p>
             </div>
             <button
-              onClick={onConfirmSubscribe}
+              onClick={handleConfirmSubscribe}
               className="w-full py-3 rounded-xl bg-primary text-primary-foreground text-sm font-body font-semibold hover:opacity-90 transition-opacity"
             >
               Да, я подписался — продолжить

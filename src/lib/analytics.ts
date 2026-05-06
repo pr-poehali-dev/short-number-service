@@ -4,10 +4,10 @@ declare global {
   }
 }
 
-const YM_ID = 101026698;
+const YM_IDS = [101026698, 103323875];
 
 export function ymGoal(goal: string, params?: Record<string, unknown>) {
   if (typeof window !== "undefined" && window.ym) {
-    window.ym(YM_ID, "reachGoal", goal, params);
+    YM_IDS.forEach((id) => window.ym!(id, "reachGoal", goal, params));
   }
 }
