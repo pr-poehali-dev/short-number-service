@@ -335,7 +335,7 @@ export function Header({
                 to="/en"
                 className="flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-body font-semibold text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
               >
-                <Icon name="Globe" size={12} /> EN
+                EN
               </Link>
             )}
             <button
