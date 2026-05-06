@@ -46,7 +46,7 @@ def handler(event: dict, context) -> dict:
             f"🔧 <b>Как воспользоваться:</b> {procedure or '—'}"
         )
 
-    token = os.environ['TELEGRAM_BOT_TOKEN']
+    token = os.environ.get('TELEGRAM_BOT_TOKEN', '')
     chat_id = os.environ['TELEGRAM_CHAT_ID']
 
     url = f"https://api.telegram.org/bot{token}/sendMessage"
