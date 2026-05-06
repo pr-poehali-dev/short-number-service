@@ -291,8 +291,8 @@ export function Header({
   return (
     <header className="sticky top-0 z-50 bg-white border-b border-border shadow-sm">
       <div className="max-w-6xl mx-auto px-4">
-        <div className="flex items-center justify-between h-16">
-          <button onClick={() => onNav("home")} className="flex items-center gap-2">
+        <div className="grid grid-cols-[1fr_auto_1fr] items-center h-16">
+          <button onClick={() => onNav("home")} className="flex items-center gap-2 justify-self-start">
             <div className="font-display text-base font-bold text-black leading-tight tracking-wide">
               <span className="md:hidden">2407.рф</span>
               <span className="hidden md:inline">Справочник коротких номеров России "2407"</span>
@@ -313,7 +313,7 @@ export function Header({
             ))}
           </nav>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 justify-self-end">
             {activeSection !== "nearby" && (
               <Link
                 to="/en"
