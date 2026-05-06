@@ -291,7 +291,7 @@ export function Header({
   return (
     <header className="sticky top-0 z-50 bg-white border-b border-border shadow-sm">
       <div className="max-w-6xl mx-auto px-4">
-        <div className="flex items-center justify-between h-16 md:grid md:grid-cols-[1fr_auto_1fr]">
+        <div className="relative flex items-center justify-between h-16 md:grid md:grid-cols-[1fr_auto_1fr]">
           <button onClick={() => onNav("home")} className="flex items-center gap-2 justify-self-start">
             <div className="font-display text-base font-bold text-black leading-tight tracking-wide">
               <span className="md:hidden">2407.рф</span>
@@ -313,23 +313,16 @@ export function Header({
             ))}
           </nav>
 
+          {(activeSection === "directory" || activeSection === "nearby") && (
+            <button
+              onClick={() => onNav(activeSection === "directory" ? "nearby" : "directory")}
+              className="md:hidden absolute left-1/2 -translate-x-1/2 px-3 py-1.5 rounded-md text-sm font-body font-medium text-foreground hover:bg-muted transition-colors whitespace-nowrap"
+            >
+              {activeSection === "directory" ? "Быстрый ответ" : "Справочник"}
+            </button>
+          )}
+
           <div className="flex items-center gap-2 justify-self-end">
-            {activeSection === "directory" && (
-              <button
-                onClick={() => onNav("nearby")}
-                className="md:hidden px-3 py-1.5 rounded-md text-sm font-body font-medium text-foreground hover:bg-muted transition-colors"
-              >
-                Быстрый ответ
-              </button>
-            )}
-            {activeSection === "nearby" && (
-              <button
-                onClick={() => onNav("directory")}
-                className="md:hidden px-3 py-1.5 rounded-md text-sm font-body font-medium text-foreground hover:bg-muted transition-colors"
-              >
-                Справочник
-              </button>
-            )}
             {activeSection !== "nearby" && (
               <Link
                 to="/en"
