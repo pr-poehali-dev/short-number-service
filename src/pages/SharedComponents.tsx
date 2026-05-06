@@ -322,6 +322,22 @@ export function Header({
                 <Icon name="Globe" size={12} /> EN
               </Link>
             )}
+            {activeSection === "directory" && (
+              <button
+                onClick={() => onNav("nearby")}
+                className="md:hidden px-3 py-1.5 rounded-md text-sm font-body font-medium text-foreground hover:bg-muted transition-colors"
+              >
+                Быстрый ответ
+              </button>
+            )}
+            {activeSection === "nearby" && (
+              <button
+                onClick={() => onNav("directory")}
+                className="md:hidden px-3 py-1.5 rounded-md text-sm font-body font-medium text-foreground hover:bg-muted transition-colors"
+              >
+                Справочник
+              </button>
+            )}
             <button
               onClick={() => setInstallOpen(true)}
               title="Добавить на домашний экран"
