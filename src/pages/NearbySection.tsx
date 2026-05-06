@@ -3,6 +3,8 @@ import { Place, Bookmark, loadBookmarks, saveBookmarks } from "@/pages/nearby.ty
 import { NearbyPromptEditor } from "@/pages/NearbyPromptEditor";
 import { NearbyBookmarks } from "@/pages/NearbyBookmarks";
 import { NearbyResults } from "@/pages/NearbyResults";
+import SubscribeModal from "@/components/SubscribeModal";
+import { useAdviceLimit, AdviceGateResult } from "@/hooks/useAdviceLimit";
 
 const NEARBY_URL = "https://functions.poehali.dev/d4b08b1e-6bd7-4d3b-81cf-02b5e4c6447f";
 const ANALYZE_URL = "https://functions.poehali.dev/f314b7e4-d728-4c13-bfd3-c1962a5861fc";
@@ -33,6 +35,8 @@ export function NearbySection() {
   const [adviceLoading, setAdviceLoading] = useState(false);
   const [adviceError, setAdviceError] = useState("");
   const [manualCoords, setManualCoords] = useState("");
+  const [subscribeModal, setSubscribeModal] = useState<AdviceGateResult | null>(null);
+  const { check, consume, confirmSubscriber, cooldownMs } = useAdviceLimit();
 
   useEffect(() => {
     saveBookmarks(bookmarks);
@@ -177,6 +181,12 @@ export function NearbySection() {
   }
 
   async function analyzeBookmarks() {
+    const gate = check();
+    if (gate !== "ok") {
+      setSubscribeModal(gate);
+      return;
+    }
+    consume();
     setAdviceLoading(true);
     setAdviceError("");
     setAdvice("");
@@ -227,6 +237,18 @@ export function NearbySection() {
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-8 animate-fade-in">
+      {subscribeModal && (
+        <SubscribeModal
+          mode={subscribeModal === "show_subscribe" ? "subscribe" : "plans"}
+          cooldownHours={Math.ceil(cooldownMs() / 3600000)}
+          onConfirmSubscribe={() => {
+            confirmSubscriber();
+            setSubscribeModal(null);
+            analyzeBookmarks();
+          }}
+          onClose={() => setSubscribeModal(null)}
+        />
+      )}
       {showPromptEditor && (
         <NearbyPromptEditor
           prompt={prompt}
