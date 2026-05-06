@@ -89,6 +89,77 @@ export const EXAMPLE_BOOKMARK: Bookmark = {
   hours: "08:00–22:00",
 };
 
+export interface BookmarkGroup {
+  id: string;
+  date: string;
+  label: string;
+  center: { lat: number; lon: number };
+  cityLabel: string;
+  bookmarks: Bookmark[];
+}
+
+function haversineKm(lat1: number, lon1: number, lat2: number, lon2: number): number {
+  const R = 6371;
+  const dLat = ((lat2 - lat1) * Math.PI) / 180;
+  const dLon = ((lon2 - lon1) * Math.PI) / 180;
+  const a =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos((lat1 * Math.PI) / 180) * Math.cos((lat2 * Math.PI) / 180) * Math.sin(dLon / 2) ** 2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+}
+
+function dayKey(iso: string): string {
+  return new Date(iso).toLocaleDateString("ru-RU", { day: "2-digit", month: "long", year: "numeric" });
+}
+
+function formatGroupLabel(iso: string): string {
+  const d = new Date(iso);
+  const today = new Date();
+  const yesterday = new Date(today);
+  yesterday.setDate(today.getDate() - 1);
+  const sameDay = (a: Date, b: Date) =>
+    a.getDate() === b.getDate() && a.getMonth() === b.getMonth() && a.getFullYear() === b.getFullYear();
+  if (sameDay(d, today)) return "Сегодня";
+  if (sameDay(d, yesterday)) return "Вчера";
+  return d.toLocaleDateString("ru-RU", { day: "numeric", month: "long", year: d.getFullYear() !== today.getFullYear() ? "numeric" : undefined });
+}
+
+export function groupBookmarks(bookmarks: Bookmark[]): BookmarkGroup[] {
+  const sorted = [...bookmarks].sort(
+    (a, b) => new Date(b.savedAt).getTime() - new Date(a.savedAt).getTime()
+  );
+
+  const groups: BookmarkGroup[] = [];
+
+  for (const bm of sorted) {
+    const day = dayKey(bm.savedAt);
+    const matched = groups.find((g) => {
+      if (dayKey(g.bookmarks[0].savedAt) !== day) return false;
+      return haversineKm(g.center.lat, g.center.lon, bm.lat, bm.lon) <= 1.0;
+    });
+
+    if (matched) {
+      matched.bookmarks.push(bm);
+      matched.center = {
+        lat: matched.bookmarks.reduce((s, b) => s + b.lat, 0) / matched.bookmarks.length,
+        lon: matched.bookmarks.reduce((s, b) => s + b.lon, 0) / matched.bookmarks.length,
+      };
+    } else {
+      const cityLabel = bm.city || bm.address?.split(",")[0] || "Неизвестное место";
+      groups.push({
+        id: `${day}-${bm.lat.toFixed(3)}-${bm.lon.toFixed(3)}`,
+        date: bm.savedAt,
+        label: formatGroupLabel(bm.savedAt),
+        center: { lat: bm.lat, lon: bm.lon },
+        cityLabel,
+        bookmarks: [bm],
+      });
+    }
+  }
+
+  return groups;
+}
+
 export function loadBookmarks(): Bookmark[] {
   try {
     const stored = JSON.parse(localStorage.getItem(BOOKMARKS_KEY) || "[]");
