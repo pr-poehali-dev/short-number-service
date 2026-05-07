@@ -61,7 +61,7 @@ function generateVCard(num: PhoneNumber): string {
     `ORG:${num.organization ?? "Справочник 2407.рф"}`,
     `CATEGORIES:${num.category}`,
     `NOTE:${num.description.replace(/\n/g, "\\n")} | Оператор: ${num.operator}`,
-    "URL:https://2407.рф",
+    "URL:2407.рф",
     "END:VCARD",
   ];
   return lines.join("\r\n");
