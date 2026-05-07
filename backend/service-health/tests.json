@@ -1,0 +1,12 @@
+{
+  "tests": [
+    {
+      "name": "Health check all services",
+      "method": "GET",
+      "path": "/",
+      "expectedStatus": 200,
+      "expectedBody": { "ok": true, "services": {} },
+      "bodyMatcher": "partial"
+    }
+  ]
+}

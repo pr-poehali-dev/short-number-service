@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import Icon from "@/components/ui/icon";
 import { PhoneNumber, Operator, OPERATOR_COLORS } from "./data";
 import { ymGoal } from "@/lib/analytics";
+import { ServiceStatusBanner } from "@/components/ServiceStatusBanner";
 
 interface BeforeInstallPromptEvent extends Event {
   prompt(): Promise<void>;
@@ -290,6 +291,7 @@ export function Header({
 
   return (
     <header className="sticky top-0 z-50 bg-white border-b border-border shadow-sm">
+      <ServiceStatusBanner />
       <div className="max-w-6xl mx-auto px-4">
         <div className="relative flex items-center justify-between h-16 md:grid md:grid-cols-[1fr_auto_1fr]">
           <button onClick={() => onNav("home")} className="flex items-center gap-2 justify-self-start">
