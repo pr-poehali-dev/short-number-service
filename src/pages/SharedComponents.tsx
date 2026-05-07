@@ -293,7 +293,7 @@ export function Header({
     <header className="sticky top-0 z-50 bg-white border-b border-border shadow-sm">
       <ServiceStatusBanner />
       <div className="max-w-6xl mx-auto px-4">
-        <div className="relative flex items-center justify-between h-16 md:grid md:grid-cols-[1fr_auto_1fr]">
+        <div className="relative flex items-center justify-between h-16 md:grid md:grid-cols-[1fr_auto_1fr] md:items-center">
           <button onClick={() => onNav("home")} className="flex items-center gap-2 justify-self-start">
             <div className="font-display text-base font-bold text-black leading-tight tracking-wide">
               <span className="md:hidden">2407.рф</span>
