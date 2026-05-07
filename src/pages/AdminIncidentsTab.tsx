@@ -66,6 +66,31 @@ function formatDate(iso: string) {
   }
 }
 
+function exportCsv(incidents: Incident[]) {
+  const BOM = "\uFEFF";
+  const header = ["Время (UTC+3)", "Сервис", "Статус", "HTTP-код", "Отклик (мс)", "Ошибка"];
+  const rows = incidents.map((inc) => [
+    formatDate(inc.checked_at),
+    inc.service,
+    inc.status === "degraded" ? "Сбои" : "Недоступен",
+    inc.http_code ?? "",
+    inc.response_ms ?? "",
+    inc.error ?? "",
+  ]);
+  const csv =
+    BOM +
+    [header, ...rows]
+      .map((row) => row.map((cell) => `"${String(cell).replace(/"/g, '""')}"`).join(";"))
+      .join("\n");
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `incidents-2407-${new Date().toISOString().slice(0, 10)}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
 export function AdminIncidentsTab() {
   const [data, setData] = useState<HealthResponse | null>(null);
   const [loading, setLoading] = useState(false);
@@ -160,9 +185,20 @@ export function AdminIncidentsTab() {
               <Icon name="ClipboardList" size={15} />
               История инцидентов
             </h3>
-            <span className="text-xs text-muted-foreground font-body">
-              {data.incidents.length} записей
-            </span>
+            <div className="flex items-center gap-3">
+              <span className="text-xs text-muted-foreground font-body">
+                {data.incidents.length} записей
+              </span>
+              {data.incidents.length > 0 && (
+                <button
+                  onClick={() => exportCsv(data.incidents)}
+                  className="flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-lg border border-border text-muted-foreground hover:bg-muted font-body"
+                >
+                  <Icon name="Download" size={12} />
+                  CSV
+                </button>
+              )}
+            </div>
           </div>
 
           {data.incidents.length === 0 ? (
