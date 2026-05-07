@@ -198,7 +198,7 @@ export function InstallModal({ onClose, pwaPrompt }: { onClose: () => void; pwaP
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4 bg-black/50" onClick={onClose}>
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50" onClick={onClose}>
       <div className="bg-white rounded-2xl max-w-sm w-full p-6 shadow-2xl animate-fade-in" onClick={(e) => e.stopPropagation()}>
         <div className="flex items-start justify-between mb-4">
           <div className="flex items-center gap-3">
