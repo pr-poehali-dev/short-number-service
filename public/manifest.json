@@ -9,15 +9,15 @@
   "lang": "ru",
   "icons": [
     {
-      "src": "/icon-192.svg",
+      "src": "https://cdn.poehali.dev/files/7bcf9c89-8cb9-48db-a7ac-f8b6902960bd.png",
       "sizes": "192x192",
-      "type": "image/svg+xml",
+      "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "/icon-512.svg",
+      "src": "https://cdn.poehali.dev/files/38eb13e3-1c31-48b5-8e01-7cb7f13c0bad.png",
       "sizes": "512x512",
-      "type": "image/svg+xml",
+      "type": "image/png",
       "purpose": "any maskable"
     }
   ]
