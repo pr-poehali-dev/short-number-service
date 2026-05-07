@@ -328,7 +328,7 @@ export function Header({
             {activeSection !== "nearby" && (
               <Link
                 to="/en"
-                className="flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-body font-semibold text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+                className="hidden md:flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-body font-semibold text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
               >
                 EN
               </Link>
