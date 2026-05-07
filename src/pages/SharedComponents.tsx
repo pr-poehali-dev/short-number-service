@@ -363,6 +363,16 @@ export function Header({
               {item.label}
             </button>
           ))}
+          {activeSection === "directory" && (
+            <Link
+              to="/en"
+              onClick={() => setMenuOpen(false)}
+              className="w-full flex items-center gap-2 px-5 py-3 text-sm font-body font-medium text-muted-foreground hover:bg-muted transition-colors border-t border-border"
+            >
+              <span className="text-xs">🌐</span>
+              English version
+            </Link>
+          )}
         </div>
       )}
     </header>
