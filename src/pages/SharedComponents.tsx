@@ -201,8 +201,8 @@ export function InstallModal({ onClose, pwaPrompt }: { onClose: () => void; pwaP
       <div className="bg-white rounded-2xl max-w-sm w-full p-6 shadow-2xl animate-fade-in" onClick={(e) => e.stopPropagation()}>
         <div className="flex items-start justify-between mb-4">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-xl bg-primary flex items-center justify-center flex-shrink-0">
-              <span className="font-display text-white leading-tight text-center text-base font-light">2407</span>
+            <div className="w-12 h-12 rounded-xl border-2 border-primary/20 shadow-sm flex items-center justify-center flex-shrink-0 overflow-hidden bg-white">
+              <img src="https://cdn.poehali.dev/files/7bcf9c89-8cb9-48db-a7ac-f8b6902960bd.png" alt="2407" className="w-full h-full object-contain" />
             </div>
             <div>
               <h3 className="font-display font-bold text-foreground text-lg leading-tight">Справочник</h3>
