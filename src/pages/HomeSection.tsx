@@ -121,7 +121,7 @@ function NumberForm() {
         {([
           { id: "add", icon: "Plus", label: "Новый номер", short: "Новый" },
           { id: "edit", icon: "Pencil", label: "Изменить описание", short: "Изменить" },
-          { id: "photo", icon: "Camera", label: "Фото на практике", short: "Фото" },
+          { id: "photo", icon: "Camera", label: "Практика использования", short: "Фото" },
         ] as const).map((m) => (
           <button
             key={m.id}
