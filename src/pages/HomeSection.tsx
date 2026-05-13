@@ -260,9 +260,7 @@ function NumberForm() {
                   onChange={(e) => setPhotoForm({ ...photoForm, agreed: e.target.checked })}
                   className="mt-0.5 w-4 h-4 accent-primary flex-shrink-0"
                 />
-                <span className="text-xs font-body text-muted-foreground leading-relaxed">
-                  Я автор этих материалов и разрешаю интернет-сервису 2407.рф безвозмездно использовать их на сайте, в новостном канале и в других материалах сервиса
-                </span>
+                <span className="text-xs font-body text-muted-foreground leading-relaxed">Я автор этих материалов и разрешаю их безвозмездно использовать их на сайте, в новостном канале и в других материалах интернет-сервиса "2407.рф"</span>
               </label>
 
               <button
