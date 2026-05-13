@@ -4,8 +4,8 @@ import Icon from "@/components/ui/icon";
 const HEALTH_URL =
   "https://functions.poehali.dev/bab250b6-9b44-4c92-b8f6-e3d80cd06c33";
 
-const CHECK_INTERVAL_OK = 5 * 60 * 1000;
-const CHECK_INTERVAL_FAIL = 60 * 1000;
+const CHECK_INTERVAL_OK = 3 * 60 * 60 * 1000;
+const CHECK_INTERVAL_FAIL = 10 * 60 * 1000;
 
 interface ServiceResult {
   status: "ok" | "degraded" | "down";
