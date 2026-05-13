@@ -140,6 +140,15 @@ export function EditModal({
             />
           </Field>
 
+          <Field label="Предложено (необязательно)">
+            <input
+              value={form.suggestedBy ?? ""}
+              onChange={(e) => set("suggestedBy", e.target.value)}
+              placeholder="Интернет-сервисом"
+              className={inputCls}
+            />
+          </Field>
+
           <div className="flex gap-3 pt-2">
             <button type="button" onClick={onClose} className="flex-1 py-2.5 rounded-xl border border-border font-body text-sm hover:bg-muted">
               Отмена

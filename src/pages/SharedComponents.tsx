@@ -154,9 +154,12 @@ export function NumberModal({ num, onClose, onAddFavorite, isFavorite, maxReache
               <p className="text-sm text-blue-800 font-body">{num.procedure}</p>
             </div>
           )}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-wrap">
             <span className="text-sm font-body text-muted-foreground">Категория:</span>
             <span className="text-sm font-body font-semibold text-foreground">{num.category}</span>
+            <span className="text-muted-foreground/40 text-sm">·</span>
+            <span className="text-sm font-body text-muted-foreground">Предложено:</span>
+            <span className="text-sm font-body font-semibold text-foreground">{num.suggestedBy ?? "Интернет-сервисом"}</span>
           </div>
         </div>
 

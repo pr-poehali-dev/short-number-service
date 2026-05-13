@@ -11,6 +11,7 @@ export interface PhoneNumber {
   organization?: string;
   deviceAccess?: "mobile" | "any";
   industry?: string;
+  suggestedBy?: string;
 }
 
 export const NUMBERS: PhoneNumber[] = [
