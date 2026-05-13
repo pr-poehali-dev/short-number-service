@@ -119,9 +119,9 @@ function NumberForm() {
 
       <div className="flex gap-2 mb-5 flex-wrap">
         {([
-          { id: "add", icon: "Plus", label: "Новый номер" },
-          { id: "edit", icon: "Pencil", label: "Изменить описание" },
-          { id: "photo", icon: "Camera", label: "Фото на практике" },
+          { id: "add", icon: "Plus", label: "Новый номер", short: "Новый" },
+          { id: "edit", icon: "Pencil", label: "Изменить описание", short: "Изменить" },
+          { id: "photo", icon: "Camera", label: "Фото на практике", short: "Фото" },
         ] as const).map((m) => (
           <button
             key={m.id}
@@ -131,7 +131,8 @@ function NumberForm() {
             }`}
           >
             <Icon name={m.icon} size={14} />
-            {m.label}
+            <span className="hidden sm:inline">{m.label}</span>
+            <span className="sm:hidden">{m.short}</span>
           </button>
         ))}
       </div>
