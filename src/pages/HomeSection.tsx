@@ -7,10 +7,13 @@ type IconName = Parameters<typeof Icon>[0]["name"];
 const SEND_SUGGESTION_URL = "https://functions.poehali.dev/0c640a47-5d45-45cb-901c-c7ba1f48d5ea";
 
 function NumberForm() {
-  const [mode, setMode] = useState<"add" | "edit">("add");
+  const [mode, setMode] = useState<"add" | "edit" | "photo">("add");
   const [search, setSearch] = useState("");
   const [selected, setSelected] = useState<PhoneNumber | null>(null);
   const [form, setForm] = useState({ number: "", name: "", description: "", procedure: "", category: "" });
+  const [photoForm, setPhotoForm] = useState({ number: "", experience: "", agreed: false });
+  const [photoFile, setPhotoFile] = useState<File | null>(null);
+  const [photoPreview, setPhotoPreview] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
 
@@ -33,6 +36,15 @@ function NumberForm() {
     });
   }
 
+  function handlePhotoSelect(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setPhotoFile(file);
+    const reader = new FileReader();
+    reader.onload = (ev) => setPhotoPreview(ev.target?.result as string);
+    reader.readAsDataURL(file);
+  }
+
   async function handleSubmit() {
     setLoading(true);
     try {
@@ -50,7 +62,37 @@ function NumberForm() {
     }
   }
 
+  async function handlePhotoSubmit() {
+    if (!photoFile || !photoForm.agreed) return;
+    setLoading(true);
+    try {
+      const base64 = await new Promise<string>((resolve) => {
+        const reader = new FileReader();
+        reader.onload = (e) => resolve((e.target?.result as string).split(",")[1]);
+        reader.readAsDataURL(photoFile);
+      });
+      await fetch(SEND_SUGGESTION_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          mode: "photo",
+          number: photoForm.number,
+          experience: photoForm.experience,
+          photo_base64: base64,
+          photo_name: photoFile.name,
+        }),
+      });
+    } finally {
+      setLoading(false);
+      setShowModal(true);
+      setPhotoForm({ number: "", experience: "", agreed: false });
+      setPhotoFile(null);
+      setPhotoPreview(null);
+    }
+  }
+
   const isValid = form.number.trim() && form.name.trim() && form.description.trim();
+  const isPhotoValid = photoFile && photoForm.agreed;
 
   return (
     <div className="bg-white border border-border rounded-2xl p-6">
@@ -73,19 +115,23 @@ function NumberForm() {
       )}
 
       <h3 className="font-display text-xl font-bold text-foreground mb-1">Станьте частью справочника</h3>
-      <p className="text-sm text-muted-foreground font-body mb-4">Добавьте короткий номер или предложите описание существующего</p>
+      <p className="text-sm text-muted-foreground font-body mb-4">Добавьте короткий номер, предложите правку или поделитесь фото</p>
 
-      <div className="flex gap-2 mb-5">
-        {(["add", "edit"] as const).map((m) => (
+      <div className="flex gap-2 mb-5 flex-wrap">
+        {([
+          { id: "add", icon: "Plus", label: "Новый номер" },
+          { id: "edit", icon: "Pencil", label: "Изменить описание" },
+          { id: "photo", icon: "Camera", label: "Фото на практике" },
+        ] as const).map((m) => (
           <button
-            key={m}
-            onClick={() => { setMode(m); setSelected(null); setSearch(""); setForm({ number: "", name: "", description: "", procedure: "", category: "" }); }}
+            key={m.id}
+            onClick={() => { setMode(m.id); setSelected(null); setSearch(""); setForm({ number: "", name: "", description: "", procedure: "", category: "" }); }}
             className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-body font-semibold transition-colors border ${
-              mode === m ? "bg-primary text-white border-primary" : "bg-white text-foreground border-border hover:border-primary/40"
+              mode === m.id ? "bg-primary text-white border-primary" : "bg-white text-foreground border-border hover:border-primary/40"
             }`}
           >
-            <Icon name={m === "add" ? "Plus" : "Pencil"} size={14} />
-            {m === "add" ? "Новый номер" : "Изменить описание"}
+            <Icon name={m.icon} size={14} />
+            {m.label}
           </button>
         ))}
       </div>
@@ -171,6 +217,63 @@ function NumberForm() {
 
           {mode === "edit" && !selected && !suggestions.length && search.length > 0 && (
             <p className="text-center text-sm text-muted-foreground font-body py-4">Ничего не найдено — попробуйте другой запрос</p>
+          )}
+
+          {mode === "photo" && (
+            <>
+              <input
+                value={photoForm.number}
+                onChange={(e) => setPhotoForm({ ...photoForm, number: e.target.value })}
+                placeholder="Короткий номер на фото (необязательно)"
+                className="w-full px-4 py-3 border border-border rounded-xl font-body text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"
+              />
+
+              <label className={`flex flex-col items-center justify-center gap-2 w-full border-2 border-dashed rounded-xl cursor-pointer transition-colors ${photoPreview ? "border-primary/40 bg-primary/5" : "border-border hover:border-primary/40 bg-muted/30"}`}>
+                {photoPreview ? (
+                  <div className="relative w-full">
+                    <img src={photoPreview} alt="preview" className="w-full max-h-52 object-contain rounded-xl p-1" />
+                    <div className="absolute bottom-2 right-2 bg-black/50 text-white text-xs px-2 py-1 rounded-lg font-body">
+                      {photoFile?.name}
+                    </div>
+                  </div>
+                ) : (
+                  <div className="py-6 flex flex-col items-center gap-2">
+                    <Icon name="ImagePlus" size={28} className="text-muted-foreground" />
+                    <span className="text-sm font-body text-muted-foreground text-center px-4">Нажмите, чтобы выбрать фото<br /><span className="text-xs">JPG, PNG до 5 МБ</span></span>
+                  </div>
+                )}
+                <input type="file" accept="image/jpeg,image/png,image/webp" className="hidden" onChange={handlePhotoSelect} />
+              </label>
+
+              <textarea
+                rows={3}
+                value={photoForm.experience}
+                onChange={(e) => setPhotoForm({ ...photoForm, experience: e.target.value })}
+                placeholder="Личный опыт или мысли (необязательно) — где встретили, как использовали, что думаете..."
+                className="w-full px-4 py-3 border border-border rounded-xl font-body text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary resize-none"
+              />
+
+              <label className="flex items-start gap-3 cursor-pointer select-none">
+                <input
+                  type="checkbox"
+                  checked={photoForm.agreed}
+                  onChange={(e) => setPhotoForm({ ...photoForm, agreed: e.target.checked })}
+                  className="mt-0.5 w-4 h-4 accent-primary flex-shrink-0"
+                />
+                <span className="text-xs font-body text-muted-foreground leading-relaxed">
+                  Я автор этих материалов и разрешаю интернет-сервису 2407.рф безвозмездно использовать их на сайте, в новостном канале и в других материалах сервиса
+                </span>
+              </label>
+
+              <button
+                onClick={handlePhotoSubmit}
+                disabled={!isPhotoValid || loading}
+                className="w-full py-3 bg-primary text-primary-foreground rounded-xl font-body font-semibold hover:bg-primary/90 transition-colors flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed"
+              >
+                {loading ? <Icon name="Loader" size={16} className="animate-spin" /> : <Icon name="Send" size={16} />}
+                {loading ? "Отправка..." : "Отправить фото"}
+              </button>
+            </>
           )}
         </div>
     </div>

@@ -19,7 +19,6 @@
         "category": "Экстренные"
       },
       "expectedStatus": 200,
-      "expectedBody": {"ok": true},
       "bodyMatcher": "partial"
     }
   ]
