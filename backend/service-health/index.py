@@ -108,7 +108,7 @@ def get_recent_incidents(conn, limit: int = 50) -> list:
         cur.execute(
             f"""
             SELECT service_name, status, http_code, response_ms, error_message,
-                   checked_at AT TIME ZONE 'UTC' as checked_at
+                   checked_at
             FROM {SCHEMA}.service_availability_log
             WHERE status != 'ok'
             ORDER BY checked_at DESC
