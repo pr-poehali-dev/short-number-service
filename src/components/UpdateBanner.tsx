@@ -29,12 +29,10 @@ export default function UpdateBanner() {
 
   const handleUpdate = () => {
     if (!waitingSW) return;
+    navigator.serviceWorker.addEventListener('controllerchange', () => {
+      window.location.reload();
+    }, { once: true });
     waitingSW.postMessage({ type: 'SKIP_WAITING' });
-    waitingSW.addEventListener('statechange', () => {
-      if (waitingSW.state === 'activated') {
-        window.location.reload();
-      }
-    });
   };
 
   if (!waitingSW) return null;
