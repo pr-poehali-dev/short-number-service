@@ -83,6 +83,16 @@ export default function Index() {
           </div>
           <span>{section === "nearby" ? "© 2026 · Помогаем принимать решения" : "© 2026 · Все номера проверены вручную"}</span>
         </div>
+        <div className="max-w-6xl mx-auto border-t border-border mt-4 pt-4 flex flex-col md:flex-row items-center justify-between gap-2 text-sm text-muted-foreground font-body">
+          <div className="flex flex-wrap items-center justify-center md:justify-start gap-x-4 gap-y-1">
+            <a href="/terms" className="hover:text-foreground transition-colors">Пользовательское соглашение</a>
+            <a href="/privacy" className="hover:text-foreground transition-colors">Политика конфиденциальности</a>
+          </div>
+          <div className="flex flex-col md:flex-row items-center gap-x-4 gap-y-1 text-center md:text-right">
+            <span>© ООО «МЕДИА-ИНКОД», 2026</span>
+            <a href="mailto:support@incode.ru" className="hover:text-foreground transition-colors">support@incode.ru</a>
+          </div>
+        </div>
       </footer>
 
       {selected && (
