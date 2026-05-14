@@ -36,6 +36,10 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('message', (event) => {
+  if (event.data && event.data.type === 'SKIP_WAITING') {
+    self.skipWaiting();
+    return;
+  }
   if (event.data && event.data.type === 'PRECACHE_ASSETS') {
     caches.open(CACHE_NAME).then((cache) => {
       event.data.assets.forEach((assetPath) => {
