@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import Icon from "@/components/ui/icon";
+import { LEGAL_DATES } from "@/config/legalDates";
 
 export default function PrivacyPage() {
   const navigate = useNavigate();
@@ -16,7 +17,7 @@ export default function PrivacyPage() {
       </header>
 
       <main className="max-w-3xl mx-auto px-4 py-8 prose prose-sm text-foreground">
-        <p className="text-muted-foreground text-sm mb-8">Дата вступления в силу: 1 января 2026 г.</p>
+        <p className="text-muted-foreground text-sm mb-8">Последнее обновление: {LEGAL_DATES.privacy}</p>
 
         <h2 className="text-base font-semibold mt-6 mb-2">1. Общие положения</h2>
         <p className="text-sm text-muted-foreground leading-relaxed">
