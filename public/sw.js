@@ -1,9 +1,25 @@
-const CACHE_VERSION = 'v3';
+const CACHE_VERSION = 'v4';
 const CACHE_NAME = `spravochnik-${CACHE_VERSION}`;
 const FONT_CACHE = 'fonts-v1';
 
+const PRECACHE_URLS = [
+  '/',
+  '/index.html',
+  '/manifest.json',
+];
+
 self.addEventListener('install', (event) => {
-  self.skipWaiting();
+  event.waitUntil(
+    caches.open(CACHE_NAME).then((cache) =>
+      Promise.all(
+        PRECACHE_URLS.map((url) =>
+          fetch(url, { cache: 'reload' })
+            .then((res) => { if (res.ok) cache.put(url, res); })
+            .catch(() => {})
+        )
+      )
+    ).then(() => self.skipWaiting())
+  );
 });
 
 self.addEventListener('activate', (event) => {
@@ -17,6 +33,22 @@ self.addEventListener('activate', (event) => {
     )
   );
   self.clients.claim();
+});
+
+self.addEventListener('message', (event) => {
+  if (event.data && event.data.type === 'PRECACHE_ASSETS') {
+    caches.open(CACHE_NAME).then((cache) => {
+      event.data.assets.forEach((assetPath) => {
+        cache.match(assetPath).then((cached) => {
+          if (!cached) {
+            fetch(assetPath, { cache: 'reload' })
+              .then((res) => { if (res.ok) cache.put(assetPath, res); })
+              .catch(() => {});
+          }
+        });
+      });
+    });
+  }
 });
 
 self.addEventListener('fetch', (event) => {
