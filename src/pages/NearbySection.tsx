@@ -14,6 +14,25 @@ type SearchSource = "2gis" | "ai";
 
 const IS_IFRAME = window.self !== window.top;
 
+const NEARBY_CACHE_TTL = 5 * 60 * 1000;
+const nearbyCache = new Map<string, { places: Place[]; ts: number }>();
+
+function getCacheKey(lat: number, lon: number) {
+  return `${lat.toFixed(4)},${lon.toFixed(4)}`;
+}
+
+function getCached(lat: number, lon: number): Place[] | null {
+  const key = getCacheKey(lat, lon);
+  const entry = nearbyCache.get(key);
+  if (!entry) return null;
+  if (Date.now() - entry.ts > NEARBY_CACHE_TTL) { nearbyCache.delete(key); return null; }
+  return entry.places;
+}
+
+function setCache(lat: number, lon: number, places: Place[]) {
+  nearbyCache.set(getCacheKey(lat, lon), { places, ts: Date.now() });
+}
+
 const MOCK_PLACES: Place[] = [
   { name: "Кофейня «Бодрость»", type: "кафе", description: "Кофейня. Сегодня: 08:00–22:00", distance_approx: 85, city: "Москва", address: "ул. Ленина, 12", label: "кафе", profile: "завтраки, для семей", hours: "08:00–22:00" },
   { name: "Аптека «Здоровье»", type: "аптека", description: "Аптека. Сегодня: 09:00–21:00", distance_approx: 140, city: "Москва", address: "пр. Мира, 5", profile: "Сеть аптек", hours: "09:00–21:00" },
@@ -160,9 +179,17 @@ export function NearbySection() {
 
   async function searchByCoords(lat: number, lon: number) {
     setCoords({ lat, lon });
+    setErrorMsg("");
+
+    const cached = getCached(lat, lon);
+    if (cached) {
+      setPlaces(cached);
+      setStatus("done");
+      return;
+    }
+
     setStatus("loading");
     setPlaces([]);
-    setErrorMsg("");
     try {
       const res = await fetch(NEARBY_URL, {
         method: "POST",
@@ -171,6 +198,7 @@ export function NearbySection() {
       });
       const data = await res.json();
       if (res.ok && data.places) {
+        setCache(lat, lon, data.places);
         setPlaces(data.places);
         setStatus("done");
       } else {
