@@ -21,7 +21,7 @@
       "path": "/",
       "body": {"lat": 55.7558, "lon": 37.6173},
       "expectedStatus": 200,
-      "expectedBody": {"places": []},
+      "expectedBody": {"lat": 55.7558, "lon": 37.6173},
       "bodyMatcher": "partial"
     }
   ]

@@ -1,6 +1,8 @@
 import json
 import os
 import requests
+import urllib.request
+import urllib.parse
 
 
 SYSTEM_PROMPT = """Ты — геолокационный помощник. Пользователь находится в конкретной точке на карте.
@@ -69,6 +71,24 @@ def handler(event: dict, context) -> dict:
         f"Предложи интересные места рядом (в радиусе 500 м) — кафе, рестораны, магазины, парки, культурные места и всё интересное."
     )
 
+    city = ""
+    try:
+        twogis_key = os.environ.get('TWOGIS_API_KEY', '')
+        geo_params = urllib.parse.urlencode({'key': twogis_key, 'point': f"{lon},{lat}", 'fields': 'items.regions', 'locale': 'ru_RU'})
+        geo_url = f"https://catalog.api.2gis.com/3.0/items/geocode?{geo_params}"
+        geo_req = urllib.request.Request(geo_url, headers={'User-Agent': 'Mozilla/5.0'})
+        with urllib.request.urlopen(geo_req, timeout=5) as geo_resp:
+            geo_data = json.loads(geo_resp.read().decode('utf-8'))
+        geo_items = geo_data.get('result', {}).get('items', [])
+        if geo_items:
+            regions = geo_items[0].get('regions', [])
+            for r in regions:
+                if r.get('type') == 'city':
+                    city = r.get('name', '')
+                    break
+    except Exception as e:
+        print(f"Geocode error: {e}")
+
     api_key = os.environ.get('POLZA_AI_API_KEY', '')
     response = requests.post(
         'https://api.polza.ai/api/v1/chat/completions',
@@ -110,6 +130,7 @@ def handler(event: dict, context) -> dict:
             'description': p.get('description', ''),
             'distance_approx': int(p.get('distance_approx', 200)),
             'address': p.get('address', ''),
+            'city': city,
             'label': p.get('type', 'место'),
             'profile': p.get('profile', ''),
             'hours': p.get('hours', ''),
