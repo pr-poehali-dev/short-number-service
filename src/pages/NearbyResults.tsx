@@ -57,8 +57,16 @@ export function NearbyResults({
         <div className="relative bg-white border border-border rounded-2xl p-8 text-center">
           <button
             onClick={onOpenSettings}
+            className="absolute top-3 left-3 flex items-center gap-1 px-2 py-1.5 rounded-lg hover:bg-muted border border-border transition-colors text-xs font-body text-muted-foreground hover:text-foreground"
+            title="Изменить город"
+          >
+            <Icon name="MapPin" size={13} className="text-primary flex-shrink-0" />
+            <span>{city || "Город не задан"}</span>
+          </button>
+          <button
+            onClick={onOpenSettings}
             className="absolute top-3 right-3 p-2 rounded-lg hover:bg-muted border border-border transition-colors"
-            title="Настройки AI-промпта"
+            title="Настройки"
           >
             <Icon name="Settings2" size={18} className="text-muted-foreground" />
           </button>
