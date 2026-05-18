@@ -47,6 +47,7 @@ export function NearbySection() {
   const [places, setPlaces] = useState<Place[]>([]);
   const [errorMsg, setErrorMsg] = useState("");
   const [rateLimited, setRateLimited] = useState(false);
+  const [remainingRequests, setRemainingRequests] = useState<number | null>(null);
   const [coords, setCoords] = useState<{ lat: number; lon: number } | null>(null);
   const [showPromptEditor, setShowPromptEditor] = useState(false);
   const [prompt, setPrompt] = useState("");
@@ -168,9 +169,10 @@ export function NearbySection() {
       const data = await res.json();
       if (res.ok && data.places) {
         setPlaces(data.places);
+        if (typeof data.remaining === "number") setRemainingRequests(data.remaining);
         setStatus("done");
       } else {
-        if (res.status === 429) setRateLimited(true);
+        if (res.status === 429) { setRateLimited(true); setRemainingRequests(0); }
         setErrorMsg(data.error || "Ошибка получения данных");
         setStatus("error");
       }
@@ -204,9 +206,10 @@ export function NearbySection() {
       if (res.ok && data.places) {
         setCache(lat, lon, data.places);
         setPlaces(data.places);
+        if (typeof data.remaining === "number") setRemainingRequests(data.remaining);
         setStatus("done");
       } else {
-        if (res.status === 429) setRateLimited(true);
+        if (res.status === 429) { setRateLimited(true); setRemainingRequests(0); }
         setErrorMsg(data.error || "Ошибка получения данных");
         setStatus("error");
       }
@@ -348,6 +351,7 @@ export function NearbySection() {
         coords={coords}
         errorMsg={errorMsg}
         rateLimited={rateLimited}
+        remainingRequests={remainingRequests}
         bookmarks={bookmarks}
         savedId={savedId}
         onFind={findNearby}

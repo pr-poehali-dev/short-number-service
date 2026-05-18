@@ -129,7 +129,7 @@ def handler(event: dict, context) -> dict:
                 'body': json.dumps({'error': 'lat and lon are required'})
             }
 
-        rl = check_rate_limit(event, 'nearby')
+        rl, remaining = check_rate_limit(event, 'nearby')
         if rl:
             return rl
 
@@ -230,7 +230,7 @@ def handler(event: dict, context) -> dict:
         return {
             'statusCode': 200,
             'headers': {'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json'},
-            'body': json.dumps({'places': places[:30], 'lat': lat, 'lon': lon}, ensure_ascii=False)
+            'body': json.dumps({'places': places[:30], 'lat': lat, 'lon': lon, 'remaining': remaining}, ensure_ascii=False)
         }
 
     finally:

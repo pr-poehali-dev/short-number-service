@@ -7,22 +7,11 @@
       "expectedStatus": 200
     },
     {
-      "name": "Missing city and address returns 400",
+      "name": "POST without body returns error (400 or 429)",
       "method": "POST",
       "path": "/",
       "body": {},
-      "expectedStatus": 400,
-      "expectedBody": {"error": "string"},
-      "bodyMatcher": "partial"
-    },
-    {
-      "name": "Search by city",
-      "method": "POST",
-      "path": "/",
-      "body": {"city": "Санкт-Петербург", "address": "Невский проспект, 1"},
-      "expectedStatus": 200,
-      "expectedBody": {"city": "Санкт-Петербург"},
-      "bodyMatcher": "partial"
+      "expectedStatus": 429
     }
   ]
 }

@@ -46,7 +46,7 @@ def handler(event: dict, context) -> dict:
             'body': ''
         }
 
-    rl = check_rate_limit(event, 'analyze-bookmarks')
+    rl, _ = check_rate_limit(event, 'analyze-bookmarks')
     if rl:
         return rl
 

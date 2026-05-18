@@ -11,6 +11,7 @@ interface Props {
   coords: { lat: number; lon: number } | null;
   errorMsg: string;
   rateLimited: boolean;
+  remainingRequests: number | null;
   bookmarks: Bookmark[];
   savedId: string | null;
   onFind: () => void;
@@ -36,6 +37,7 @@ export function NearbyResults({
   coords,
   errorMsg,
   rateLimited,
+  remainingRequests,
   bookmarks,
   savedId,
   onFind,
@@ -130,15 +132,27 @@ export function NearbyResults({
                 <Icon name="Sparkles" size={16} />
                 Показать интересное рядом
               </button>
+              {remainingRequests !== null && (
+                <p className={`text-xs font-body mt-2 text-center ${remainingRequests <= 1 ? "text-amber-600" : "text-muted-foreground"}`}>
+                  Осталось запросов сегодня: <span className="font-semibold">{remainingRequests} из 5</span>
+                </p>
+              )}
             </div>
           ) : (
-            <button
-              onClick={onFind}
-              className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-xl font-body font-semibold hover:bg-primary/90 transition-colors"
-            >
-              <Icon name="MapPin" size={16} />
-              Показать интересное рядом
-            </button>
+            <>
+              <button
+                onClick={onFind}
+                className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-xl font-body font-semibold hover:bg-primary/90 transition-colors"
+              >
+                <Icon name="MapPin" size={16} />
+                Показать интересное рядом
+              </button>
+              {remainingRequests !== null && (
+                <p className={`text-xs font-body mt-3 ${remainingRequests <= 1 ? "text-amber-600" : "text-muted-foreground"}`}>
+                  Осталось запросов сегодня: <span className="font-semibold">{remainingRequests} из 5</span>
+                </p>
+              )}
+            </>
           )}
         </div>
       )}
@@ -216,7 +230,7 @@ export function NearbyResults({
       {status === "done" && (
         <>
           <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 flex-wrap">
               <Icon name="CheckCircle" size={16} className="text-green-600" />
               <span className="text-sm font-body text-muted-foreground">
                 Найдено: <strong className="text-foreground">{sorted.length}</strong>
@@ -231,6 +245,15 @@ export function NearbyResults({
               {hiddenCount > 0 && (
                 <span className="ml-1.5 text-xs text-primary/70 font-body">
                   · ещё {hiddenCount} в избранном
+                </span>
+              )}
+              {remainingRequests !== null && (
+                <span className={`text-[10px] px-2 py-0.5 rounded-full font-body font-medium border ${
+                  remainingRequests <= 1
+                    ? "text-amber-700 bg-amber-50 border-amber-200"
+                    : "text-muted-foreground bg-muted border-border"
+                }`}>
+                  Осталось: {remainingRequests}/5
                 </span>
               )}
             </div>

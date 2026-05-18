@@ -41,7 +41,7 @@ def handler(event: dict, context) -> dict:
             'body': ''
         }
 
-    rl = check_rate_limit(event, 'nearby-ai')
+    rl, remaining = check_rate_limit(event, 'nearby-ai')
     if rl:
         return rl
 
@@ -135,5 +135,5 @@ def handler(event: dict, context) -> dict:
     return {
         'statusCode': 200,
         'headers': {'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json'},
-        'body': json.dumps({'places': result, 'city': city, 'address': address}, ensure_ascii=False)
+        'body': json.dumps({'places': result, 'city': city, 'address': address, 'remaining': remaining}, ensure_ascii=False)
     }

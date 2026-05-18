@@ -21,7 +21,7 @@ def handler(event: dict, context) -> dict:
             'body': ''
         }
 
-    rl = check_rate_limit(event, 'send-suggestion')
+    rl, _ = check_rate_limit(event, 'send-suggestion')
     if rl:
         return rl
 
