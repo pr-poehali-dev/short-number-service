@@ -1,6 +1,7 @@
 import json
 import os
 import requests
+from rate_limit import check_rate_limit
 
 
 SYSTEM_PROMPT = """Ты — геолокационный помощник. Пользователь находится в конкретной точке на карте.
@@ -39,6 +40,10 @@ def handler(event: dict, context) -> dict:
             },
             'body': ''
         }
+
+    rl = check_rate_limit(event, 'nearby-ai')
+    if rl:
+        return rl
 
     body = json.loads(event.get('body') or '{}')
     city = body.get('city', '').strip()

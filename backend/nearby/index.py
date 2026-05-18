@@ -4,6 +4,7 @@ import math
 import urllib.request
 import urllib.parse
 import psycopg2
+from rate_limit import check_rate_limit
 
 
 def haversine(lat1, lon1, lat2, lon2):
@@ -71,6 +72,10 @@ def handler(event: dict, context) -> dict:
             },
             'body': ''
         }
+
+    rl = check_rate_limit(event, 'nearby')
+    if rl:
+        return rl
 
     conn = psycopg2.connect(os.environ['DATABASE_URL'])
     schema = os.environ.get('MAIN_DB_SCHEMA', 't_p25384465_short_number_service')

@@ -2,6 +2,7 @@ import json
 import os
 import math
 import requests
+from rate_limit import check_rate_limit
 
 
 SYSTEM_PROMPT = """Ты — персональный помощник по выбору мест для посещения.
@@ -44,6 +45,10 @@ def handler(event: dict, context) -> dict:
             },
             'body': ''
         }
+
+    rl = check_rate_limit(event, 'analyze-bookmarks')
+    if rl:
+        return rl
 
     body = json.loads(event.get('body') or '{}')
     bookmarks = body.get('bookmarks', [])

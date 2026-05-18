@@ -3,6 +3,7 @@ import os
 import base64
 import urllib.request
 import urllib.parse
+from rate_limit import check_rate_limit
 
 
 def handler(event: dict, context) -> dict:
@@ -19,6 +20,10 @@ def handler(event: dict, context) -> dict:
             },
             'body': ''
         }
+
+    rl = check_rate_limit(event, 'send-suggestion')
+    if rl:
+        return rl
 
     body = json.loads(event.get('body', '{}'))
     mode = body.get('mode', 'add')
