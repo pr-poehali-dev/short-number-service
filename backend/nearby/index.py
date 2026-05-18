@@ -140,40 +140,33 @@ def handler(event: dict, context) -> dict:
         fields = "items.point,items.address,items.rubrics,items.name,items.schedule"
 
         categories = [c.strip() for c in search_query.split(',') if c.strip()]
+        combined_query = ' '.join(categories)
 
-        seen_names = set()
         items = []
-
-        for category in categories:
-            params = urllib.parse.urlencode({
-                'key': api_key,
-                'q': category,
-                'point': f"{lon},{lat}",
-                'radius': radius,
-                'sort': 'distance',
-                'type': 'branch',
-                'fields': fields,
-                'page_size': 5,
-                'locale': 'ru_RU',
-            })
-            url = f"https://catalog.api.2gis.com/3.0/items?{params}"
-            req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
-            try:
-                with urllib.request.urlopen(req, timeout=8) as resp:
-                    raw = resp.read().decode('utf-8')
-                    data = json.loads(raw)
-                status_code = data.get('meta', {}).get('code', '?')
-                result_items = data.get('result', {}).get('items', [])
-                print(f"2GIS '{category}': status={status_code}, found={len(result_items)}")
-                if status_code not in (200, '?'):
-                    print(f"2GIS error body: {raw[:500]}")
-                for item in result_items:
-                    name = item.get('name', '')
-                    if name not in seen_names:
-                        seen_names.add(name)
-                        items.append(item)
-            except Exception as e:
-                print(f"2GIS EXCEPTION for '{category}': {type(e).__name__}: {e}")
+        params = urllib.parse.urlencode({
+            'key': api_key,
+            'q': combined_query,
+            'point': f"{lon},{lat}",
+            'radius': radius,
+            'sort': 'distance',
+            'type': 'branch',
+            'fields': fields,
+            'page_size': 30,
+            'locale': 'ru_RU',
+        })
+        url = f"https://catalog.api.2gis.com/3.0/items?{params}"
+        req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
+        try:
+            with urllib.request.urlopen(req, timeout=8) as resp:
+                raw = resp.read().decode('utf-8')
+                data = json.loads(raw)
+            status_code = data.get('meta', {}).get('code', '?')
+            items = data.get('result', {}).get('items', [])
+            print(f"2GIS combined query: status={status_code}, found={len(items)}")
+            if status_code not in (200, '?'):
+                print(f"2GIS error body: {raw[:500]}")
+        except Exception as e:
+            print(f"2GIS EXCEPTION: {type(e).__name__}: {e}")
 
         places = []
         for item in items:
