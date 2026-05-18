@@ -1,8 +1,6 @@
 import json
 import os
 import requests
-import urllib.request
-import urllib.parse
 
 
 SYSTEM_PROMPT = """Ты — геолокационный помощник. Пользователь находится в конкретной точке на карте.
@@ -43,14 +41,14 @@ def handler(event: dict, context) -> dict:
         }
 
     body = json.loads(event.get('body') or '{}')
-    lat = body.get('lat')
-    lon = body.get('lon')
+    city = body.get('city', '').strip()
+    address = body.get('address', '').strip()
 
-    if lat is None or lon is None:
+    if not city and not address:
         return {
             'statusCode': 400,
             'headers': {'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json'},
-            'body': json.dumps({'error': 'lat и lon обязательны'}, ensure_ascii=False)
+            'body': json.dumps({'error': 'Укажите город в настройках или введите адрес'}, ensure_ascii=False)
         }
 
     import datetime
@@ -65,29 +63,20 @@ def handler(event: dict, context) -> dict:
     else:
         time_context = "ночь"
 
-    user_message = (
-        f"Я нахожусь на координатах: {lat:.5f}, {lon:.5f}. "
-        f"Сейчас {time_context}. "
-        f"Предложи интересные места рядом (в радиусе 500 м) — кафе, рестораны, магазины, парки, культурные места и всё интересное."
-    )
+    location_str = ""
+    if city and address:
+        location_str = f"в городе {city}, на улице {address}"
+    elif city:
+        location_str = f"в городе {city}"
+    else:
+        location_str = f"по адресу: {address}"
 
-    city = ""
-    try:
-        twogis_key = os.environ.get('TWOGIS_API_KEY', '')
-        geo_params = urllib.parse.urlencode({'key': twogis_key, 'point': f"{lon},{lat}", 'fields': 'items.regions', 'locale': 'ru_RU'})
-        geo_url = f"https://catalog.api.2gis.com/3.0/items/geocode?{geo_params}"
-        geo_req = urllib.request.Request(geo_url, headers={'User-Agent': 'Mozilla/5.0'})
-        with urllib.request.urlopen(geo_req, timeout=5) as geo_resp:
-            geo_data = json.loads(geo_resp.read().decode('utf-8'))
-        geo_items = geo_data.get('result', {}).get('items', [])
-        if geo_items:
-            regions = geo_items[0].get('regions', [])
-            for r in regions:
-                if r.get('type') == 'city':
-                    city = r.get('name', '')
-                    break
-    except Exception as e:
-        print(f"Geocode error: {e}")
+    user_message = (
+        f"Я нахожусь {location_str}. "
+        f"Сейчас {time_context}. "
+        f"Предложи интересные места рядом (в радиусе 500 м) — кафе, рестораны, магазины, парки, культурные места и всё интересное. "
+        f"В поле address указывай реальные улицы этого города."
+    )
 
     api_key = os.environ.get('POLZA_AI_API_KEY', '')
     response = requests.post(
@@ -141,5 +130,5 @@ def handler(event: dict, context) -> dict:
     return {
         'statusCode': 200,
         'headers': {'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json'},
-        'body': json.dumps({'places': result, 'lat': lat, 'lon': lon}, ensure_ascii=False)
+        'body': json.dumps({'places': result, 'city': city, 'address': address}, ensure_ascii=False)
     }

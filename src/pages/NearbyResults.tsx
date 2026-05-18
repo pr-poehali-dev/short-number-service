@@ -20,6 +20,10 @@ interface Props {
   manualCoords: string;
   onManualCoordsChange: (v: string) => void;
   onFindByManualCoords: () => void;
+  manualAddress: string;
+  onManualAddressChange: (v: string) => void;
+  onFindByManualAddress: () => void;
+  city: string;
   searchSource: SearchSource;
   onSearchSourceChange: (s: SearchSource) => void;
 }
@@ -40,6 +44,10 @@ export function NearbyResults({
   manualCoords,
   onManualCoordsChange,
   onFindByManualCoords,
+  manualAddress,
+  onManualAddressChange,
+  onFindByManualAddress,
+  city,
   searchSource,
   onSearchSourceChange,
 }: Props) {
@@ -87,13 +95,41 @@ export function NearbyResults({
             </button>
           </div>
 
-          <button
-            onClick={onFind}
-            className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-xl font-body font-semibold hover:bg-primary/90 transition-colors"
-          >
-            <Icon name={searchSource === "ai" ? "Sparkles" : "MapPin"} size={16} />
-            Показать интересное рядом
-          </button>
+          {searchSource === "ai" ? (
+            <div className="max-w-sm mx-auto">
+              {!city && (
+                <p className="text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2 mb-3 font-body text-left">
+                  Укажите город в настройках (⚙️), чтобы нейросеть знала, где вы находитесь.
+                </p>
+              )}
+              <div className="flex gap-2 mb-3">
+                <input
+                  type="text"
+                  value={manualAddress}
+                  onChange={e => onManualAddressChange(e.target.value)}
+                  placeholder="Улица и дом, например: ул. Ленина, 5"
+                  className="flex-1 text-sm border border-border rounded-xl px-3 py-2.5 font-body bg-white focus:outline-none focus:border-primary"
+                  onKeyDown={e => e.key === 'Enter' && manualAddress.trim() && onFindByManualAddress()}
+                />
+              </div>
+              <button
+                onClick={onFind}
+                disabled={!city && !manualAddress.trim()}
+                className="w-full inline-flex items-center justify-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-xl font-body font-semibold hover:bg-primary/90 transition-colors disabled:opacity-50"
+              >
+                <Icon name="Sparkles" size={16} />
+                Показать интересное рядом
+              </button>
+            </div>
+          ) : (
+            <button
+              onClick={onFind}
+              className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-xl font-body font-semibold hover:bg-primary/90 transition-colors"
+            >
+              <Icon name="MapPin" size={16} />
+              Показать интересное рядом
+            </button>
+          )}
         </div>
       )}
 

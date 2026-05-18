@@ -30,6 +30,7 @@ export function NearbySection() {
   const [coords, setCoords] = useState<{ lat: number; lon: number } | null>(null);
   const [showPromptEditor, setShowPromptEditor] = useState(false);
   const [prompt, setPrompt] = useState("");
+  const [city, setCity] = useState("");
   const [promptLoading, setPromptLoading] = useState(false);
   const [promptSaved, setPromptSaved] = useState(false);
   const [bookmarks, setBookmarks] = useState<Bookmark[]>(() => loadBookmarks());
@@ -38,6 +39,7 @@ export function NearbySection() {
   const [adviceLoading, setAdviceLoading] = useState(false);
   const [adviceError, setAdviceError] = useState("");
   const [manualCoords, setManualCoords] = useState("");
+  const [manualAddress, setManualAddress] = useState("");
   const [subscribeModal, setSubscribeModal] = useState<AdviceGateResult | null>(null);
   const [searchSource, setSearchSource] = useState<SearchSource>("2gis");
   const { check, consume, confirmSubscriber, cooldownMs } = useAdviceLimit();
@@ -56,6 +58,7 @@ export function NearbySection() {
       if (res.ok) {
         const data = await res.json();
         setPrompt(data.prompt || "");
+        setCity(data.city || "");
       }
     } catch (_e) {
       // ignore
@@ -68,7 +71,7 @@ export function NearbySection() {
       await fetch(NEARBY_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ _action: "update_prompt", prompt })
+        body: JSON.stringify({ _action: "update_prompt", prompt, city })
       });
       setPromptSaved(true);
       setTimeout(() => setPromptSaved(false), 2000);
@@ -86,6 +89,12 @@ export function NearbySection() {
       setCoords({ lat: 55.7558, lon: 37.6173 });
       setPlaces(MOCK_PLACES);
       setStatus("done");
+      return;
+    }
+
+    // Для нейросети — предлагаем ввести адрес вручную если города нет
+    if (searchSource === "ai") {
+      await searchByAI();
       return;
     }
 
@@ -123,14 +132,39 @@ export function NearbySection() {
     );
   }
 
+  async function searchByAI(address?: string) {
+    setCoords(null);
+    setStatus("loading");
+    setPlaces([]);
+    setErrorMsg("");
+    const streetAddress = address ?? manualAddress;
+    try {
+      const res = await fetch(NEARBY_AI_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ city, address: streetAddress })
+      });
+      const data = await res.json();
+      if (res.ok && data.places) {
+        setPlaces(data.places);
+        setStatus("done");
+      } else {
+        setErrorMsg(data.error || "Ошибка получения данных");
+        setStatus("error");
+      }
+    } catch {
+      setErrorMsg("Не удалось связаться с сервером");
+      setStatus("error");
+    }
+  }
+
   async function searchByCoords(lat: number, lon: number) {
     setCoords({ lat, lon });
     setStatus("loading");
     setPlaces([]);
     setErrorMsg("");
-    const url = searchSource === "ai" ? NEARBY_AI_URL : NEARBY_URL;
     try {
-      const res = await fetch(url, {
+      const res = await fetch(NEARBY_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ lat, lon })
@@ -159,19 +193,18 @@ export function NearbySection() {
   }
 
   function addBookmark(p: Place) {
-    if (!coords) return;
     const id = `${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
     const bm: Bookmark = {
       id,
       savedAt: new Date().toISOString(),
-      lat: coords.lat,
-      lon: coords.lon,
+      lat: coords?.lat ?? 0,
+      lon: coords?.lon ?? 0,
       name: p.name,
       type: p.type,
       description: p.description,
       distance_approx: p.distance_approx,
       address: p.address || "",
-      city: p.city || "",
+      city: p.city || city,
       label: p.label || p.type,
       profile: p.profile || "",
       hours: p.hours || "",
@@ -230,9 +263,7 @@ export function NearbySection() {
   }
 
   function isBookmarked(p: Place): boolean {
-    return bookmarks.some(
-      (b) => b.name === p.name && b.lat === coords?.lat && b.lon === coords?.lon
-    );
+    return bookmarks.some((b) => b.name === p.name);
   }
 
   const sorted = [...places]
@@ -257,9 +288,11 @@ export function NearbySection() {
       {showPromptEditor && (
         <NearbyPromptEditor
           prompt={prompt}
+          city={city}
           promptLoading={promptLoading}
           promptSaved={promptSaved}
           onPromptChange={setPrompt}
+          onCityChange={setCity}
           onSave={savePrompt}
           onClose={() => setShowPromptEditor(false)}
         />
@@ -291,6 +324,10 @@ export function NearbySection() {
         manualCoords={manualCoords}
         onManualCoordsChange={setManualCoords}
         onFindByManualCoords={findByManualCoords}
+        manualAddress={manualAddress}
+        onManualAddressChange={setManualAddress}
+        onFindByManualAddress={() => searchByAI(manualAddress)}
+        city={city}
         searchSource={searchSource}
         onSearchSourceChange={setSearchSource}
       />

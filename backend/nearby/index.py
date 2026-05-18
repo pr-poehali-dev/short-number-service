@@ -84,10 +84,12 @@ def handler(event: dict, context) -> dict:
             cur.execute(f"SELECT value FROM {schema}.nearby_settings WHERE key = 'search_query'")
             row = cur.fetchone()
             default = "кафе,ресторан,магазин,аптека,банк,супермаркет"
+            cur.execute(f"SELECT value FROM {schema}.nearby_settings WHERE key = 'city'")
+            city_row = cur.fetchone()
             return {
                 'statusCode': 200,
                 'headers': {'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json'},
-                'body': json.dumps({'prompt': row[0] if row else default})
+                'body': json.dumps({'prompt': row[0] if row else default, 'city': city_row[0] if city_row else ''})
             }
 
         if action == 'update_prompt':
@@ -102,6 +104,12 @@ def handler(event: dict, context) -> dict:
                 f"INSERT INTO {schema}.nearby_settings (key, value) VALUES ('search_query', %s) "
                 f"ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value, updated_at = NOW()",
                 (new_val,)
+            )
+            new_city = body.get('city', '').strip()
+            cur.execute(
+                f"INSERT INTO {schema}.nearby_settings (key, value) VALUES ('city', %s) "
+                f"ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value, updated_at = NOW()",
+                (new_city,)
             )
             conn.commit()
             return {
@@ -123,6 +131,9 @@ def handler(event: dict, context) -> dict:
         cur.execute(f"SELECT value FROM {schema}.nearby_settings WHERE key = 'search_query'")
         row = cur.fetchone()
         search_query = row[0] if row else "кафе,ресторан,магазин,аптека,банк,супермаркет"
+        cur.execute(f"SELECT value FROM {schema}.nearby_settings WHERE key = 'city'")
+        city_row = cur.fetchone()
+        saved_city = city_row[0] if city_row else ""
 
         api_key = os.environ['TWOGIS_API_KEY']
         radius = 300
@@ -210,6 +221,7 @@ def handler(event: dict, context) -> dict:
                 'description': f"{rubric_name}. {schedule_str}".strip('. '),
                 'distance_approx': distance,
                 'address': address,
+                'city': saved_city,
                 'label': obj_type,
                 'profile': profile,
                 'hours': schedule_str,

@@ -2,14 +2,16 @@ import Icon from "@/components/ui/icon";
 
 interface Props {
   prompt: string;
+  city: string;
   promptLoading: boolean;
   promptSaved: boolean;
   onPromptChange: (val: string) => void;
+  onCityChange: (val: string) => void;
   onSave: () => void;
   onClose: () => void;
 }
 
-export function NearbyPromptEditor({ prompt, promptLoading, promptSaved, onPromptChange, onSave, onClose }: Props) {
+export function NearbyPromptEditor({ prompt, city, promptLoading, promptSaved, onPromptChange, onCityChange, onSave, onClose }: Props) {
   return (
     <div className="mb-6 bg-amber-50 border border-amber-200 rounded-2xl p-4 relative">
       <button
@@ -18,6 +20,16 @@ export function NearbyPromptEditor({ prompt, promptLoading, promptSaved, onPromp
       >
         <Icon name="X" size={16} />
       </button>
+      <p className="text-sm font-body font-semibold text-amber-800 mb-2 flex items-center gap-1.5">
+        <Icon name="MapPin" size={14} /> Мой город
+      </p>
+      <input
+        type="text"
+        value={city}
+        onChange={(e) => onCityChange(e.target.value)}
+        className="w-full px-3 py-2 border border-amber-300 rounded-xl font-body text-sm focus:outline-none focus:ring-2 focus:ring-amber-400/30 bg-white mb-4"
+        placeholder="Например: Санкт-Петербург"
+      />
       <p className="text-sm font-body font-semibold text-amber-800 mb-2 flex items-center gap-1.5">
         <Icon name="Search" size={14} /> Категории поиска (2ГИС)
       </p>
