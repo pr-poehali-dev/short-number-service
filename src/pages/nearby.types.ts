@@ -73,21 +73,6 @@ export function formatDate(iso: string): string {
 
 export const BOOKMARKS_KEY = "nearby_bookmarks";
 
-export const EXAMPLE_BOOKMARK: Bookmark = {
-  id: "example_1",
-  savedAt: "2026-04-20T10:30:00.000Z",
-  lat: 55.7558,
-  lon: 37.6173,
-  name: "Кафе «Уют»",
-  type: "кафе",
-  description: "Уютное кафе с домашней кухней и свежей выпечкой. Работает с 8:00 до 22:00.",
-  distance_approx: 120,
-  city: "Москва",
-  address: "ул. Тверская, 14",
-  label: "кафе",
-  profile: "завтраки, для семей",
-  hours: "08:00–22:00",
-};
 
 export interface BookmarkGroup {
   id: string;
@@ -162,11 +147,9 @@ export function groupBookmarks(bookmarks: Bookmark[]): BookmarkGroup[] {
 
 export function loadBookmarks(): Bookmark[] {
   try {
-    const stored = JSON.parse(localStorage.getItem(BOOKMARKS_KEY) || "[]");
-    if (stored.length === 0) return [EXAMPLE_BOOKMARK];
-    return stored;
+    return JSON.parse(localStorage.getItem(BOOKMARKS_KEY) || "[]");
   } catch {
-    return [EXAMPLE_BOOKMARK];
+    return [];
   }
 }
 
