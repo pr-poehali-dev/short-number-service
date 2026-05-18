@@ -19,7 +19,7 @@ export function NearbyPromptEditor({ prompt, promptLoading, promptSaved, onPromp
         <Icon name="X" size={16} />
       </button>
       <p className="text-sm font-body font-semibold text-amber-800 mb-2 flex items-center gap-1.5">
-        <Icon name="Search" size={14} /> Категории поиска (2GIS)
+        <Icon name="Search" size={14} /> Категории поиска (2ГИС)
       </p>
       <textarea
         rows={3}

@@ -61,7 +61,7 @@ function BookmarkCard({ bm, onRemove }: { bm: Bookmark; onRemove: (id: string) =
             className="text-xs text-blue-600 hover:text-blue-800 font-body flex items-center gap-1 flex-shrink-0 hover:underline"
           >
             <Icon name="ExternalLink" size={10} className="flex-shrink-0" />
-            2GIS
+            2ГИС
           </a>
           <span className="text-xs text-muted-foreground font-body flex items-center gap-1 flex-shrink-0 ml-auto">
             <Icon name="Clock" size={10} className="flex-shrink-0" />
