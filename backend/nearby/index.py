@@ -73,10 +73,6 @@ def handler(event: dict, context) -> dict:
             'body': ''
         }
 
-    rl = check_rate_limit(event, 'nearby')
-    if rl:
-        return rl
-
     conn = psycopg2.connect(os.environ['DATABASE_URL'])
     schema = os.environ.get('MAIN_DB_SCHEMA', 't_p25384465_short_number_service')
 
@@ -132,6 +128,10 @@ def handler(event: dict, context) -> dict:
                 'headers': {'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json'},
                 'body': json.dumps({'error': 'lat and lon are required'})
             }
+
+        rl = check_rate_limit(event, 'nearby')
+        if rl:
+            return rl
 
         cur.execute(f"SELECT value FROM {schema}.nearby_settings WHERE key = 'search_query'")
         row = cur.fetchone()

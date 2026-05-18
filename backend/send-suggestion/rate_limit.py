@@ -7,10 +7,10 @@ import psycopg2
 SCHEMA = "t_p25384465_short_number_service"
 
 LIMITS = {
-    "nearby":            (20, 60),
-    "nearby-ai":         (5,  60),
-    "analyze-bookmarks": (5,  60),
-    "send-suggestion":   (10, 60),
+    "nearby":            (5, 86400),
+    "nearby-ai":         (5, 86400),
+    "analyze-bookmarks": (5, 86400),
+    "send-suggestion":   (5, 86400),
 }
 
 
@@ -47,7 +47,7 @@ def check_rate_limit(event: dict, endpoint: str) -> dict | None:
         return {
             "statusCode": 429,
             "headers": {"Access-Control-Allow-Origin": "*", "Content-Type": "application/json"},
-            "body": f'{{"error": "Слишком много запросов. Попробуйте через {window_seconds} секунд.", "retry_after": {window_seconds}}}'
+            "body": f'{{"error": "Вы исчерпали лимит запросов на сегодня ({max_requests} в сутки). Попробуйте завтра.", "retry_after": {window_seconds}, "limit": {max_requests}}}'
         }
     cur.execute(
         f"INSERT INTO {SCHEMA}.rate_limit (ip, endpoint, requests, window_start) "

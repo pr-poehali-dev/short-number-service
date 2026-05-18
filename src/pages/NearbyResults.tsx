@@ -10,6 +10,7 @@ interface Props {
   hiddenCount: number;
   coords: { lat: number; lon: number } | null;
   errorMsg: string;
+  rateLimited: boolean;
   bookmarks: Bookmark[];
   savedId: string | null;
   onFind: () => void;
@@ -34,6 +35,7 @@ export function NearbyResults({
   hiddenCount,
   coords,
   errorMsg,
+  rateLimited,
   bookmarks,
   savedId,
   onFind,
@@ -162,15 +164,32 @@ export function NearbyResults({
           >
             <Icon name="X" size={16} />
           </button>
-          <Icon name="AlertCircle" size={32} className="text-red-500 mx-auto mb-3" />
-          <p className="font-body text-red-700 font-semibold mb-4">{errorMsg}</p>
-          <button
-            onClick={onFind}
-            className="inline-flex items-center gap-2 px-5 py-2.5 bg-primary text-primary-foreground rounded-xl font-body font-semibold hover:bg-primary/90 transition-colors text-sm"
-          >
-            <Icon name="RefreshCw" size={15} />
-            Попробовать снова
-          </button>
+          {rateLimited ? (
+            <>
+              <Icon name="Clock" size={32} className="text-amber-500 mx-auto mb-3" />
+              <p className="font-body text-red-700 font-semibold mb-1">{errorMsg}</p>
+              <p className="text-sm text-red-500 font-body mb-4">Лимит сбрасывается каждые 24 часа.</p>
+              <button
+                onClick={onReset}
+                className="inline-flex items-center gap-2 px-5 py-2.5 bg-muted text-foreground rounded-xl font-body font-semibold hover:bg-muted/80 transition-colors text-sm border border-border"
+              >
+                <Icon name="ArrowLeft" size={15} />
+                Вернуться назад
+              </button>
+            </>
+          ) : (
+            <>
+              <Icon name="AlertCircle" size={32} className="text-red-500 mx-auto mb-3" />
+              <p className="font-body text-red-700 font-semibold mb-4">{errorMsg}</p>
+              <button
+                onClick={onFind}
+                className="inline-flex items-center gap-2 px-5 py-2.5 bg-primary text-primary-foreground rounded-xl font-body font-semibold hover:bg-primary/90 transition-colors text-sm"
+              >
+                <Icon name="RefreshCw" size={15} />
+                Попробовать снова
+              </button>
+            </>
+          )}
           <div className="mt-5 pt-5 border-t border-red-200">
             <p className="text-xs text-red-500 font-body mb-2">Или введите координаты вручную (можно скопировать из Яндекс.Карт)</p>
             <div className="flex gap-2 max-w-xs mx-auto">

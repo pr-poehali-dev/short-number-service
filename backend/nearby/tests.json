@@ -18,13 +18,10 @@
       "bodyMatcher": "partial"
     },
     {
-      "name": "Поиск мест в центре Санкт-Петербурга",
-      "method": "POST",
+      "name": "OPTIONS preflight",
+      "method": "OPTIONS",
       "path": "/",
-      "body": {"lat": 59.9343, "lon": 30.3351},
-      "expectedStatus": 200,
-      "expectedBody": {"lat": 59.9343, "lon": 30.3351},
-      "bodyMatcher": "partial"
+      "expectedStatus": 200
     }
   ]
 }

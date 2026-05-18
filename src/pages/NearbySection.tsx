@@ -46,6 +46,7 @@ export function NearbySection() {
   const [status, setStatus] = useState<"idle" | "locating" | "loading" | "done" | "error">("idle");
   const [places, setPlaces] = useState<Place[]>([]);
   const [errorMsg, setErrorMsg] = useState("");
+  const [rateLimited, setRateLimited] = useState(false);
   const [coords, setCoords] = useState<{ lat: number; lon: number } | null>(null);
   const [showPromptEditor, setShowPromptEditor] = useState(false);
   const [prompt, setPrompt] = useState("");
@@ -156,6 +157,7 @@ export function NearbySection() {
     setStatus("loading");
     setPlaces([]);
     setErrorMsg("");
+    setRateLimited(false);
     const streetAddress = address ?? manualAddress;
     try {
       const res = await fetch(NEARBY_AI_URL, {
@@ -168,6 +170,7 @@ export function NearbySection() {
         setPlaces(data.places);
         setStatus("done");
       } else {
+        if (res.status === 429) setRateLimited(true);
         setErrorMsg(data.error || "Ошибка получения данных");
         setStatus("error");
       }
@@ -180,6 +183,7 @@ export function NearbySection() {
   async function searchByCoords(lat: number, lon: number) {
     setCoords({ lat, lon });
     setErrorMsg("");
+    setRateLimited(false);
 
     const cached = getCached(lat, lon);
     if (cached) {
@@ -202,6 +206,7 @@ export function NearbySection() {
         setPlaces(data.places);
         setStatus("done");
       } else {
+        if (res.status === 429) setRateLimited(true);
         setErrorMsg(data.error || "Ошибка получения данных");
         setStatus("error");
       }
@@ -342,6 +347,7 @@ export function NearbySection() {
         hiddenCount={hiddenCount}
         coords={coords}
         errorMsg={errorMsg}
+        rateLimited={rateLimited}
         bookmarks={bookmarks}
         savedId={savedId}
         onFind={findNearby}
