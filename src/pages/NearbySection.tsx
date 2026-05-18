@@ -7,7 +7,10 @@ import SubscribeModal from "@/components/SubscribeModal";
 import { useAdviceLimit, AdviceGateResult } from "@/hooks/useAdviceLimit";
 
 const NEARBY_URL = "https://functions.poehali.dev/d4b08b1e-6bd7-4d3b-81cf-02b5e4c6447f";
+const NEARBY_AI_URL = "https://functions.poehali.dev/b1af48b5-9a0e-41ee-a5ce-efe1072c0347";
 const ANALYZE_URL = "https://functions.poehali.dev/f314b7e4-d728-4c13-bfd3-c1962a5861fc";
+
+type SearchSource = "2gis" | "ai";
 
 const IS_IFRAME = window.self !== window.top;
 
@@ -36,6 +39,7 @@ export function NearbySection() {
   const [adviceError, setAdviceError] = useState("");
   const [manualCoords, setManualCoords] = useState("");
   const [subscribeModal, setSubscribeModal] = useState<AdviceGateResult | null>(null);
+  const [searchSource, setSearchSource] = useState<SearchSource>("2gis");
   const { check, consume, confirmSubscriber, cooldownMs } = useAdviceLimit();
 
   useEffect(() => {
@@ -124,8 +128,9 @@ export function NearbySection() {
     setStatus("loading");
     setPlaces([]);
     setErrorMsg("");
+    const url = searchSource === "ai" ? NEARBY_AI_URL : NEARBY_URL;
     try {
-      const res = await fetch(NEARBY_URL, {
+      const res = await fetch(url, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ lat, lon })
@@ -286,6 +291,8 @@ export function NearbySection() {
         manualCoords={manualCoords}
         onManualCoordsChange={setManualCoords}
         onFindByManualCoords={findByManualCoords}
+        searchSource={searchSource}
+        onSearchSourceChange={setSearchSource}
       />
     </div>
   );

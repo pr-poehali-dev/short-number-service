@@ -1,0 +1,28 @@
+{
+  "tests": [
+    {
+      "name": "OPTIONS preflight",
+      "method": "OPTIONS",
+      "path": "/",
+      "expectedStatus": 200
+    },
+    {
+      "name": "Missing coords",
+      "method": "POST",
+      "path": "/",
+      "body": {},
+      "expectedStatus": 400,
+      "expectedBody": {"error": "string"},
+      "bodyMatcher": "partial"
+    },
+    {
+      "name": "Search by coords",
+      "method": "POST",
+      "path": "/",
+      "body": {"lat": 55.7558, "lon": 37.6173},
+      "expectedStatus": 200,
+      "expectedBody": {"places": []},
+      "bodyMatcher": "partial"
+    }
+  ]
+}

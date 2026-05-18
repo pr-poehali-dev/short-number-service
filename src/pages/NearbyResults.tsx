@@ -2,6 +2,8 @@ import Icon from "@/components/ui/icon";
 import { Place, getIcon, distanceColor } from "@/pages/nearby.types";
 import { Bookmark } from "@/pages/nearby.types";
 
+type SearchSource = "2gis" | "ai";
+
 interface Props {
   status: "idle" | "locating" | "loading" | "done" | "error";
   sorted: Place[];
@@ -18,6 +20,8 @@ interface Props {
   manualCoords: string;
   onManualCoordsChange: (v: string) => void;
   onFindByManualCoords: () => void;
+  searchSource: SearchSource;
+  onSearchSourceChange: (s: SearchSource) => void;
 }
 
 export function NearbyResults({
@@ -36,6 +40,8 @@ export function NearbyResults({
   manualCoords,
   onManualCoordsChange,
   onFindByManualCoords,
+  searchSource,
+  onSearchSourceChange,
 }: Props) {
   return (
     <>
@@ -52,11 +58,42 @@ export function NearbyResults({
             <Icon name="MapPin" size={32} className="text-primary" />
           </div>
           <h3 className="font-display text-xl font-bold text-foreground mb-2">Быстрый вопрос</h3>
-          <p className="text-muted-foreground font-body text-sm mb-6 max-w-2xl mx-auto">Каждая сохраненная Вами закладка сделает быстрый ответ на вопрос "Что посетить сегодня?" точнее, а времяпрепровождение - интересным и полезным.</p>
+          <p className="text-muted-foreground font-body text-sm mb-5 max-w-2xl mx-auto">Каждая сохраненная Вами закладка сделает быстрый ответ на вопрос "Что посетить сегодня?" точнее, а времяпрепровождение - интересным и полезным.</p>
+
+          <div className="flex items-stretch gap-2 max-w-sm mx-auto mb-5 p-1 bg-muted rounded-xl">
+            <button
+              onClick={() => onSearchSourceChange("2gis")}
+              className={`flex-1 flex flex-col items-center gap-1 px-3 py-2.5 rounded-lg text-xs font-body font-semibold transition-all ${
+                searchSource === "2gis"
+                  ? "bg-white text-foreground shadow-sm"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              <Icon name="Map" size={15} className={searchSource === "2gis" ? "text-primary" : "text-muted-foreground"} />
+              <span>2ГИС</span>
+              <span className={`text-[10px] font-normal leading-tight ${searchSource === "2gis" ? "text-muted-foreground" : "text-muted-foreground/60"}`}>точнее</span>
+            </button>
+            <button
+              onClick={() => onSearchSourceChange("ai")}
+              className={`flex-1 flex flex-col items-center gap-1 px-3 py-2.5 rounded-lg text-xs font-body font-semibold transition-all ${
+                searchSource === "ai"
+                  ? "bg-white text-foreground shadow-sm"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              <Icon name="Sparkles" size={15} className={searchSource === "ai" ? "text-primary" : "text-muted-foreground"} />
+              <span>Нейросеть</span>
+              <span className={`text-[10px] font-normal leading-tight ${searchSource === "ai" ? "text-muted-foreground" : "text-muted-foreground/60"}`}>интереснее</span>
+            </button>
+          </div>
+
           <button
             onClick={onFind}
             className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-xl font-body font-semibold hover:bg-primary/90 transition-colors"
-          >Показать интересное рядом</button>
+          >
+            <Icon name={searchSource === "ai" ? "Sparkles" : "MapPin"} size={16} />
+            Показать интересное рядом
+          </button>
         </div>
       )}
 
@@ -120,12 +157,19 @@ export function NearbyResults({
               <Icon name="CheckCircle" size={16} className="text-green-600" />
               <span className="text-sm font-body text-muted-foreground">
                 Найдено: <strong className="text-foreground">{sorted.length}</strong>
-                {hiddenCount > 0 && (
-                  <span className="ml-1.5 text-xs text-primary/70 font-body">
-                    · ещё {hiddenCount} в избранном
-                  </span>
-                )}
               </span>
+              <span className={`text-[10px] px-2 py-0.5 rounded-full font-body font-medium border ${
+                searchSource === "ai"
+                  ? "text-primary bg-primary/8 border-primary/20"
+                  : "text-blue-600 bg-blue-50 border-blue-200"
+              }`}>
+                {searchSource === "ai" ? "Нейросеть" : "2ГИС"}
+              </span>
+              {hiddenCount > 0 && (
+                <span className="ml-1.5 text-xs text-primary/70 font-body">
+                  · ещё {hiddenCount} в избранном
+                </span>
+              )}
             </div>
             <button
               onClick={onReset}
