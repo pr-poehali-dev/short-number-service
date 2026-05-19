@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'v4';
+const CACHE_VERSION = 'v5';
 const CACHE_NAME = `spravochnik-${CACHE_VERSION}`;
 const FONT_CACHE = 'fonts-v1';
 
@@ -76,22 +76,33 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // HTML и JS/CSS — сначала сеть, кеш только при офлайне
+  // HTML и JS/CSS — сначала сеть с таймаутом, при зависании/ошибке — кеш
   if (
     event.request.destination === 'document' ||
     event.request.destination === 'script' ||
     event.request.destination === 'style'
   ) {
+    const FETCH_TIMEOUT_MS = 5000;
+    const fromCache = () =>
+      caches.match(event.request).then((cached) => cached || caches.match('/index.html'));
+
+    const fromNetwork = new Promise((resolve, reject) => {
+      const timer = setTimeout(() => reject(new Error('timeout')), FETCH_TIMEOUT_MS);
+      fetch(event.request).then((res) => {
+        clearTimeout(timer);
+        if (res.ok) {
+          const clone = res.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone));
+        }
+        resolve(res);
+      }).catch((err) => {
+        clearTimeout(timer);
+        reject(err);
+      });
+    });
+
     event.respondWith(
-      fetch(event.request)
-        .then((res) => {
-          if (res.ok) {
-            const clone = res.clone();
-            caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone));
-          }
-          return res;
-        })
-        .catch(() => caches.match(event.request).then((cached) => cached || caches.match('/index.html')))
+      fromNetwork.catch(() => fromCache())
     );
     return;
   }
