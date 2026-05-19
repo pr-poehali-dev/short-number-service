@@ -121,6 +121,42 @@ def handler(event: dict, context) -> dict:
 
         lat = body.get('lat')
         lon = body.get('lon')
+        address = body.get('address', '').strip()
+        city_input = body.get('city', '').strip()
+
+        api_key = os.environ['TWOGIS_API_KEY']
+
+        # Геокодинг адреса если координаты не переданы
+        if (lat is None or lon is None) and address:
+            geo_query = f"{city_input} {address}".strip() if city_input else address
+            geo_params = urllib.parse.urlencode({
+                'key': api_key,
+                'q': geo_query,
+                'fields': 'items.point',
+                'page_size': 1,
+                'locale': 'ru_RU',
+            })
+            geo_url = f"https://catalog.api.2gis.com/3.0/items?{geo_params}"
+            geo_req = urllib.request.Request(geo_url, headers={'User-Agent': 'Mozilla/5.0'})
+            try:
+                with urllib.request.urlopen(geo_req, timeout=6) as geo_resp:
+                    geo_data = json.loads(geo_resp.read().decode('utf-8'))
+                geo_items = geo_data.get('result', {}).get('items', [])
+                if not geo_items or 'point' not in geo_items[0]:
+                    return {
+                        'statusCode': 400,
+                        'headers': {'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json'},
+                        'body': json.dumps({'error': f'Адрес не найден: {geo_query}'}, ensure_ascii=False)
+                    }
+                point = geo_items[0]['point']
+                lat = point['lat']
+                lon = point['lon']
+            except Exception as e:
+                return {
+                    'statusCode': 400,
+                    'headers': {'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json'},
+                    'body': json.dumps({'error': f'Ошибка геокодинга: {str(e)}'}, ensure_ascii=False)
+                }
 
         if lat is None or lon is None:
             return {
@@ -139,8 +175,6 @@ def handler(event: dict, context) -> dict:
         cur.execute(f"SELECT value FROM {schema}.nearby_settings WHERE key = 'city'")
         city_row = cur.fetchone()
         saved_city = city_row[0] if city_row else ""
-
-        api_key = os.environ['TWOGIS_API_KEY']
         radius = 300
         fields = "items.point,items.address,items.rubrics,items.name,items.schedule"
 

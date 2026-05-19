@@ -2,8 +2,6 @@ import Icon from "@/components/ui/icon";
 import { Place, getIcon, distanceColor } from "@/pages/nearby.types";
 import { Bookmark } from "@/pages/nearby.types";
 
-type SearchSource = "2gis" | "ai";
-
 interface Props {
   status: "idle" | "locating" | "loading" | "done" | "error";
   sorted: Place[];
@@ -15,6 +13,7 @@ interface Props {
   bookmarks: Bookmark[];
   savedId: string | null;
   onFind: () => void;
+  onFindByAddress: () => void;
   onReset: () => void;
   onAddBookmark: (p: Place) => void;
   onOpenSettings: () => void;
@@ -24,10 +23,7 @@ interface Props {
   onFindByManualCoords: () => void;
   manualAddress: string;
   onManualAddressChange: (v: string) => void;
-  onFindByManualAddress: () => void;
   city: string;
-  searchSource: SearchSource;
-  onSearchSourceChange: (s: SearchSource) => void;
 }
 
 export function NearbyResults({
@@ -41,6 +37,7 @@ export function NearbyResults({
   bookmarks,
   savedId,
   onFind,
+  onFindByAddress,
   onReset,
   onAddBookmark,
   onOpenSettings,
@@ -50,10 +47,7 @@ export function NearbyResults({
   onFindByManualCoords,
   manualAddress,
   onManualAddressChange,
-  onFindByManualAddress,
   city,
-  searchSource,
-  onSearchSourceChange,
 }: Props) {
   return (
     <>
@@ -74,86 +68,55 @@ export function NearbyResults({
           >
             <Icon name="Settings2" size={18} className="text-muted-foreground" />
           </button>
+
           <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-4">
             <Icon name="MapPin" size={32} className="text-primary" />
           </div>
           <h3 className="font-display text-xl font-bold text-foreground mb-2">Быстрый вопрос</h3>
-          <p className="text-muted-foreground font-body text-sm mb-5 max-w-2xl mx-auto">Каждая сохраненная Вами закладка сделает быстрый ответ на вопрос "Что посетить сегодня?" точнее, а времяпрепровождение - интересным и полезным.</p>
+          <p className="text-muted-foreground font-body text-sm mb-6 max-w-2xl mx-auto">Каждая сохраненная Вами закладка сделает быстрый ответ на вопрос "Что посетить сегодня?" точнее, а времяпрепровождение — интересным и полезным.</p>
 
-          <div className="flex items-stretch gap-2 max-w-sm mx-auto mb-5 p-1 bg-muted rounded-xl">
+          <div className="max-w-sm mx-auto space-y-3">
+            {/* Поиск по геолокации */}
             <button
-              onClick={() => onSearchSourceChange("2gis")}
-              className={`flex-1 flex flex-col items-center gap-1 px-3 py-2.5 rounded-lg text-xs font-body font-semibold transition-all ${
-                searchSource === "2gis"
-                  ? "bg-white text-foreground shadow-sm"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
+              onClick={onFind}
+              className="w-full inline-flex items-center justify-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-xl font-body font-semibold hover:bg-primary/90 transition-colors"
             >
-              <Icon name="Map" size={15} className={searchSource === "2gis" ? "text-primary" : "text-muted-foreground"} />
-              <span>2ГИС</span>
-              <span className={`text-[10px] font-normal leading-tight ${searchSource === "2gis" ? "text-muted-foreground" : "text-muted-foreground/60"}`}>точнее</span>
+              <Icon name="LocateFixed" size={16} />
+              Найти рядом со мной
             </button>
-            <button
-              onClick={() => onSearchSourceChange("ai")}
-              className={`flex-1 flex flex-col items-center gap-1 px-3 py-2.5 rounded-lg text-xs font-body font-semibold transition-all ${
-                searchSource === "ai"
-                  ? "bg-white text-foreground shadow-sm"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              <Icon name="Sparkles" size={15} className={searchSource === "ai" ? "text-primary" : "text-muted-foreground"} />
-              <span>Нейросеть</span>
-              <span className={`text-[10px] font-normal leading-tight ${searchSource === "ai" ? "text-muted-foreground" : "text-muted-foreground/60"}`}>интереснее</span>
-            </button>
-          </div>
 
-          {searchSource === "ai" ? (
-            <div className="max-w-sm mx-auto">
-              {!city && (
-                <p className="text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2 mb-3 font-body text-left">
-                  Укажите город в настройках (⚙️), чтобы нейросеть знала, где вы находитесь.
-                </p>
-              )}
-              <div className="flex gap-2 mb-3">
-                <input
-                  type="text"
-                  value={manualAddress}
-                  onChange={e => onManualAddressChange(e.target.value)}
-                  placeholder="Улица и дом, например: ул. Ленина, 5"
-                  className="flex-1 text-sm border border-border rounded-xl px-3 py-2.5 font-body bg-white focus:outline-none focus:border-primary"
-                  onKeyDown={e => e.key === 'Enter' && manualAddress.trim() && onFindByManualAddress()}
-                />
-              </div>
-              <button
-                onClick={onFind}
-                disabled={!city && !manualAddress.trim()}
-                className="w-full inline-flex items-center justify-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-xl font-body font-semibold hover:bg-primary/90 transition-colors disabled:opacity-50"
-              >
-                <Icon name="Sparkles" size={16} />
-                Показать интересное рядом
-              </button>
-              {remainingRequests !== null && (
-                <p className={`text-xs font-body mt-2 text-center ${remainingRequests <= 1 ? "text-amber-600" : "text-muted-foreground"}`}>
-                  Осталось запросов сегодня: <span className="font-semibold">{remainingRequests} из 5</span>
-                </p>
-              )}
+            {/* Разделитель */}
+            <div className="flex items-center gap-3">
+              <div className="flex-1 h-px bg-border" />
+              <span className="text-xs text-muted-foreground font-body">или введите адрес</span>
+              <div className="flex-1 h-px bg-border" />
             </div>
-          ) : (
-            <>
+
+            {/* Поиск по адресу */}
+            <div className="flex gap-2">
+              <input
+                type="text"
+                value={manualAddress}
+                onChange={e => onManualAddressChange(e.target.value)}
+                placeholder="Улица и дом, например: ул. Ленина, 5"
+                className="flex-1 text-sm border border-border rounded-xl px-3 py-2.5 font-body bg-white focus:outline-none focus:border-primary"
+                onKeyDown={e => e.key === 'Enter' && manualAddress.trim() && onFindByAddress()}
+              />
               <button
-                onClick={onFind}
-                className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-xl font-body font-semibold hover:bg-primary/90 transition-colors"
+                onClick={onFindByAddress}
+                disabled={!manualAddress.trim()}
+                className="px-3 py-2.5 bg-primary text-primary-foreground rounded-xl font-body font-semibold hover:bg-primary/90 disabled:opacity-40 transition-colors"
               >
-                <Icon name="MapPin" size={16} />
-                Показать интересное рядом
+                <Icon name="Search" size={16} />
               </button>
-              {remainingRequests !== null && (
-                <p className={`text-xs font-body mt-3 ${remainingRequests <= 1 ? "text-amber-600" : "text-muted-foreground"}`}>
-                  Осталось запросов сегодня: <span className="font-semibold">{remainingRequests} из 5</span>
-                </p>
-              )}
-            </>
-          )}
+            </div>
+
+            {remainingRequests !== null && (
+              <p className={`text-xs font-body text-center ${remainingRequests <= 1 ? "text-amber-600" : "text-muted-foreground"}`}>
+                Осталось запросов сегодня: <span className="font-semibold">{remainingRequests} из 5</span>
+              </p>
+            )}
+          </div>
         </div>
       )}
 
@@ -182,7 +145,7 @@ export function NearbyResults({
             <>
               <Icon name="Clock" size={32} className="text-amber-500 mx-auto mb-3" />
               <p className="font-body text-red-700 font-semibold mb-1">{errorMsg}</p>
-              <p className="text-sm text-red-500 font-body mb-4">Лимит сбрасывается каждые 24 часа.</p>
+              <p className="text-sm text-red-500 font-body mb-4">Лимит сбрасывается в полночь по московскому времени.</p>
               <button
                 onClick={onReset}
                 className="inline-flex items-center gap-2 px-5 py-2.5 bg-muted text-foreground rounded-xl font-body font-semibold hover:bg-muted/80 transition-colors text-sm border border-border"
@@ -269,7 +232,6 @@ export function NearbyResults({
                     <Icon name={getIcon(p.type)} size={20} className="text-primary" fallback="Store" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    {/* Строка 1: название + дистанция + закладка */}
                     <div className="flex items-center justify-between gap-2 mb-0.5">
                       <h3 className="font-display font-semibold text-foreground text-base leading-tight truncate">{p.name}</h3>
                       <div className="flex items-center gap-1.5 flex-shrink-0">
@@ -290,7 +252,6 @@ export function NearbyResults({
                         </button>
                       </div>
                     </div>
-                    {/* Строка 2: категория / специализация / часы */}
                     {(() => {
                       const typeLabel = p.type.charAt(0).toUpperCase() + p.type.slice(1);
                       const spec = p.profile && p.profile.toLowerCase() !== p.type.toLowerCase() ? p.profile : "";
@@ -309,7 +270,6 @@ export function NearbyResults({
                         </div>
                       );
                     })()}
-                    {/* Строка 3: адрес + ссылка 2GIS */}
                     <div className="flex items-center gap-2 min-w-0">
                       {(p.city || p.address) && (
                         <p className="text-xs text-muted-foreground font-body flex items-center gap-1 truncate min-w-0">

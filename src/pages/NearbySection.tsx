@@ -7,10 +7,7 @@ import SubscribeModal from "@/components/SubscribeModal";
 import { useAdviceLimit, AdviceGateResult } from "@/hooks/useAdviceLimit";
 
 const NEARBY_URL = "https://functions.poehali.dev/d4b08b1e-6bd7-4d3b-81cf-02b5e4c6447f";
-const NEARBY_AI_URL = "https://functions.poehali.dev/b1af48b5-9a0e-41ee-a5ce-efe1072c0347";
 const ANALYZE_URL = "https://functions.poehali.dev/f314b7e4-d728-4c13-bfd3-c1962a5861fc";
-
-type SearchSource = "2gis" | "ai";
 
 const IS_IFRAME = window.self !== window.top;
 
@@ -62,7 +59,6 @@ export function NearbySection() {
   const [manualCoords, setManualCoords] = useState("");
   const [manualAddress, setManualAddress] = useState("");
   const [subscribeModal, setSubscribeModal] = useState<AdviceGateResult | null>(null);
-  const [searchSource, setSearchSource] = useState<SearchSource>("2gis");
   const { check, consume, confirmSubscriber, cooldownMs } = useAdviceLimit();
 
   useEffect(() => {
@@ -113,12 +109,6 @@ export function NearbySection() {
       return;
     }
 
-    // Для нейросети — предлагаем ввести адрес вручную если города нет
-    if (searchSource === "ai") {
-      await searchByAI();
-      return;
-    }
-
     if (!navigator.geolocation) {
       setErrorMsg("Геолокация не поддерживается вашим браузером.");
       setStatus("error");
@@ -153,18 +143,20 @@ export function NearbySection() {
     );
   }
 
-  async function searchByAI(address?: string) {
-    setCoords(null);
+  async function findByAddress() {
+    const addr = manualAddress.trim();
+    if (!addr) return;
+
     setStatus("loading");
     setPlaces([]);
     setErrorMsg("");
     setRateLimited(false);
-    const streetAddress = address ?? manualAddress;
+
     try {
-      const res = await fetch(NEARBY_AI_URL, {
+      const res = await fetch(NEARBY_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ city, address: streetAddress })
+        body: JSON.stringify({ address: addr, city })
       });
       const data = await res.json();
       if (res.ok && data.places) {
@@ -355,6 +347,7 @@ export function NearbySection() {
         bookmarks={bookmarks}
         savedId={savedId}
         onFind={findNearby}
+        onFindByAddress={findByAddress}
         onReset={() => setStatus("idle")}
         onAddBookmark={addBookmark}
         onOpenSettings={() => { setShowPromptEditor(!showPromptEditor); if (!prompt) loadPrompt(); }}
@@ -364,10 +357,7 @@ export function NearbySection() {
         onFindByManualCoords={findByManualCoords}
         manualAddress={manualAddress}
         onManualAddressChange={setManualAddress}
-        onFindByManualAddress={() => searchByAI(manualAddress)}
         city={city}
-        searchSource={searchSource}
-        onSearchSourceChange={setSearchSource}
       />
     </div>
   );
