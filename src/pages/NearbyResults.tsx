@@ -235,13 +235,6 @@ export function NearbyResults({
               <span className="text-sm font-body text-muted-foreground">
                 Найдено: <strong className="text-foreground">{sorted.length}</strong>
               </span>
-              <span className={`text-[10px] px-2 py-0.5 rounded-full font-body font-medium border ${
-                searchSource === "ai"
-                  ? "text-primary bg-primary/8 border-primary/20"
-                  : "text-blue-600 bg-blue-50 border-blue-200"
-              }`}>
-                {searchSource === "ai" ? "Нейросеть" : "2ГИС"}
-              </span>
               {hiddenCount > 0 && (
                 <span className="ml-1.5 text-xs text-primary/70 font-body">
                   · ещё {hiddenCount} в избранном
