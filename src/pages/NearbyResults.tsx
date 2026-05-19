@@ -93,7 +93,7 @@ export function NearbyResults({
                 value={manualAddress}
                 onChange={e => onManualAddressChange(e.target.value)}
                 placeholder="Улица и дом, например: ул. Ленина, 5"
-                className="flex-1 text-sm border border-border rounded-xl px-3 py-2.5 font-body bg-white focus:outline-none focus:border-primary"
+                className="flex-1 text-base border border-border rounded-xl px-3 py-2.5 font-body bg-white focus:outline-none focus:border-primary"
                 onKeyDown={e => e.key === 'Enter' && manualAddress.trim() && onFindByAddress()}
               />
               <button
