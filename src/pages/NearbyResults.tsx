@@ -69,7 +69,7 @@ export function NearbyResults({
             <Icon name="Settings2" size={18} className="text-muted-foreground" />
           </button>
 
-          <div className="max-w-sm mx-auto space-y-3">
+          <div className="max-w-sm mx-auto space-y-3 pt-10">
             {/* Поиск по геолокации */}
             <button
               onClick={onFind}
