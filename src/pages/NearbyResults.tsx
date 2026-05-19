@@ -69,12 +69,6 @@ export function NearbyResults({
             <Icon name="Settings2" size={18} className="text-muted-foreground" />
           </button>
 
-          <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-4">
-            <Icon name="MapPin" size={32} className="text-primary" />
-          </div>
-          <h3 className="font-display text-xl font-bold text-foreground mb-2">Быстрый вопрос</h3>
-          <p className="text-muted-foreground font-body text-sm mb-6 max-w-2xl mx-auto">Каждая сохраненная Вами закладка сделает быстрый ответ на вопрос "Что посетить сегодня?" точнее, а времяпрепровождение — интересным и полезным.</p>
-
           <div className="max-w-sm mx-auto space-y-3">
             {/* Поиск по геолокации */}
             <button
