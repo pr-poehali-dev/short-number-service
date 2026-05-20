@@ -14,16 +14,16 @@ interface Props {
 
 function BookmarkCard({ bm, onRemove }: { bm: Bookmark; onRemove: (id: string) => void }) {
   return (
-    <div className="bg-white border border-border rounded-xl p-3 flex items-start gap-3">
-      <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0 mt-0.5">
-        <Icon name={getIcon(bm.type)} size={16} className="text-primary" fallback="Store" />
+    <div className="bg-white border border-border rounded-xl p-4 flex items-start gap-3">
+      <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
+        <Icon name={getIcon(bm.type)} size={20} className="text-primary" fallback="Store" />
       </div>
       <div className="flex-1 min-w-0">
         <div className="flex items-center justify-between gap-2 mb-0.5">
           <p className="font-display font-semibold text-foreground text-base leading-tight truncate">{bm.name}</p>
           <button
             onClick={() => onRemove(bm.id)}
-            className="flex-shrink-0 w-6 h-6 flex items-center justify-center rounded-md hover:bg-red-50 text-muted-foreground hover:text-red-500 transition-colors"
+            className="flex-shrink-0 w-7 h-7 flex items-center justify-center rounded-lg hover:bg-red-50 text-muted-foreground hover:text-red-500 transition-colors"
             title="Удалить закладку"
           >
             <Icon name="X" size={14} />
