@@ -94,16 +94,22 @@ export function NearbyResults({
                 onChange={e => onManualAddressChange(e.target.value)}
                 placeholder="Улица и дом, например: ул. Ленина, 5"
                 className="flex-1 text-base border border-border rounded-xl px-3 py-2.5 font-body bg-white focus:outline-none focus:border-primary"
-                onKeyDown={e => e.key === 'Enter' && manualAddress.trim() && onFindByAddress()}
+                onKeyDown={e => e.key === 'Enter' && manualAddress.trim() && (!city ? onOpenSettings() : onFindByAddress())}
               />
               <button
-                onClick={onFindByAddress}
+                onClick={() => !city ? onOpenSettings() : onFindByAddress()}
                 disabled={!manualAddress.trim()}
                 className="px-3 py-2.5 bg-primary text-primary-foreground rounded-xl font-body font-semibold hover:bg-primary/90 disabled:opacity-40 transition-colors"
               >
                 <Icon name="Search" size={16} />
               </button>
             </div>
+            {!city && manualAddress.trim() && (
+              <p className="text-xs font-body text-amber-600 text-center flex items-center justify-center gap-1">
+                <Icon name="AlertTriangle" size={12} />
+                Сначала укажите город — нажмите <button onClick={onOpenSettings} className="underline font-semibold">«Город не задан»</button>
+              </p>
+            )}
 
             {remainingRequests !== null && (
               <p className={`text-xs font-body text-center ${remainingRequests <= 1 ? "text-amber-600" : "text-muted-foreground"}`}>
