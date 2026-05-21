@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'v5';
+const CACHE_VERSION = 'v6';
 const CACHE_NAME = `spravochnik-${CACHE_VERSION}`;
 const FONT_CACHE = 'fonts-v1';
 
@@ -18,7 +18,7 @@ self.addEventListener('install', (event) => {
             .catch(() => {})
         )
       )
-    ).then(() => self.skipWaiting())
+    )
   );
 });
 
