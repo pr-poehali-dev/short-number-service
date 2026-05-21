@@ -186,32 +186,23 @@ export function NearbyResults({
 
       {status === "done" && (
         <>
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-2 flex-wrap">
-              <Icon name="CheckCircle" size={16} className="text-green-600" />
-              <span className="text-sm font-body text-muted-foreground">
+          <div className="flex items-center justify-between mb-4 gap-2">
+            <div className="flex items-center gap-1.5 min-w-0">
+              <Icon name="CheckCircle" size={14} className="text-green-600 flex-shrink-0" />
+              <span className="text-sm font-body text-muted-foreground whitespace-nowrap">
                 Найдено: <strong className="text-foreground">{sorted.length}</strong>
               </span>
-              {hiddenCount > 0 && (
-                <span className="ml-1.5 text-xs text-primary/70 font-body">
-                  · ещё {hiddenCount} в избранном
-                </span>
-              )}
-              {remainingRequests !== null && (
-                <span className={`text-[10px] px-2 py-0.5 rounded-full font-body font-medium border ${
-                  remainingRequests <= 1
-                    ? "text-amber-700 bg-amber-50 border-amber-200"
-                    : "text-muted-foreground bg-muted border-border"
-                }`}>
-                  Осталось: {remainingRequests}/5
+              {remainingRequests !== null && remainingRequests <= 2 && (
+                <span className="text-xs font-body text-amber-600 whitespace-nowrap">
+                  · осталось {remainingRequests}
                 </span>
               )}
             </div>
             <button
               onClick={onReset}
-              className="flex items-center gap-1.5 px-3 py-1.5 border border-border rounded-lg text-sm font-body hover:bg-muted transition-colors"
+              className="flex items-center gap-1 text-sm font-body text-muted-foreground hover:text-foreground transition-colors flex-shrink-0"
             >
-              <Icon name="X" size={14} />
+              <Icon name="X" size={13} />
               Сбросить
             </button>
           </div>
