@@ -31,7 +31,9 @@ export default function UpdateBanner() {
   const handleUpdate = () => {
     if (!waitingSW || updating) return;
     setUpdating(true);
+    const fallback = setTimeout(() => window.location.reload(), 3000);
     navigator.serviceWorker.addEventListener('controllerchange', () => {
+      clearTimeout(fallback);
       window.location.reload();
     }, { once: true });
     waitingSW.postMessage({ type: 'SKIP_WAITING' });
