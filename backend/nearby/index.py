@@ -190,7 +190,7 @@ def handler(event: dict, context) -> dict:
             'sort': 'distance',
             'type': 'branch',
             'fields': fields,
-            'page_size': 30,
+            'page_size': 10,
             'locale': 'ru_RU',
         })
         url = f"https://catalog.api.2gis.com/3.0/items?{params}"
