@@ -53,12 +53,21 @@ def get_remaining(event: dict, endpoint: str) -> int:
     return max(0, max_requests - total)
 
 
+def _is_admin(event: dict) -> bool:
+    token = os.environ.get("ADMIN_TOKEN", "")
+    if not token:
+        return False
+    return event.get("headers", {}).get("X-Admin-Token", "") == token
+
+
 def check_rate_limit(event: dict, endpoint: str) -> tuple[dict | None, int]:
     """
     Проверяет лимит и списывает 1 запрос.
     Сброс — в полночь по МСК.
     Возвращает (None, remaining) если ок, (dict_429, 0) если лимит превышен.
     """
+    if _is_admin(event):
+        return None, 999
     if endpoint not in LIMITS:
         return None, 999
     max_requests = LIMITS[endpoint]

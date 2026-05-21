@@ -19,6 +19,8 @@ export function AdminPinScreen({ onAuth }: { onAuth: () => void }) {
       setTimeout(() => {
         if (next === ADMIN_PIN) {
           sessionStorage.setItem(SESSION_KEY, "1");
+          const token = (import.meta.env as Record<string, string>).VITE_ADMIN_TOKEN;
+          if (token) sessionStorage.setItem("admin_token", token);
           onAuth();
         } else {
           setPinError(true);

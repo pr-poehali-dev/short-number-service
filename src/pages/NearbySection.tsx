@@ -9,6 +9,11 @@ import { useAdviceLimit, AdviceGateResult } from "@/hooks/useAdviceLimit";
 const NEARBY_URL = "https://functions.poehali.dev/d4b08b1e-6bd7-4d3b-81cf-02b5e4c6447f";
 const ANALYZE_URL = "https://functions.poehali.dev/f314b7e4-d728-4c13-bfd3-c1962a5861fc";
 
+function getAdminHeaders(): Record<string, string> {
+  const token = sessionStorage.getItem("admin_token");
+  return token ? { "X-Admin-Token": token } : {};
+}
+
 const IS_IFRAME = window.self !== window.top;
 
 const NEARBY_CACHE_TTL = 5 * 60 * 1000;
@@ -155,7 +160,7 @@ export function NearbySection() {
     try {
       const res = await fetch(NEARBY_URL, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", ...getAdminHeaders() },
         body: JSON.stringify({ address: addr, city })
       });
       const data = await res.json();
@@ -191,7 +196,7 @@ export function NearbySection() {
     try {
       const res = await fetch(NEARBY_URL, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", ...getAdminHeaders() },
         body: JSON.stringify({ lat, lon })
       });
       const data = await res.json();
@@ -271,7 +276,7 @@ export function NearbySection() {
       const currentCoords = await getCoords();
       const res = await fetch(ANALYZE_URL, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", ...getAdminHeaders() },
         body: JSON.stringify({
           bookmarks,
           ...(currentCoords ?? {})

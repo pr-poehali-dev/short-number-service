@@ -169,7 +169,7 @@ export default function AdminPage() {
               На сайт
             </a>
             <button
-              onClick={() => { sessionStorage.removeItem(SESSION_KEY); setAuthed(false); }}
+              onClick={() => { sessionStorage.removeItem(SESSION_KEY); sessionStorage.removeItem("admin_token"); setAuthed(false); }}
               className="text-sm px-3 py-1.5 rounded-lg bg-red-50 text-red-600 border border-red-200 hover:bg-red-100 font-body"
             >
               Выйти
