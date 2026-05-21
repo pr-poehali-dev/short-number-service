@@ -135,20 +135,27 @@ def handler(event: dict, context) -> dict:
                 'fields': 'items.point',
                 'page_size': 1,
                 'locale': 'ru_RU',
+                'type': 'building,street,adm_div,poi',
             })
-            geo_url = f"https://catalog.api.2gis.com/3.0/items?{geo_params}"
+            geo_url = f"https://catalog.api.2gis.com/3.0/items/geocode?{geo_params}"
             geo_req = urllib.request.Request(geo_url, headers={'User-Agent': 'Mozilla/5.0'})
             try:
                 with urllib.request.urlopen(geo_req, timeout=6) as geo_resp:
-                    geo_data = json.loads(geo_resp.read().decode('utf-8'))
+                    geo_raw = geo_resp.read().decode('utf-8')
+                geo_data = json.loads(geo_raw)
+                print(f"Geocode response: {geo_raw[:300]}")
                 geo_items = geo_data.get('result', {}).get('items', [])
-                if not geo_items or 'point' not in geo_items[0]:
+                point = None
+                for gi in geo_items:
+                    if 'point' in gi:
+                        point = gi['point']
+                        break
+                if not point:
                     return {
                         'statusCode': 400,
                         'headers': {'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json'},
                         'body': json.dumps({'error': f'Адрес не найден: {geo_query}'}, ensure_ascii=False)
                     }
-                point = geo_items[0]['point']
                 lat = point['lat']
                 lon = point['lon']
             except Exception as e:
