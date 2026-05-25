@@ -160,7 +160,7 @@ export function NumberModal({ num, onClose, onAddFavorite, isFavorite, maxReache
             <span className="text-muted-foreground/40 text-sm hidden sm:inline">·</span>
             <span className="w-full sm:w-auto" />
             <span className="text-sm font-body text-muted-foreground">Предложено:</span>
-            <span className="text-sm font-body font-semibold text-foreground">{num.suggestedBy ?? "Интернет-сервисом"}</span>
+            <span className="text-sm font-body font-semibold text-foreground">{num.suggestedBy ?? 'Справочник "2407"'}</span>
           </div>
         </div>
 
