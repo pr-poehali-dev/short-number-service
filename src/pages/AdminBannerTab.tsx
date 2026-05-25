@@ -1,0 +1,234 @@
+import { useState, useEffect } from "react";
+import Icon from "@/components/ui/icon";
+
+const NEARBY_URL = "https://functions.poehali.dev/d4b08b1e-6bd7-4d3b-81cf-02b5e4c6447f";
+
+interface BannerForm {
+  enabled: string;
+  type: string;
+  title: string;
+  text: string;
+  button_label: string;
+  button_url: string;
+  interval_hours: string;
+}
+
+const DEFAULTS: BannerForm = {
+  enabled: "true",
+  type: "subscribe",
+  title: "Будьте в курсе обновлений",
+  text: "Подписывайтесь на наш Telegram-канал — новые номера, изменения и полезные материалы",
+  button_label: "Подписаться",
+  button_url: "https://t.me/qrnumber",
+  interval_hours: "24",
+};
+
+export function AdminBannerTab() {
+  const [form, setForm] = useState<BannerForm>(DEFAULTS);
+  const [loading, setLoading] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [saved, setSaved] = useState(false);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    setLoading(true);
+    fetch(NEARBY_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ _action: "get_banner" }),
+    })
+      .then((r) => r.json())
+      .then((data) => setForm({ ...DEFAULTS, ...data }))
+      .catch(() => setError("Не удалось загрузить настройки"))
+      .finally(() => setLoading(false));
+  }, []);
+
+  async function handleSave() {
+    setSaving(true);
+    setError("");
+    try {
+      const token = sessionStorage.getItem("admin_token") || "";
+      await fetch(NEARBY_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "X-Admin-Token": token },
+        body: JSON.stringify({ _action: "update_banner", ...form }),
+      });
+      setSaved(true);
+      setTimeout(() => setSaved(false), 2000);
+    } catch {
+      setError("Ошибка сохранения");
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  const f = (key: keyof BannerForm, value: string) => setForm((p) => ({ ...p, [key]: value }));
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-16">
+        <Icon name="Loader" size={24} className="animate-spin text-primary" />
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-6">
+      <div className="bg-white rounded-2xl border border-border p-6">
+        <div className="flex items-center justify-between mb-5">
+          <div>
+            <h2 className="font-display font-bold text-foreground text-lg">Промо-баннер</h2>
+            <p className="text-sm text-muted-foreground font-body mt-0.5">Отображается под блоком «Избранное» в обоих разделах</p>
+          </div>
+          <label className="flex items-center gap-2 cursor-pointer select-none">
+            <span className="text-sm font-body text-muted-foreground">Включён</span>
+            <div
+              onClick={() => f("enabled", form.enabled === "true" ? "false" : "true")}
+              className={`w-11 h-6 rounded-full transition-colors relative cursor-pointer ${form.enabled === "true" ? "bg-primary" : "bg-border"}`}
+            >
+              <div className={`absolute top-1 w-4 h-4 rounded-full bg-white shadow transition-all ${form.enabled === "true" ? "left-6" : "left-1"}`} />
+            </div>
+          </label>
+        </div>
+
+        <div className="space-y-4">
+          {/* Тип баннера */}
+          <div>
+            <label className="text-xs font-body font-semibold text-muted-foreground uppercase tracking-wide mb-2 block">Тип баннера</label>
+            <div className="flex gap-2">
+              {[
+                { id: "subscribe", label: "Подписка (Telegram/VK)", icon: "Bell" },
+                { id: "promo", label: "Произвольный текст", icon: "Megaphone" },
+              ].map((t) => (
+                <button
+                  key={t.id}
+                  onClick={() => f("type", t.id)}
+                  className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-body font-medium border transition-colors ${
+                    form.type === t.id ? "bg-primary text-white border-primary" : "bg-white text-foreground border-border hover:border-primary/40"
+                  }`}
+                >
+                  <Icon name={t.icon as "Bell" | "Megaphone"} size={14} />
+                  {t.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Заголовок */}
+          <div>
+            <label className="text-xs font-body font-semibold text-muted-foreground uppercase tracking-wide mb-1.5 block">Заголовок</label>
+            <input
+              value={form.title}
+              onChange={(e) => f("title", e.target.value)}
+              className="w-full px-4 py-3 border border-border rounded-xl font-body text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"
+            />
+          </div>
+
+          {/* Текст */}
+          <div>
+            <label className="text-xs font-body font-semibold text-muted-foreground uppercase tracking-wide mb-1.5 block">Текст</label>
+            <textarea
+              rows={3}
+              value={form.text}
+              onChange={(e) => f("text", e.target.value)}
+              className="w-full px-4 py-3 border border-border rounded-xl font-body text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary resize-none"
+            />
+          </div>
+
+          {/* Кнопка */}
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="text-xs font-body font-semibold text-muted-foreground uppercase tracking-wide mb-1.5 block">Текст кнопки</label>
+              <input
+                value={form.button_label}
+                onChange={(e) => f("button_label", e.target.value)}
+                className="w-full px-4 py-3 border border-border rounded-xl font-body text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"
+              />
+            </div>
+            <div>
+              <label className="text-xs font-body font-semibold text-muted-foreground uppercase tracking-wide mb-1.5 block">URL кнопки</label>
+              <input
+                value={form.button_url}
+                onChange={(e) => f("button_url", e.target.value)}
+                placeholder="https://..."
+                className="w-full px-4 py-3 border border-border rounded-xl font-body text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"
+              />
+            </div>
+          </div>
+
+          {/* Периодичность */}
+          <div>
+            <label className="text-xs font-body font-semibold text-muted-foreground uppercase tracking-wide mb-1.5 block">
+              Периодичность показа
+            </label>
+            <div className="flex items-center gap-3">
+              <input
+                type="number"
+                min="1"
+                max="8760"
+                value={form.interval_hours}
+                onChange={(e) => f("interval_hours", e.target.value)}
+                className="w-28 px-4 py-3 border border-border rounded-xl font-body text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"
+              />
+              <span className="text-sm font-body text-muted-foreground">часов после закрытия</span>
+              <div className="flex gap-2 ml-auto">
+                {[{ label: "1 день", val: "24" }, { label: "3 дня", val: "72" }, { label: "7 дней", val: "168" }].map((p) => (
+                  <button
+                    key={p.val}
+                    onClick={() => f("interval_hours", p.val)}
+                    className={`px-3 py-1.5 rounded-lg text-xs font-body font-medium border transition-colors ${
+                      form.interval_hours === p.val ? "bg-primary text-white border-primary" : "bg-white text-muted-foreground border-border hover:border-primary/40"
+                    }`}
+                  >
+                    {p.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {error && <p className="text-sm text-red-600 font-body mt-3">{error}</p>}
+
+        <div className="flex items-center gap-3 mt-6 pt-5 border-t border-border">
+          <button
+            onClick={handleSave}
+            disabled={saving}
+            className="flex items-center gap-2 px-6 py-2.5 bg-primary text-primary-foreground rounded-xl font-body font-semibold text-sm hover:bg-primary/90 disabled:opacity-60 transition-colors"
+          >
+            {saving ? <Icon name="Loader" size={14} className="animate-spin" /> : <Icon name="Save" size={14} />}
+            {saving ? "Сохраняю..." : "Сохранить"}
+          </button>
+          {saved && (
+            <span className="text-sm text-green-600 font-body flex items-center gap-1">
+              <Icon name="Check" size={14} /> Сохранено
+            </span>
+          )}
+        </div>
+      </div>
+
+      {/* Превью */}
+      <div className="bg-white rounded-2xl border border-border p-6">
+        <h3 className="font-display font-semibold text-foreground mb-4 text-sm">Превью баннера</h3>
+        <div className="relative bg-gradient-to-br from-primary/8 to-primary/5 border border-primary/20 rounded-2xl p-4">
+          <div className="absolute top-3 right-3 w-6 h-6 flex items-center justify-center rounded-full bg-primary/10 text-muted-foreground">
+            <Icon name="X" size={14} />
+          </div>
+          <div className="flex items-start gap-3 pr-6">
+            <div className="w-9 h-9 rounded-xl bg-primary/15 flex items-center justify-center flex-shrink-0 mt-0.5">
+              <Icon name={form.type === "subscribe" ? "Bell" : "Megaphone"} size={18} className="text-primary" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="font-display font-bold text-foreground text-sm leading-snug mb-1">{form.title || "Заголовок"}</p>
+              <p className="text-xs font-body text-muted-foreground leading-relaxed mb-3">{form.text || "Текст баннера"}</p>
+              <span className="inline-flex items-center gap-1.5 px-4 py-2 bg-primary text-primary-foreground rounded-xl text-xs font-body font-semibold">
+                <Icon name={form.type === "subscribe" ? "ExternalLink" : "ArrowRight"} size={13} />
+                {form.button_label || "Кнопка"}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

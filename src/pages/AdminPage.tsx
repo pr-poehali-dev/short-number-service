@@ -11,6 +11,7 @@ import { AdminPinScreen } from "./AdminPinScreen";
 import { AdminRuTab, DeleteModal } from "./AdminRuTab";
 import { AdminEnTab } from "./AdminEnTab";
 import { AdminIncidentsTab } from "./AdminIncidentsTab";
+import { AdminBannerTab } from "./AdminBannerTab";
 
 const STORAGE_KEY = "admin_numbers_v1";
 const SESSION_KEY = "admin_auth_v1";
@@ -31,7 +32,7 @@ function saveNumbers(nums: PhoneNumber[]) {
 
 export default function AdminPage() {
   const [authed, setAuthed] = useState(() => sessionStorage.getItem(SESSION_KEY) === "1");
-  const [adminTab, setAdminTab] = useState<"ru" | "en" | "incidents">("ru");
+  const [adminTab, setAdminTab] = useState<"ru" | "en" | "incidents" | "banner">("ru");
 
   const [numbers, setNumbers] = useState<PhoneNumber[]>(loadNumbers);
   const [search, setSearch] = useState("");
@@ -205,6 +206,14 @@ export default function AdminPage() {
           >
             <Icon name="Activity" size={14} /> Мониторинг
           </button>
+          <button
+            onClick={() => setAdminTab("banner")}
+            className={`flex items-center gap-1.5 px-4 py-2 rounded-t-lg text-sm font-body font-medium border-b-2 transition-colors ${
+              adminTab === "banner" ? "border-primary text-primary bg-primary/5" : "border-transparent text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            <Icon name="Megaphone" size={14} /> Баннер
+          </button>
         </div>
       </div>
 
@@ -233,6 +242,7 @@ export default function AdminPage() {
         )}
 
         {adminTab === "incidents" && <AdminIncidentsTab />}
+        {adminTab === "banner" && <AdminBannerTab />}
       </main>
 
       {deleteId !== null && (

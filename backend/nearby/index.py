@@ -119,6 +119,43 @@ def handler(event: dict, context) -> dict:
                 'body': json.dumps({'ok': True})
             }
 
+        BANNER_KEYS = {'enabled', 'type', 'title', 'text', 'button_label', 'button_url', 'interval_hours'}
+        BANNER_DEFAULTS = {
+            'enabled': 'true', 'type': 'subscribe',
+            'title': 'Будьте в курсе обновлений',
+            'text': 'Подписывайтесь на наш Telegram-канал — новые номера, изменения и полезные материалы',
+            'button_label': 'Подписаться', 'button_url': 'https://t.me/qrnumber',
+            'interval_hours': '24',
+        }
+
+        if action == 'get_banner':
+            cur.execute(f"SELECT key, value FROM {schema}.banner_settings")
+            rows = cur.fetchall()
+            settings = dict(BANNER_DEFAULTS)
+            for k, v in rows:
+                settings[k] = v
+            return {
+                'statusCode': 200,
+                'headers': {'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json'},
+                'body': json.dumps(settings)
+            }
+
+        if action == 'update_banner':
+            for k, v in body.items():
+                if k not in BANNER_KEYS:
+                    continue
+                cur.execute(
+                    f"INSERT INTO {schema}.banner_settings (key, value) VALUES (%s, %s) "
+                    f"ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value, updated_at = NOW()",
+                    (k, str(v))
+                )
+            conn.commit()
+            return {
+                'statusCode': 200,
+                'headers': {'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json'},
+                'body': json.dumps({'ok': True})
+            }
+
         lat = body.get('lat')
         lon = body.get('lon')
         address = body.get('address', '').strip()

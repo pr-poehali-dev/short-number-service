@@ -6,6 +6,7 @@ import { loadNumbers } from "./AdminPage";
 import { ymGoal } from "@/lib/analytics";
 import { FavoritesBar } from "./FavoritesBar";
 import { Favorite } from "./useFavorites";
+import PromoBanner from "@/components/PromoBanner";
 
 function CommercialCard({ num, onClick }: { num: PhoneNumber; onClick: (n: PhoneNumber) => void }) {
   return (
@@ -87,6 +88,9 @@ export function DirectorySection({ onSelect, initialCategory, favorites = [], on
       {onRemoveFavorite && onSelectFavorite && (
         <FavoritesBar favorites={favorites} onRemove={onRemoveFavorite} onSelect={onSelectFavorite} />
       )}
+      <div className="max-w-6xl mx-auto px-4 pt-4">
+        <PromoBanner section="directory" />
+      </div>
     <div className="max-w-6xl mx-auto px-4 py-8">
       <h2 className="font-display font-bold text-foreground mb-1 text-2xl">Справочник</h2>
       <p className="text-muted-foreground font-body mb-6 text-sm">Нажмите на карточку, чтобы узнать подробности, использовать или сохранить</p>

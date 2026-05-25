@@ -5,6 +5,7 @@ import { NearbyPromptEditor } from "@/pages/NearbyPromptEditor";
 import { NearbyBookmarks } from "@/pages/NearbyBookmarks";
 import { NearbyResults } from "@/pages/NearbyResults";
 import SubscribeModal from "@/components/SubscribeModal";
+import PromoBanner from "@/components/PromoBanner";
 import { useAdviceLimit, AdviceGateResult } from "@/hooks/useAdviceLimit";
 
 const NEARBY_URL = "https://functions.poehali.dev/d4b08b1e-6bd7-4d3b-81cf-02b5e4c6447f";
@@ -342,6 +343,8 @@ export function NearbySection() {
         onAnalyze={analyzeBookmarks}
         onDismissAdvice={() => { setAdvice(""); setAdviceError(""); }}
       />
+
+      <PromoBanner section="nearby" />
 
       <NearbyResults
         status={status}
