@@ -36,12 +36,14 @@ def handler(event: dict, context) -> dict:
         photo_b64 = body.get('photo_base64', '')
         photo_name = body.get('photo_name', 'photo.jpg')
 
+        contact_info = body.get('contact_info', '').strip()
         caption_parts = ["📸 <b>Фото короткого номера на практике</b>"]
         if number:
             caption_parts.append(f"📞 <b>Номер:</b> {number}")
         if experience:
             caption_parts.append(f"💬 <b>Опыт/мысли:</b> {experience}")
         caption_parts.append("✅ <i>Автор разрешил использование материалов</i>")
+        caption_parts.append(f"👤 <b>Контакт:</b> {contact_info or '—'}")
         caption = "\n".join(caption_parts)
 
         photo_bytes = base64.b64decode(photo_b64)
@@ -73,6 +75,7 @@ def handler(event: dict, context) -> dict:
         description = body.get('description', '')
         procedure = body.get('procedure', '')
         category = body.get('category', '')
+        contact_info = body.get('contact_info', '').strip()
 
         if mode == 'add':
             text = (
@@ -81,7 +84,8 @@ def handler(event: dict, context) -> dict:
                 f"🏷 <b>Категория:</b> {category or '—'}\n"
                 f"📛 <b>Название:</b> {name}\n"
                 f"📝 <b>Описание:</b> {description}\n"
-                f"🔧 <b>Как воспользоваться:</b> {procedure or '—'}"
+                f"🔧 <b>Как воспользоваться:</b> {procedure or '—'}\n"
+                f"👤 <b>Контакт:</b> {contact_info or '—'}"
             )
         else:
             text = (
@@ -90,7 +94,8 @@ def handler(event: dict, context) -> dict:
                 f"🏷 <b>Категория:</b> {category or '—'}\n"
                 f"📛 <b>Название:</b> {name}\n"
                 f"📝 <b>Описание:</b> {description}\n"
-                f"🔧 <b>Как воспользоваться:</b> {procedure or '—'}"
+                f"🔧 <b>Как воспользоваться:</b> {procedure or '—'}\n"
+                f"👤 <b>Контакт:</b> {contact_info or '—'}"
             )
 
         url = f"https://api.telegram.org/bot{token}/sendMessage"

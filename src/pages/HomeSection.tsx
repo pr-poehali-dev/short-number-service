@@ -10,8 +10,8 @@ function NumberForm() {
   const [mode, setMode] = useState<"add" | "edit" | "photo">("add");
   const [search, setSearch] = useState("");
   const [selected, setSelected] = useState<PhoneNumber | null>(null);
-  const [form, setForm] = useState({ number: "", name: "", description: "", procedure: "", category: "" });
-  const [photoForm, setPhotoForm] = useState({ number: "", experience: "", agreed: false });
+  const [form, setForm] = useState({ number: "", name: "", description: "", procedure: "", category: "", contactInfo: "" });
+  const [photoForm, setPhotoForm] = useState({ number: "", experience: "", agreed: false, contactInfo: "" });
   const [photoFile, setPhotoFile] = useState<File | null>(null);
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -51,12 +51,12 @@ function NumberForm() {
       await fetch(SEND_SUGGESTION_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ mode, ...form }),
+        body: JSON.stringify({ mode, ...form, contact_info: form.contactInfo }),
       });
     } finally {
       setLoading(false);
       setShowModal(true);
-      setForm({ number: "", name: "", description: "", procedure: "", category: "" });
+      setForm({ number: "", name: "", description: "", procedure: "", category: "", contactInfo: "" });
       setSearch("");
       setSelected(null);
     }
@@ -80,19 +80,20 @@ function NumberForm() {
           experience: photoForm.experience,
           photo_base64: base64,
           photo_name: photoFile.name,
+          contact_info: photoForm.contactInfo,
         }),
       });
     } finally {
       setLoading(false);
       setShowModal(true);
-      setPhotoForm({ number: "", experience: "", agreed: false });
+      setPhotoForm({ number: "", experience: "", agreed: false, contactInfo: "" });
       setPhotoFile(null);
       setPhotoPreview(null);
     }
   }
 
-  const isValid = form.number.trim() && form.name.trim() && form.description.trim();
-  const isPhotoValid = photoFile && photoForm.agreed;
+  const isValid = form.number.trim() && form.name.trim() && form.description.trim() && form.contactInfo.trim();
+  const isPhotoValid = photoFile && photoForm.agreed && photoForm.contactInfo.trim();
 
   return (
     <div className="bg-white border border-border rounded-2xl p-6">
@@ -125,7 +126,7 @@ function NumberForm() {
         ] as const).map((m) => (
           <button
             key={m.id}
-            onClick={() => { setMode(m.id); setSelected(null); setSearch(""); setForm({ number: "", name: "", description: "", procedure: "", category: "" }); }}
+            onClick={() => { setMode(m.id); setSelected(null); setSearch(""); setForm({ number: "", name: "", description: "", procedure: "", category: "", contactInfo: "" }); }}
             className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-body font-semibold transition-colors border ${
               mode === m.id ? "bg-primary text-white border-primary" : "bg-white text-foreground border-border hover:border-primary/40"
             }`}
@@ -201,6 +202,12 @@ function NumberForm() {
                 placeholder="Как воспользоваться (необязательно)"
                 className="w-full px-4 py-3 border border-border rounded-xl font-body text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary resize-none"
               />
+              <input
+                value={form.contactInfo}
+                onChange={(e) => setForm({ ...form, contactInfo: e.target.value })}
+                placeholder="Имя, @telegram или e-mail для обратной связи *"
+                className="w-full px-4 py-3 border border-border rounded-xl font-body text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"
+              />
               <button
                 onClick={handleSubmit}
                 disabled={!isValid || loading}
@@ -264,6 +271,12 @@ function NumberForm() {
                 <span className="text-xs font-body text-muted-foreground leading-relaxed">Я автор этих материалов и разрешаю их безвозмездно использовать на сайте, в новостном канале и в других материалах интернет-сервиса "2407.рф"</span>
               </label>
 
+              <input
+                value={photoForm.contactInfo}
+                onChange={(e) => setPhotoForm({ ...photoForm, contactInfo: e.target.value })}
+                placeholder="Имя, @telegram или e-mail для обратной связи *"
+                className="w-full px-4 py-3 border border-border rounded-xl font-body text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"
+              />
               <button
                 onClick={handlePhotoSubmit}
                 disabled={!isPhotoValid || loading}
