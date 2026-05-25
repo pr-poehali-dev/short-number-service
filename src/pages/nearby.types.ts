@@ -72,6 +72,58 @@ export function formatDate(iso: string): string {
 }
 
 export const BOOKMARKS_KEY = "nearby_bookmarks";
+export const BOOKMARK_VIEW_KEY = "nearby_bookmark_view";
+export const COLLECTIONS_KEY = "nearby_collections";
+
+export type BookmarkView = "default" | "distance" | "type" | "collections";
+
+export interface BookmarkCollection {
+  id: string;
+  name: string;
+  color: string;
+  bookmarkIds: string[];
+  createdAt: string;
+}
+
+export const COLLECTION_COLORS = [
+  { id: "blue",   bg: "bg-blue-100",   text: "text-blue-700",   border: "border-blue-200"   },
+  { id: "green",  bg: "bg-green-100",  text: "text-green-700",  border: "border-green-200"  },
+  { id: "amber",  bg: "bg-amber-100",  text: "text-amber-700",  border: "border-amber-200"  },
+  { id: "rose",   bg: "bg-rose-100",   text: "text-rose-700",   border: "border-rose-200"   },
+  { id: "violet", bg: "bg-violet-100", text: "text-violet-700", border: "border-violet-200" },
+];
+
+export function loadCollections(): BookmarkCollection[] {
+  try { return JSON.parse(localStorage.getItem(COLLECTIONS_KEY) || "[]"); } catch { return []; }
+}
+
+export function saveCollections(cols: BookmarkCollection[]) {
+  localStorage.setItem(COLLECTIONS_KEY, JSON.stringify(cols));
+}
+
+export function groupByType(bookmarks: Bookmark[]): { type: string; bookmarks: Bookmark[] }[] {
+  const map: Record<string, Bookmark[]> = {};
+  for (const bm of bookmarks) {
+    const key = bm.type || "место";
+    if (!map[key]) map[key] = [];
+    map[key].push(bm);
+  }
+  return Object.entries(map)
+    .sort((a, b) => b[1].length - a[1].length)
+    .map(([type, bms]) => ({ type, bookmarks: bms }));
+}
+
+export function sortByDistance(
+  bookmarks: Bookmark[],
+  userLat: number,
+  userLon: number
+): Bookmark[] {
+  return [...bookmarks].sort((a, b) => {
+    const da = haversineKm(userLat, userLon, a.lat, a.lon);
+    const db = haversineKm(userLat, userLon, b.lat, b.lon);
+    return da - db;
+  });
+}
 
 
 export interface BookmarkGroup {

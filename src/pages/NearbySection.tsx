@@ -342,6 +342,7 @@ export function NearbySection() {
         onRemove={removeBookmark}
         onAnalyze={analyzeBookmarks}
         onDismissAdvice={() => { setAdvice(""); setAdviceError(""); }}
+        coords={coords}
       />
 
       <PromoBanner section="nearby" />
