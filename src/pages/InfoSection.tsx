@@ -59,26 +59,28 @@ export function FaqSection() {
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-8 animate-fade-in">
-      <PromoBanner section="faq" />
       <h2 className="font-display text-3xl font-bold text-foreground mb-1">Часто задаваемые вопросы</h2>
       <p className="text-muted-foreground font-body mb-8">Ответы на популярные вопросы о коротких номерах</p>
 
       <div className="space-y-3">
         {FAQ_ITEMS.map((item, i) => (
-          <div key={i} className="bg-white border border-border rounded-xl overflow-hidden">
-            <button
-              onClick={() => setOpen(open === i ? null : i)}
-              className="w-full flex items-center justify-between px-5 py-4 text-left hover:bg-muted/50 transition-colors"
-            >
-              <span className="font-body font-semibold text-foreground pr-4">{item.q}</span>
-              <Icon name={open === i ? "ChevronUp" : "ChevronDown"} size={18} className="text-muted-foreground flex-shrink-0" />
-            </button>
-            {open === i && (
-              <div className="px-5 pb-4">
-                <p className="text-foreground font-body leading-relaxed text-sm">{item.a}</p>
-              </div>
-            )}
-          </div>
+          <>
+            <div key={i} className="bg-white border border-border rounded-xl overflow-hidden">
+              <button
+                onClick={() => setOpen(open === i ? null : i)}
+                className="w-full flex items-center justify-between px-5 py-4 text-left hover:bg-muted/50 transition-colors"
+              >
+                <span className="font-body font-semibold text-foreground pr-4">{item.q}</span>
+                <Icon name={open === i ? "ChevronUp" : "ChevronDown"} size={18} className="text-muted-foreground flex-shrink-0" />
+              </button>
+              {open === i && (
+                <div className="px-5 pb-4">
+                  <p className="text-foreground font-body leading-relaxed text-sm">{item.a}</p>
+                </div>
+              )}
+            </div>
+            {i === 0 && <PromoBanner section="faq" />}
+          </>
         ))}
       </div>
     </div>
