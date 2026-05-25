@@ -171,26 +171,28 @@ export function NearbyResults({
               </button>
             </>
           )}
-          <div className="mt-5 pt-5 border-t border-red-200">
-            <p className="text-xs text-red-500 font-body mb-2">Или введите координаты вручную (можно скопировать из Яндекс.Карт)</p>
-            <div className="flex gap-2 max-w-xs mx-auto">
-              <input
-                type="text"
-                value={manualCoords}
-                onChange={e => onManualCoordsChange(e.target.value)}
-                placeholder="59.9311, 30.3609"
-                className="flex-1 text-sm border border-red-200 rounded-lg px-3 py-2 font-body bg-white focus:outline-none focus:border-primary"
-                onKeyDown={e => e.key === 'Enter' && onFindByManualCoords()}
-              />
-              <button
-                onClick={onFindByManualCoords}
-                disabled={!manualCoords.trim()}
-                className="px-3 py-2 bg-primary text-primary-foreground rounded-lg text-sm font-body font-semibold hover:bg-primary/90 disabled:opacity-40 transition-colors"
-              >
-                <Icon name="Search" size={15} />
-              </button>
+          {!rateLimited && (
+            <div className="mt-5 pt-5 border-t border-red-200">
+              <p className="text-xs text-red-500 font-body mb-2">Или введите координаты вручную</p>
+              <div className="flex gap-2 max-w-xs mx-auto">
+                <input
+                  type="text"
+                  value={manualCoords}
+                  onChange={e => onManualCoordsChange(e.target.value)}
+                  placeholder="59.9311, 30.3609"
+                  className="flex-1 text-sm border border-red-200 rounded-lg px-3 py-2 font-body bg-white focus:outline-none focus:border-primary"
+                  onKeyDown={e => e.key === 'Enter' && onFindByManualCoords()}
+                />
+                <button
+                  onClick={onFindByManualCoords}
+                  disabled={!manualCoords.trim()}
+                  className="px-3 py-2 bg-primary text-primary-foreground rounded-lg text-sm font-body font-semibold hover:bg-primary/90 disabled:opacity-40 transition-colors"
+                >
+                  <Icon name="Search" size={15} />
+                </button>
+              </div>
             </div>
-          </div>
+          )}
         </div>
       )}
 
