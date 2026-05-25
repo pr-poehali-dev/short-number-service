@@ -25,18 +25,18 @@ export function FavoritesBar({ favorites, onRemove, onSelect }: Props) {
           </p>
         </div>
       ) : (
-        <div className="flex flex-wrap gap-2">
+        <div className="grid grid-cols-2 sm:flex sm:flex-wrap gap-2">
           {favorites.map((fav) => (
             <div
               key={fav.id}
-              className="flex items-center gap-1.5 pl-3 pr-1 py-1.5 bg-white border border-border rounded-lg shadow-sm hover:border-primary/40 transition-colors"
+              className="flex items-center gap-1.5 pl-3 pr-1 py-1.5 bg-white border border-border rounded-lg shadow-sm hover:border-primary/40 transition-colors min-w-0"
             >
               <button
                 onClick={() => onSelect(fav.id)}
-                className="flex items-center gap-1.5 text-sm font-body font-medium text-foreground"
+                className="flex items-center gap-1.5 text-sm font-body font-medium text-foreground min-w-0 flex-1"
               >
-                <span className="font-display font-bold text-primary text-xs">{fav.number}</span>
-                <span className="truncate max-w-[120px]">{fav.name}</span>
+                <span className="font-display font-bold text-primary text-xs flex-shrink-0">{fav.number}</span>
+                <span className="truncate">{fav.name}</span>
               </button>
               <button
                 onClick={(e) => { e.stopPropagation(); onRemove(fav.id); }}
