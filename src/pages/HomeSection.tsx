@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Icon from "@/components/ui/icon";
 import { NUMBERS, LAST_UPDATED, PhoneNumber } from "./data";
+import PromoBanner from "@/components/PromoBanner";
 
 type IconName = Parameters<typeof Icon>[0]["name"];
 
@@ -363,20 +364,7 @@ export function HomeSection({ onNav }: { onNav: (s: string, category?: string) =
 
       {/* Access banner */}
       <div className="max-w-6xl mx-auto px-4 pb-6">
-        <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-100 rounded-2xl p-6 md:p-8 flex flex-col md:flex-row items-center gap-6">
-          <div className="flex-1">
-            <h3 className="font-display text-xl font-bold text-foreground mb-2">Полный доступ к справочнику</h3>
-            <p className="text-muted-foreground font-body">Подпишитесь на новости, чтобы следить за пульсом интернет-серивса.</p>
-          </div>
-          <div className="flex gap-3 flex-shrink-0">
-            <a href="https://t.me/qrnumber" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 px-5 py-3 bg-[#2AABEE] text-white rounded-xl font-body font-semibold hover:bg-[#239cd8] transition-colors no-underline">
-              <Icon name="Send" size={18} /> Telegram
-            </a>
-            <a href="https://vk.com/qrnumber" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 px-5 py-3 bg-[#0077FF] text-white rounded-xl font-body font-semibold hover:bg-[#0066dd] transition-colors no-underline">
-              <Icon name="Users" size={18} /> ВКонтакте
-            </a>
-          </div>
-        </div>
+        <PromoBanner section="home" />
       </div>
 
       {/* Add/Edit number form */}

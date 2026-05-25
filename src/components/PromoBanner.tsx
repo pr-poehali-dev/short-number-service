@@ -13,11 +13,13 @@ export interface BannerSettings {
   interval_hours: string;
 }
 
-const STORAGE_KEY = "promo_banner_dismissed_at";
+function storageKey(section: string) {
+  return `promo_banner_dismissed_at_${section}`;
+}
 
-function isDismissed(intervalHours: number): boolean {
+function isDismissed(section: string, intervalHours: number): boolean {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
+    const raw = localStorage.getItem(storageKey(section));
     if (!raw) return false;
     const dismissedAt = parseInt(raw, 10);
     const elapsed = (Date.now() - dismissedAt) / 1000 / 3600;
@@ -27,12 +29,12 @@ function isDismissed(intervalHours: number): boolean {
   }
 }
 
-function dismiss() {
-  localStorage.setItem(STORAGE_KEY, String(Date.now()));
+function dismiss(section: string) {
+  localStorage.setItem(storageKey(section), String(Date.now()));
 }
 
 interface Props {
-  section: "directory" | "nearby";
+  section: "home" | "directory" | "nearby";
 }
 
 export default function PromoBanner({ section }: Props) {
@@ -43,23 +45,23 @@ export default function PromoBanner({ section }: Props) {
     fetch(NEARBY_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ _action: "get_banner" }),
+      body: JSON.stringify({ _action: "get_banner", section }),
     })
       .then((r) => r.json())
       .then((data: BannerSettings) => {
         setSettings(data);
         if (data.enabled === "true") {
           const hours = parseFloat(data.interval_hours) || 24;
-          setVisible(!isDismissed(hours));
+          setVisible(!isDismissed(section, hours));
         }
       })
       .catch(() => {});
-  }, []);
+  }, [section]);
 
   if (!settings || !visible) return null;
 
   function handleClose() {
-    dismiss();
+    dismiss(section);
     setVisible(false);
   }
 

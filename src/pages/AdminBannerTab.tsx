@@ -3,6 +3,8 @@ import Icon from "@/components/ui/icon";
 
 const NEARBY_URL = "https://functions.poehali.dev/d4b08b1e-6bd7-4d3b-81cf-02b5e4c6447f";
 
+type BannerSection = "home" | "directory" | "nearby";
+
 interface BannerForm {
   enabled: string;
   type: string;
@@ -13,18 +15,35 @@ interface BannerForm {
   interval_hours: string;
 }
 
-const DEFAULTS: BannerForm = {
-  enabled: "true",
-  type: "subscribe",
-  title: "Будьте в курсе обновлений",
-  text: "Подписывайтесь на наш Telegram-канал — новые номера, изменения и полезные материалы",
-  button_label: "Подписаться",
-  button_url: "https://t.me/qrnumber",
-  interval_hours: "24",
+const SECTION_LABELS: Record<BannerSection, string> = {
+  home: "Главная страница",
+  directory: "Справочник",
+  nearby: "Быстрый ответ",
 };
 
-export function AdminBannerTab() {
-  const [form, setForm] = useState<BannerForm>(DEFAULTS);
+const DEFAULTS: Record<BannerSection, BannerForm> = {
+  home: {
+    enabled: "true", type: "subscribe",
+    title: "Полный доступ к справочнику",
+    text: "Подпишитесь на новости, чтобы следить за пульсом интернет-сервиса.",
+    button_label: "Подписаться", button_url: "https://t.me/qrnumber", interval_hours: "24",
+  },
+  directory: {
+    enabled: "true", type: "subscribe",
+    title: "Будьте в курсе обновлений",
+    text: "Подписывайтесь на наш Telegram-канал — новые номера, изменения и полезные материалы",
+    button_label: "Подписаться", button_url: "https://t.me/qrnumber", interval_hours: "24",
+  },
+  nearby: {
+    enabled: "true", type: "subscribe",
+    title: "Будьте в курсе обновлений",
+    text: "Подписывайтесь на наш Telegram-канал — новые номера, изменения и полезные материалы",
+    button_label: "Подписаться", button_url: "https://t.me/qrnumber", interval_hours: "24",
+  },
+};
+
+function BannerEditor({ section }: { section: BannerSection }) {
+  const [form, setForm] = useState<BannerForm>(DEFAULTS[section]);
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
@@ -32,16 +51,17 @@ export function AdminBannerTab() {
 
   useEffect(() => {
     setLoading(true);
+    setError("");
     fetch(NEARBY_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ _action: "get_banner" }),
+      body: JSON.stringify({ _action: "get_banner", section }),
     })
       .then((r) => r.json())
-      .then((data) => setForm({ ...DEFAULTS, ...data }))
+      .then((data) => setForm({ ...DEFAULTS[section], ...data }))
       .catch(() => setError("Не удалось загрузить настройки"))
       .finally(() => setLoading(false));
-  }, []);
+  }, [section]);
 
   async function handleSave() {
     setSaving(true);
@@ -51,7 +71,7 @@ export function AdminBannerTab() {
       await fetch(NEARBY_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json", "X-Admin-Token": token },
-        body: JSON.stringify({ _action: "update_banner", ...form }),
+        body: JSON.stringify({ _action: "update_banner", section, ...form }),
       });
       setSaved(true);
       setTimeout(() => setSaved(false), 2000);
@@ -77,8 +97,10 @@ export function AdminBannerTab() {
       <div className="bg-white rounded-2xl border border-border p-6">
         <div className="flex items-center justify-between mb-5">
           <div>
-            <h2 className="font-display font-bold text-foreground text-lg">Промо-баннер</h2>
-            <p className="text-sm text-muted-foreground font-body mt-0.5">Отображается под блоком «Избранное» в обоих разделах</p>
+            <h2 className="font-display font-bold text-foreground text-lg">Баннер — {SECTION_LABELS[section]}</h2>
+            <p className="text-sm text-muted-foreground font-body mt-0.5">
+              {section === "home" ? "Отображается на главной странице" : `Отображается под блоком «Избранное» в разделе «${SECTION_LABELS[section]}»`}
+            </p>
           </div>
           <label className="flex items-center gap-2 cursor-pointer select-none">
             <span className="text-sm font-body text-muted-foreground">Включён</span>
@@ -92,7 +114,6 @@ export function AdminBannerTab() {
         </div>
 
         <div className="space-y-4">
-          {/* Тип баннера */}
           <div>
             <label className="text-xs font-body font-semibold text-muted-foreground uppercase tracking-wide mb-2 block">Тип баннера</label>
             <div className="flex gap-2">
@@ -114,7 +135,6 @@ export function AdminBannerTab() {
             </div>
           </div>
 
-          {/* Заголовок */}
           <div>
             <label className="text-xs font-body font-semibold text-muted-foreground uppercase tracking-wide mb-1.5 block">Заголовок</label>
             <input
@@ -124,7 +144,6 @@ export function AdminBannerTab() {
             />
           </div>
 
-          {/* Текст */}
           <div>
             <label className="text-xs font-body font-semibold text-muted-foreground uppercase tracking-wide mb-1.5 block">Текст</label>
             <textarea
@@ -135,7 +154,6 @@ export function AdminBannerTab() {
             />
           </div>
 
-          {/* Кнопка */}
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label className="text-xs font-body font-semibold text-muted-foreground uppercase tracking-wide mb-1.5 block">Текст кнопки</label>
@@ -156,12 +174,9 @@ export function AdminBannerTab() {
             </div>
           </div>
 
-          {/* Периодичность */}
           <div>
-            <label className="text-xs font-body font-semibold text-muted-foreground uppercase tracking-wide mb-1.5 block">
-              Периодичность показа
-            </label>
-            <div className="flex items-center gap-3">
+            <label className="text-xs font-body font-semibold text-muted-foreground uppercase tracking-wide mb-1.5 block">Периодичность показа</label>
+            <div className="flex items-center gap-3 flex-wrap">
               <input
                 type="number"
                 min="1"
@@ -209,26 +224,72 @@ export function AdminBannerTab() {
 
       {/* Превью */}
       <div className="bg-white rounded-2xl border border-border p-6">
-        <h3 className="font-display font-semibold text-foreground mb-4 text-sm">Превью баннера</h3>
-        <div className="relative bg-gradient-to-br from-primary/8 to-primary/5 border border-primary/20 rounded-2xl p-4">
-          <div className="absolute top-3 right-3 w-6 h-6 flex items-center justify-center rounded-full bg-primary/10 text-muted-foreground">
-            <Icon name="X" size={14} />
-          </div>
-          <div className="flex items-start gap-3 pr-6">
-            <div className="w-9 h-9 rounded-xl bg-primary/15 flex items-center justify-center flex-shrink-0 mt-0.5">
-              <Icon name={form.type === "subscribe" ? "Bell" : "Megaphone"} size={18} className="text-primary" />
+        <h3 className="font-display font-semibold text-foreground mb-4 text-sm">Превью</h3>
+        {form.type === "subscribe" ? (
+          <div className="relative bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-100 rounded-2xl p-6">
+            <div className="absolute top-3 right-3 w-6 h-6 flex items-center justify-center rounded-full bg-blue-100 text-muted-foreground">
+              <Icon name="X" size={14} />
             </div>
-            <div className="flex-1 min-w-0">
-              <p className="font-display font-bold text-foreground text-sm leading-snug mb-1">{form.title || "Заголовок"}</p>
-              <p className="text-xs font-body text-muted-foreground leading-relaxed mb-3">{form.text || "Текст баннера"}</p>
-              <span className="inline-flex items-center gap-1.5 px-4 py-2 bg-primary text-primary-foreground rounded-xl text-xs font-body font-semibold">
-                <Icon name={form.type === "subscribe" ? "ExternalLink" : "ArrowRight"} size={13} />
-                {form.button_label || "Кнопка"}
-              </span>
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 pr-6">
+              <div className="flex-1">
+                <h3 className="font-display text-lg font-bold text-foreground mb-1">{form.title || "Заголовок"}</h3>
+                <p className="text-sm text-muted-foreground font-body">{form.text || "Текст баннера"}</p>
+              </div>
+              <div className="flex gap-3 flex-shrink-0">
+                <span className="flex items-center gap-2 px-4 py-2.5 bg-[#2AABEE] text-white rounded-xl font-body font-semibold text-sm">
+                  <Icon name="Send" size={16} /> Telegram
+                </span>
+                <span className="flex items-center gap-2 px-4 py-2.5 bg-[#0077FF] text-white rounded-xl font-body font-semibold text-sm">
+                  <Icon name="Users" size={16} /> ВКонтакте
+                </span>
+              </div>
             </div>
           </div>
-        </div>
+        ) : (
+          <div className="relative bg-gradient-to-br from-primary/8 to-primary/5 border border-primary/20 rounded-2xl p-4">
+            <div className="absolute top-3 right-3 w-6 h-6 flex items-center justify-center rounded-full bg-primary/10 text-muted-foreground">
+              <Icon name="X" size={14} />
+            </div>
+            <div className="flex items-start gap-3 pr-6">
+              <div className="w-9 h-9 rounded-xl bg-primary/15 flex items-center justify-center flex-shrink-0 mt-0.5">
+                <Icon name="Megaphone" size={18} className="text-primary" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="font-display font-bold text-foreground text-sm leading-snug mb-1">{form.title || "Заголовок"}</p>
+                <p className="text-xs font-body text-muted-foreground leading-relaxed mb-3">{form.text || "Текст баннера"}</p>
+                <span className="inline-flex items-center gap-1.5 px-4 py-2 bg-primary text-primary-foreground rounded-xl text-xs font-body font-semibold">
+                  <Icon name="ArrowRight" size={13} />
+                  {form.button_label || "Кнопка"}
+                </span>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
+    </div>
+  );
+}
+
+export function AdminBannerTab() {
+  const [activeSection, setActiveSection] = useState<BannerSection>("home");
+
+  return (
+    <div className="space-y-4">
+      <div className="flex gap-1 bg-white border border-border rounded-xl p-1 w-fit">
+        {(["home", "directory", "nearby"] as BannerSection[]).map((s) => (
+          <button
+            key={s}
+            onClick={() => setActiveSection(s)}
+            className={`px-4 py-2 rounded-lg text-sm font-body font-medium transition-colors ${
+              activeSection === s ? "bg-primary text-white" : "text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            {SECTION_LABELS[s]}
+          </button>
+        ))}
+      </div>
+
+      <BannerEditor key={activeSection} section={activeSection} />
     </div>
   );
 }

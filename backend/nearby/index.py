@@ -120,18 +120,20 @@ def handler(event: dict, context) -> dict:
             }
 
         BANNER_KEYS = {'enabled', 'type', 'title', 'text', 'button_label', 'button_url', 'interval_hours'}
+        BANNER_SECTIONS = {'home', 'directory', 'nearby'}
         BANNER_DEFAULTS = {
-            'enabled': 'true', 'type': 'subscribe',
-            'title': 'Будьте в курсе обновлений',
-            'text': 'Подписывайтесь на наш Telegram-канал — новые номера, изменения и полезные материалы',
-            'button_label': 'Подписаться', 'button_url': 'https://t.me/qrnumber',
-            'interval_hours': '24',
+            'home':      {'enabled': 'true', 'type': 'subscribe', 'title': 'Полный доступ к справочнику', 'text': 'Подпишитесь на новости, чтобы следить за пульсом интернет-сервиса.', 'button_label': 'Подписаться', 'button_url': 'https://t.me/qrnumber', 'interval_hours': '24'},
+            'directory': {'enabled': 'true', 'type': 'subscribe', 'title': 'Будьте в курсе обновлений', 'text': 'Подписывайтесь на наш Telegram-канал — новые номера, изменения и полезные материалы', 'button_label': 'Подписаться', 'button_url': 'https://t.me/qrnumber', 'interval_hours': '24'},
+            'nearby':    {'enabled': 'true', 'type': 'subscribe', 'title': 'Будьте в курсе обновлений', 'text': 'Подписывайтесь на наш Telegram-канал — новые номера, изменения и полезные материалы', 'button_label': 'Подписаться', 'button_url': 'https://t.me/qrnumber', 'interval_hours': '24'},
         }
 
         if action == 'get_banner':
-            cur.execute(f"SELECT key, value FROM {schema}.banner_settings")
+            section = body.get('section', 'directory')
+            if section not in BANNER_SECTIONS:
+                section = 'directory'
+            cur.execute(f"SELECT key, value FROM {schema}.banner_settings WHERE section = %s", (section,))
             rows = cur.fetchall()
-            settings = dict(BANNER_DEFAULTS)
+            settings = dict(BANNER_DEFAULTS[section])
             for k, v in rows:
                 settings[k] = v
             return {
@@ -141,13 +143,16 @@ def handler(event: dict, context) -> dict:
             }
 
         if action == 'update_banner':
+            section = body.get('section', 'directory')
+            if section not in BANNER_SECTIONS:
+                section = 'directory'
             for k, v in body.items():
                 if k not in BANNER_KEYS:
                     continue
                 cur.execute(
-                    f"INSERT INTO {schema}.banner_settings (key, value) VALUES (%s, %s) "
-                    f"ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value, updated_at = NOW()",
-                    (k, str(v))
+                    f"INSERT INTO {schema}.banner_settings (key, value, section) VALUES (%s, %s, %s) "
+                    f"ON CONFLICT (key, section) DO UPDATE SET value = EXCLUDED.value, updated_at = NOW()",
+                    (k, str(v), section)
                 )
             conn.commit()
             return {
