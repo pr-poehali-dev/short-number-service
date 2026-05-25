@@ -233,7 +233,7 @@ export function InstallModal({ onClose, pwaPrompt }: { onClose: () => void; pwaP
           </div>
         )}
 
-        <p className="text-sm font-body font-semibold text-foreground mb-2">Добавить закладку на экран</p>
+        <p className="text-sm font-body font-semibold text-foreground mb-2">Добавить на экран смартфона</p>
         <p className="text-xs text-muted-foreground font-body mb-3">Открывается в браузере, требует интернет при первом запуске, а затем сможет работать и без него.</p>
 
         <div className="space-y-3">
