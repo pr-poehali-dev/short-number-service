@@ -9,8 +9,10 @@ SCHEMA = "t_p25384465_short_number_service"
 
 # Лимиты: endpoint -> max_requests_per_day
 LIMITS = {
-    "nearby":          5,
-    "send-suggestion": 5,
+    "nearby":            5,
+    "nearby-ai":         5,
+    "analyze-bookmarks": 5,
+    "send-suggestion":   5,
 }
 
 

@@ -8,7 +8,12 @@ import {
 
 interface Props {
   bookmarks: Bookmark[];
+  advice: string;
+  adviceError: string;
+  adviceLoading: boolean;
   onRemove: (id: string) => void;
+  onAnalyze: () => void;
+  onDismissAdvice?: () => void;
   coords?: { lat: number; lon: number } | null;
 }
 
@@ -320,7 +325,10 @@ const VIEW_OPTIONS: { id: BookmarkView; label: string; icon: string }[] = [
 ];
 
 // ─── MAIN COMPONENT ──────────────────────────────────────────────────────────
-export function NearbyBookmarks({ bookmarks, onRemove, coords }: Props) {
+export function NearbyBookmarks({
+  bookmarks, advice, adviceError, adviceLoading,
+  onRemove, onAnalyze, onDismissAdvice, coords,
+}: Props) {
   const [view, setView] = useState<BookmarkView>(() => {
     return (localStorage.getItem(BOOKMARK_VIEW_KEY) as BookmarkView) ?? "default";
   });
@@ -347,7 +355,7 @@ export function NearbyBookmarks({ bookmarks, onRemove, coords }: Props) {
       {/* Header */}
       <div className="flex items-center gap-2 mb-3">
         <Icon name="Star" size={15} className="text-primary" />
-        <span className="font-display font-semibold text-foreground text-sm">Избранное</span>
+        <span className="font-display font-semibold text-foreground text-sm">Избранное с AI-поиском</span>
 
         {bookmarks.length > 0 && (
           <>
@@ -382,9 +390,44 @@ export function NearbyBookmarks({ bookmarks, onRemove, coords }: Props) {
               )}
             </div>
 
+            {/* AI кнопка */}
+            <button
+              onClick={onAnalyze}
+              disabled={adviceLoading}
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-primary text-primary-foreground rounded-lg text-xs font-body font-semibold hover:opacity-90 transition-opacity disabled:opacity-60"
+            >
+              <Icon name={adviceLoading ? "Loader" : "Sparkles"} size={13} className={adviceLoading ? "animate-spin" : ""} />
+              {adviceLoading ? "Анализирую..." : "Что посетить?"}
+            </button>
           </>
         )}
       </div>
+
+      {/* AI advice */}
+      {(advice || adviceError) && (
+        <div className={`mb-3 rounded-xl p-4 border ${adviceError ? "bg-red-50 border-red-200" : "bg-gradient-to-br from-primary/5 to-primary/10 border-primary/20"}`}>
+          <div className="flex items-start justify-between gap-2">
+            <div className="flex-1 min-w-0">
+              {adviceError ? (
+                <p className="text-sm font-body text-red-600">{adviceError}</p>
+              ) : (
+                <>
+                  <div className="flex items-center gap-1.5 mb-2">
+                    <Icon name="Sparkles" size={14} className="text-primary" />
+                    <span className="text-xs font-body font-semibold text-primary">Рекомендация нейросети</span>
+                  </div>
+                  <p className="text-sm font-body text-foreground leading-relaxed">{advice}</p>
+                </>
+              )}
+            </div>
+            {onDismissAdvice && (
+              <button onClick={onDismissAdvice} className="flex-shrink-0 w-6 h-6 flex items-center justify-center rounded-md hover:bg-black/10 text-muted-foreground hover:text-foreground transition-colors mt-0.5">
+                <Icon name="X" size={14} />
+              </button>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* Empty state */}
       {bookmarks.length === 0 ? (
