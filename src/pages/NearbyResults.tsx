@@ -69,7 +69,11 @@ export function NearbyResults({
             <Icon name="Settings2" size={18} className="text-muted-foreground" />
           </button>
 
-          <div className="max-w-sm mx-auto space-y-3 pt-10">
+          <div className="max-w-sm mx-auto space-y-3 pt-6">
+            <div className="mb-2">
+              <h2 className="font-display text-xl font-bold text-foreground mb-1">Что рядом с вами?</h2>
+              <p className="text-sm text-muted-foreground font-body">Кафе, аптеки, банки и другие места — за секунду, без лишних действий</p>
+            </div>
             {/* Поиск по геолокации */}
             <button
               onClick={onFind}
