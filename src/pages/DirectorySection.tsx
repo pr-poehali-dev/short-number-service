@@ -91,7 +91,7 @@ export function DirectorySection({ onSelect, initialCategory, favorites = [], on
       <h2 className="font-display font-bold text-foreground mb-1 text-2xl">Справочник</h2>
       <p className="text-muted-foreground font-body mb-6 text-sm">Нажмите на карточку, чтобы узнать подробности, использовать или сохранить</p>
 
-      <div className="flex gap-2 mb-6 border-b border-border overflow-x-auto">
+      <div className="flex gap-2 mb-6 border-b border-border overflow-x-auto scrollbar-none" style={{overflowY: 'hidden'}}>
         {tabs.map((t) => (
           <button
             key={t.id}
