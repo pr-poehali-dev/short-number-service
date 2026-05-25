@@ -117,7 +117,7 @@ export function NearbyBookmarks({ bookmarks, advice, adviceError, adviceLoading,
     <div className="mb-6">
       <div className="flex items-center gap-2 mb-3">
         <Icon name="Star" size={15} className="text-primary" />
-        <span className="font-display font-semibold text-foreground text-sm">Избранное</span>
+        <span className="font-display font-semibold text-foreground text-sm">Избранное с AI-поиском</span>
         {bookmarks.length > 0 && (
           <button
             onClick={onAnalyze}
