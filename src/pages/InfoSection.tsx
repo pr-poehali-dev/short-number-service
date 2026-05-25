@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Icon from "@/components/ui/icon";
 import { FAQ_ITEMS, PROCEDURES } from "./data";
+import PromoBanner from "@/components/PromoBanner";
 
 type IconName = Parameters<typeof Icon>[0]["name"];
 
@@ -58,6 +59,7 @@ export function FaqSection() {
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-8 animate-fade-in">
+      <PromoBanner section="faq" />
       <h2 className="font-display text-3xl font-bold text-foreground mb-1">Часто задаваемые вопросы</h2>
       <p className="text-muted-foreground font-body mb-8">Ответы на популярные вопросы о коротких номерах</p>
 

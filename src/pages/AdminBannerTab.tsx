@@ -3,7 +3,7 @@ import Icon from "@/components/ui/icon";
 
 const NEARBY_URL = "https://functions.poehali.dev/d4b08b1e-6bd7-4d3b-81cf-02b5e4c6447f";
 
-type BannerSection = "home" | "directory" | "nearby";
+type BannerSection = "home" | "directory" | "nearby" | "faq";
 
 interface BannerForm {
   enabled: string;
@@ -19,6 +19,7 @@ const SECTION_LABELS: Record<BannerSection, string> = {
   home: "Главная страница",
   directory: "Справочник",
   nearby: "Быстрый ответ",
+  faq: "FAQ",
 };
 
 const DEFAULTS: Record<BannerSection, BannerForm> = {
@@ -35,6 +36,12 @@ const DEFAULTS: Record<BannerSection, BannerForm> = {
     button_label: "Подписаться", button_url: "https://t.me/qrnumber", interval_hours: "24",
   },
   nearby: {
+    enabled: "true", type: "subscribe",
+    title: "Будьте в курсе обновлений",
+    text: "Подписывайтесь на наш Telegram-канал — новые номера, изменения и полезные материалы",
+    button_label: "Подписаться", button_url: "https://t.me/qrnumber", interval_hours: "24",
+  },
+  faq: {
     enabled: "true", type: "subscribe",
     title: "Будьте в курсе обновлений",
     text: "Подписывайтесь на наш Telegram-канал — новые номера, изменения и полезные материалы",
@@ -99,7 +106,7 @@ function BannerEditor({ section }: { section: BannerSection }) {
           <div>
             <h2 className="font-display font-bold text-foreground text-lg">Баннер — {SECTION_LABELS[section]}</h2>
             <p className="text-sm text-muted-foreground font-body mt-0.5">
-              {section === "home" ? "Отображается на главной странице" : `Отображается под блоком «Избранное» в разделе «${SECTION_LABELS[section]}»`}
+              {section === "home" ? "Отображается на главной странице" : section === "faq" ? "Отображается над заголовком раздела FAQ" : `Отображается под блоком «Избранное» в разделе «${SECTION_LABELS[section]}»`}
             </p>
           </div>
           <label className="flex items-center gap-2 cursor-pointer select-none">
@@ -276,7 +283,7 @@ export function AdminBannerTab() {
   return (
     <div className="space-y-4">
       <div className="flex gap-1 bg-white border border-border rounded-xl p-1 w-fit">
-        {(["home", "directory", "nearby"] as BannerSection[]).map((s) => (
+        {(["home", "directory", "nearby", "faq"] as BannerSection[]).map((s) => (
           <button
             key={s}
             onClick={() => setActiveSection(s)}

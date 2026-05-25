@@ -34,7 +34,7 @@ function dismiss(section: string) {
 }
 
 interface Props {
-  section: "home" | "directory" | "nearby";
+  section: "home" | "directory" | "nearby" | "faq";
 }
 
 export default function PromoBanner({ section }: Props) {

@@ -120,11 +120,12 @@ def handler(event: dict, context) -> dict:
             }
 
         BANNER_KEYS = {'enabled', 'type', 'title', 'text', 'button_label', 'button_url', 'interval_hours'}
-        BANNER_SECTIONS = {'home', 'directory', 'nearby'}
+        BANNER_SECTIONS = {'home', 'directory', 'nearby', 'faq'}
         BANNER_DEFAULTS = {
             'home':      {'enabled': 'true', 'type': 'subscribe', 'title': 'Полный доступ к справочнику', 'text': 'Подпишитесь на новости, чтобы следить за пульсом интернет-сервиса.', 'button_label': 'Подписаться', 'button_url': 'https://t.me/qrnumber', 'interval_hours': '24'},
             'directory': {'enabled': 'true', 'type': 'subscribe', 'title': 'Будьте в курсе обновлений', 'text': 'Подписывайтесь на наш Telegram-канал — новые номера, изменения и полезные материалы', 'button_label': 'Подписаться', 'button_url': 'https://t.me/qrnumber', 'interval_hours': '24'},
             'nearby':    {'enabled': 'true', 'type': 'subscribe', 'title': 'Будьте в курсе обновлений', 'text': 'Подписывайтесь на наш Telegram-канал — новые номера, изменения и полезные материалы', 'button_label': 'Подписаться', 'button_url': 'https://t.me/qrnumber', 'interval_hours': '24'},
+            'faq':       {'enabled': 'true', 'type': 'subscribe', 'title': 'Будьте в курсе обновлений', 'text': 'Подписывайтесь на наш Telegram-канал — новые номера, изменения и полезные материалы', 'button_label': 'Подписаться', 'button_url': 'https://t.me/qrnumber', 'interval_hours': '24'},
         }
 
         if action == 'get_banner':
