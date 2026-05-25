@@ -329,7 +329,7 @@ export function Header({
           <button onClick={handleLogoTap} className="flex items-center gap-2 justify-self-start relative">
             <div className="font-display text-base font-bold text-black leading-tight tracking-wide">
               <span className="md:hidden">2407.рф</span>
-              <span className="hidden md:inline">Справочник коротких номеров России "2407"</span>
+              <span className="hidden md:inline">Короткие номера России "2407"</span>
             </div>
             {isAdminAuthed && (
               <span className="absolute -top-1 -right-2 w-2 h-2 rounded-full bg-green-500 shadow-sm" title="Админ-режим активен" />
