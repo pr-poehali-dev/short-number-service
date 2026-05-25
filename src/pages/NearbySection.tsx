@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Place, Bookmark, loadBookmarks, saveBookmarks } from "@/pages/nearby.types";
+import { ymGoal } from "@/lib/analytics";
 import { NearbyPromptEditor } from "@/pages/NearbyPromptEditor";
 import { NearbyBookmarks } from "@/pages/NearbyBookmarks";
 import { NearbyResults } from "@/pages/NearbyResults";
@@ -245,6 +246,7 @@ export function NearbySection() {
     setBookmarks((prev) => [bm, ...prev]);
     setSavedId(id);
     setTimeout(() => setSavedId(null), 1800);
+    ymGoal("bookmark_add_nearby", { name: p.name, type: p.type, city: p.city || city });
   }
 
   function removeBookmark(id: string) {

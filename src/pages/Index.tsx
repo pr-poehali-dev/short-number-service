@@ -99,7 +99,7 @@ export default function Index() {
         <NumberModal
           num={selected}
           onClose={() => setSelected(null)}
-          onAddFavorite={() => addFavorite(selected)}
+          onAddFavorite={() => { addFavorite(selected); ymGoal("bookmark_add", { number: selected.number, name: selected.name, category: selected.category }); }}
           isFavorite={isFavorite(selected.id)}
           maxReached={maxReached}
         />
