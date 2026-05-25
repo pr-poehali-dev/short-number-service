@@ -4,12 +4,9 @@ import { ymGoal } from "@/lib/analytics";
 import { NearbyPromptEditor } from "@/pages/NearbyPromptEditor";
 import { NearbyBookmarks } from "@/pages/NearbyBookmarks";
 import { NearbyResults } from "@/pages/NearbyResults";
-import SubscribeModal from "@/components/SubscribeModal";
 import PromoBanner from "@/components/PromoBanner";
-import { useAdviceLimit, AdviceGateResult } from "@/hooks/useAdviceLimit";
 
 const NEARBY_URL = "https://functions.poehali.dev/d4b08b1e-6bd7-4d3b-81cf-02b5e4c6447f";
-const ANALYZE_URL = "https://functions.poehali.dev/f314b7e4-d728-4c13-bfd3-c1962a5861fc";
 
 function getAdminHeaders(): Record<string, string> {
   const token = sessionStorage.getItem("admin_token");
@@ -60,13 +57,8 @@ export function NearbySection() {
   const [promptSaved, setPromptSaved] = useState(false);
   const [bookmarks, setBookmarks] = useState<Bookmark[]>(() => loadBookmarks());
   const [savedId, setSavedId] = useState<string | null>(null);
-  const [advice, setAdvice] = useState<string>("");
-  const [adviceLoading, setAdviceLoading] = useState(false);
-  const [adviceError, setAdviceError] = useState("");
   const [manualCoords, setManualCoords] = useState("");
   const [manualAddress, setManualAddress] = useState("");
-  const [subscribeModal, setSubscribeModal] = useState<AdviceGateResult | null>(null);
-  const { check, consume, confirmSubscriber, cooldownMs } = useAdviceLimit();
 
   useEffect(() => {
     saveBookmarks(bookmarks);
@@ -254,50 +246,6 @@ export function NearbySection() {
     setBookmarks((prev) => prev.filter((b) => b.id !== id));
   }
 
-  async function analyzeBookmarks() {
-    const gate = check();
-    if (gate !== "ok") {
-      setSubscribeModal(gate);
-      return;
-    }
-    consume();
-    setAdviceLoading(true);
-    setAdviceError("");
-    setAdvice("");
-
-    const getCoords = (): Promise<{ lat: number; lon: number } | null> =>
-      new Promise((resolve) => {
-        if (!navigator.geolocation) { resolve(null); return; }
-        navigator.geolocation.getCurrentPosition(
-          (pos) => resolve({ lat: pos.coords.latitude, lon: pos.coords.longitude }),
-          () => resolve(null),
-          { timeout: 8000, enableHighAccuracy: true }
-        );
-      });
-
-    try {
-      const currentCoords = await getCoords();
-      const res = await fetch(ANALYZE_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json", ...getAdminHeaders() },
-        body: JSON.stringify({
-          bookmarks,
-          ...(currentCoords ?? {})
-        })
-      });
-      const data = await res.json();
-      if (res.ok && data.advice) {
-        setAdvice(data.advice);
-      } else {
-        setAdviceError(data.error || "Не удалось получить рекомендацию");
-      }
-    } catch {
-      setAdviceError("Не удалось связаться с сервером");
-    } finally {
-      setAdviceLoading(false);
-    }
-  }
-
   function isBookmarked(p: Place): boolean {
     return bookmarks.some((b) => b.name === p.name);
   }
@@ -309,18 +257,6 @@ export function NearbySection() {
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-8 animate-fade-in">
-      {subscribeModal && (
-        <SubscribeModal
-          mode={subscribeModal === "show_subscribe" ? "subscribe" : "plans"}
-          cooldownHours={Math.ceil(cooldownMs() / 3600000)}
-          onConfirmSubscribe={() => {
-            confirmSubscriber();
-            setSubscribeModal(null);
-            analyzeBookmarks();
-          }}
-          onClose={() => setSubscribeModal(null)}
-        />
-      )}
       {showPromptEditor && (
         <NearbyPromptEditor
           prompt={prompt}
@@ -336,12 +272,7 @@ export function NearbySection() {
 
       <NearbyBookmarks
         bookmarks={bookmarks}
-        advice={advice}
-        adviceError={adviceError}
-        adviceLoading={adviceLoading}
         onRemove={removeBookmark}
-        onAnalyze={analyzeBookmarks}
-        onDismissAdvice={() => { setAdvice(""); setAdviceError(""); }}
         coords={coords}
       />
 

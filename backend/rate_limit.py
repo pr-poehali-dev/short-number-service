@@ -9,10 +9,8 @@ SCHEMA = "t_p25384465_short_number_service"
 
 # Лимиты: endpoint -> (max_requests, window_seconds)
 LIMITS = {
-    "nearby":            (20, 60),   # 20 запросов в минуту
-    "nearby-ai":         (5,  60),   # 5 запросов в минуту (GPT дорогой)
-    "analyze-bookmarks": (5,  60),   # 5 запросов в минуту (GPT дорогой)
-    "send-suggestion":   (10, 60),   # 10 запросов в минуту
+    "nearby":          (20, 60),   # 20 запросов в минуту
+    "send-suggestion": (10, 60),   # 10 запросов в минуту
 }
 
 

@@ -1,7 +1,5 @@
 {
-  "nearby-ai": "https://functions.poehali.dev/b1af48b5-9a0e-41ee-a5ce-efe1072c0347",
   "service-health": "https://functions.poehali.dev/bab250b6-9b44-4c92-b8f6-e3d80cd06c33",
-  "analyze-bookmarks": "https://functions.poehali.dev/f314b7e4-d728-4c13-bfd3-c1962a5861fc",
   "nearby": "https://functions.poehali.dev/d4b08b1e-6bd7-4d3b-81cf-02b5e4c6447f",
   "send-suggestion": "https://functions.poehali.dev/0c640a47-5d45-45cb-901c-c7ba1f48d5ea"
 }
