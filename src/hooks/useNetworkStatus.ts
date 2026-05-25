@@ -31,6 +31,12 @@ export function useNetworkStatus() {
     setStatus(reachable ? "online" : "offline");
   }, []);
 
+  const recheck = useCallback(async () => {
+    setStatus("checking");
+    const reachable = await probeServer();
+    setStatus(reachable ? "online" : "offline");
+  }, []);
+
   useEffect(() => {
     check();
     intervalRef.current = setInterval(check, CHECK_INTERVAL_MS);
@@ -47,5 +53,5 @@ export function useNetworkStatus() {
     };
   }, [check]);
 
-  return { status, recheck: check };
+  return { status, recheck };
 }
