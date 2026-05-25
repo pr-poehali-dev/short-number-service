@@ -89,8 +89,8 @@ export default function Index() {
             <a href="/privacy" className="hover:text-foreground transition-colors">Политика конфиденциальности</a>
           </div>
           <div className="flex flex-col md:flex-row items-center gap-x-4 gap-y-1 text-center md:text-right">
-            <span>© ООО «МЕДИА-ИНКОД», 2026</span>
             <a href="mailto:support@incode.ru" className="hover:text-foreground transition-colors">support@incode.ru</a>
+            <span>© ООО «МЕДИА-ИНКОД», 2026</span>
           </div>
         </div>
       </footer>
