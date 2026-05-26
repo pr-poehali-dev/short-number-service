@@ -21,6 +21,9 @@ const IS_IFRAME = window.self !== window.top;
 const NEARBY_CACHE_TTL = 5 * 60 * 1000;
 const nearbyCache = new Map<string, { places: Place[]; ts: number }>();
 
+const PROMPT_CACHE_TTL = 10 * 60 * 1000;
+const promptCache: { prompt: string; city: string; ts: number } | null = null;
+
 function getCacheKey(lat: number, lon: number) {
   return `${lat.toFixed(4)},${lon.toFixed(4)}`;
 }
@@ -73,6 +76,11 @@ export function NearbySection() {
   }, [bookmarks]);
 
   async function loadPrompt() {
+    if (promptCache && Date.now() - promptCache.ts < PROMPT_CACHE_TTL) {
+      setPrompt(promptCache.prompt);
+      setCity(promptCache.city);
+      return;
+    }
     try {
       const res = await fetch(NEARBY_URL, {
         method: "POST",
@@ -81,8 +89,9 @@ export function NearbySection() {
       });
       if (res.ok) {
         const data = await res.json();
-        setPrompt(data.prompt || "");
-        setCity(data.city || "");
+        promptCache = { prompt: data.prompt || "", city: data.city || "", ts: Date.now() };
+        setPrompt(promptCache.prompt);
+        setCity(promptCache.city);
       }
     } catch (_e) {
       // ignore
@@ -94,9 +103,10 @@ export function NearbySection() {
     try {
       await fetch(NEARBY_URL, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", ...getAdminHeaders() },
         body: JSON.stringify({ _action: "update_prompt", prompt, city })
       });
+      promptCache = { prompt, city, ts: Date.now() };
       setPromptSaved(true);
       setTimeout(() => setPromptSaved(false), 2000);
     } finally {
