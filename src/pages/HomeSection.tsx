@@ -17,6 +17,7 @@ function NumberForm() {
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [submitError, setSubmitError] = useState("");
 
   const suggestions = mode === "edit" && search.length >= 1
     ? NUMBERS.filter((n) =>
@@ -48,31 +49,36 @@ function NumberForm() {
 
   async function handleSubmit() {
     setLoading(true);
+    setSubmitError("");
     try {
-      await fetch(SEND_SUGGESTION_URL, {
+      const res = await fetch(SEND_SUGGESTION_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ mode, ...form, contact_info: form.contactInfo }),
       });
-    } finally {
-      setLoading(false);
+      if (!res.ok) throw new Error("server");
       setShowModal(true);
       setForm({ number: "", name: "", description: "", procedure: "", category: "", contactInfo: "" });
       setSearch("");
       setSelected(null);
+    } catch {
+      setSubmitError("Не удалось отправить заявку. Проверьте соединение и попробуйте снова.");
+    } finally {
+      setLoading(false);
     }
   }
 
   async function handlePhotoSubmit() {
     if (!photoFile || !photoForm.agreed) return;
     setLoading(true);
+    setSubmitError("");
     try {
       const base64 = await new Promise<string>((resolve) => {
         const reader = new FileReader();
         reader.onload = (e) => resolve((e.target?.result as string).split(",")[1]);
         reader.readAsDataURL(photoFile);
       });
-      await fetch(SEND_SUGGESTION_URL, {
+      const res = await fetch(SEND_SUGGESTION_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -84,12 +90,15 @@ function NumberForm() {
           contact_info: photoForm.contactInfo,
         }),
       });
-    } finally {
-      setLoading(false);
+      if (!res.ok) throw new Error("server");
       setShowModal(true);
       setPhotoForm({ number: "", experience: "", agreed: false, contactInfo: "" });
       setPhotoFile(null);
       setPhotoPreview(null);
+    } catch {
+      setSubmitError("Не удалось отправить фото. Проверьте соединение и попробуйте снова.");
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -209,6 +218,12 @@ function NumberForm() {
                 placeholder="Имя, @telegram или e-mail для обратной связи *"
                 className="w-full px-4 py-3 border border-border rounded-xl font-body text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"
               />
+              {submitError && (
+                <p className="text-sm text-red-600 font-body flex items-center gap-1.5">
+                  <Icon name="AlertCircle" size={14} />
+                  {submitError}
+                </p>
+              )}
               <button
                 onClick={handleSubmit}
                 disabled={!isValid || loading}
@@ -278,6 +293,12 @@ function NumberForm() {
                 placeholder="Имя, @telegram или e-mail для обратной связи *"
                 className="w-full px-4 py-3 border border-border rounded-xl font-body text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"
               />
+              {submitError && (
+                <p className="text-sm text-red-600 font-body flex items-center gap-1.5">
+                  <Icon name="AlertCircle" size={14} />
+                  {submitError}
+                </p>
+              )}
               <button
                 onClick={handlePhotoSubmit}
                 disabled={!isPhotoValid || loading}
