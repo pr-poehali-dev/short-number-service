@@ -13,6 +13,9 @@ export interface BannerSettings {
   interval_hours: string;
 }
 
+const BANNER_CACHE_TTL = 10 * 60 * 1000;
+const bannerCache: Record<string, { data: BannerSettings; ts: number }> = {};
+
 function storageKey(section: string) {
   return `promo_banner_dismissed_at_${section}`;
 }
@@ -42,6 +45,15 @@ export default function PromoBanner({ section }: Props) {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
+    const cached = bannerCache[section];
+    if (cached && Date.now() - cached.ts < BANNER_CACHE_TTL) {
+      const data = cached.data;
+      setSettings(data);
+      if (data.enabled === "true") {
+        setVisible(!isDismissed(section, parseFloat(data.interval_hours) || 24));
+      }
+      return;
+    }
     fetch(NEARBY_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -49,10 +61,10 @@ export default function PromoBanner({ section }: Props) {
     })
       .then((r) => r.json())
       .then((data: BannerSettings) => {
+        bannerCache[section] = { data, ts: Date.now() };
         setSettings(data);
         if (data.enabled === "true") {
-          const hours = parseFloat(data.interval_hours) || 24;
-          setVisible(!isDismissed(section, hours));
+          setVisible(!isDismissed(section, parseFloat(data.interval_hours) || 24));
         }
       })
       .catch(() => {});
