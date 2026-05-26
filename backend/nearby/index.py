@@ -94,6 +94,13 @@ def handler(event: dict, context) -> dict:
             }
 
         if action == 'update_prompt':
+            admin_token = os.environ.get('ADMIN_TOKEN', '')
+            if not admin_token or event.get('headers', {}).get('X-Admin-Token', '') != admin_token:
+                return {
+                    'statusCode': 403,
+                    'headers': {'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json'},
+                    'body': json.dumps({'error': 'Forbidden'})
+                }
             new_val = body.get('prompt', '').strip()
             if not new_val:
                 return {
@@ -144,6 +151,13 @@ def handler(event: dict, context) -> dict:
             }
 
         if action == 'update_banner':
+            admin_token = os.environ.get('ADMIN_TOKEN', '')
+            if not admin_token or event.get('headers', {}).get('X-Admin-Token', '') != admin_token:
+                return {
+                    'statusCode': 403,
+                    'headers': {'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json'},
+                    'body': json.dumps({'error': 'Forbidden'})
+                }
             section = body.get('section', 'directory')
             if section not in BANNER_SECTIONS:
                 section = 'directory'

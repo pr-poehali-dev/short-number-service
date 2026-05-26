@@ -46,6 +46,13 @@ def handler(event: dict, context) -> dict:
         caption_parts.append(f"👤 <b>Контакт:</b> {contact_info or '—'}")
         caption = "\n".join(caption_parts)
 
+        MAX_PHOTO_B64 = 5 * 1024 * 1024  # ~3.7 MB файла
+        if len(photo_b64) > MAX_PHOTO_B64:
+            return {
+                'statusCode': 400,
+                'headers': {'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json'},
+                'body': json.dumps({'error': 'Фото слишком большое. Максимум — 3.7 МБ.'})
+            }
         photo_bytes = base64.b64decode(photo_b64)
 
         boundary = "----FormBoundary7MA4YWxkTrZu0gW"
