@@ -211,9 +211,7 @@ export default function AdminPage() {
             className={`flex items-center gap-1.5 px-4 py-2 rounded-t-lg text-sm font-body font-medium border-b-2 transition-colors ${
               adminTab === "banner" ? "border-primary text-primary bg-primary/5" : "border-transparent text-muted-foreground hover:text-foreground"
             }`}
-          >
-            <Icon name="Megaphone" size={14} /> Баннер
-          </button>
+          >Баннеры</button>
         </div>
       </div>
 
