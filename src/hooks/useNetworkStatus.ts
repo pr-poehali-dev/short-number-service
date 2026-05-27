@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 
-const PROBE_URL = "/";
+const PROBE_URL = "/manifest.json";
 const PROBE_TIMEOUT_MS = 4000;
 const CHECK_INTERVAL_MS = 15000;
 

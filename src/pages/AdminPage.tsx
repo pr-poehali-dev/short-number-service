@@ -11,7 +11,7 @@ import { AdminPinScreen } from "./AdminPinScreen";
 import { AdminRuTab, DeleteModal } from "./AdminRuTab";
 import { AdminEnTab } from "./AdminEnTab";
 import { AdminIncidentsTab } from "./AdminIncidentsTab";
-import AdminBannerTab from "./AdminBannerTab";
+import { AdminBannerTab } from "./AdminBannerTab";
 
 const STORAGE_KEY = "admin_numbers_v1";
 const SESSION_KEY = "admin_auth_v1";
@@ -211,7 +211,9 @@ export default function AdminPage() {
             className={`flex items-center gap-1.5 px-4 py-2 rounded-t-lg text-sm font-body font-medium border-b-2 transition-colors ${
               adminTab === "banner" ? "border-primary text-primary bg-primary/5" : "border-transparent text-muted-foreground hover:text-foreground"
             }`}
-          >Баннеры</button>
+          >
+            <Icon name="Megaphone" size={14} /> Баннер
+          </button>
         </div>
       </div>
 
