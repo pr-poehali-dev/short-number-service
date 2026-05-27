@@ -1,101 +1,103 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Icon from "@/components/ui/icon";
 
-const BANNER_URL = "https://functions.poehali.dev/bab250b6-9b44-4c92-b8f6-e3d80cd06c33";
+export type BannerSection = "home" | "directory" | "nearby" | "faq";
 
-async function fetchWithRetry(url: string, options: RequestInit, retries = 3, delay = 5000): Promise<Response> {
-  for (let i = 0; i < retries; i++) {
-    try {
-      const res = await fetch(url, options);
-      if (res.ok) return res;
-    } catch (_) { /* retry */ }
-    if (i < retries - 1) await new Promise(r => setTimeout(r, delay));
-  }
-  throw new Error("fetch failed after retries");
-}
-
-export interface BannerSettings {
-  enabled: string;
-  type: string;
+export interface BannerConfig {
+  enabled: boolean;
+  type: "subscribe" | "promo";
   title: string;
   text: string;
   button_label: string;
   button_url: string;
-  interval_hours: string;
+  interval_hours: number;
 }
 
-const BANNER_CACHE_TTL = 10 * 60 * 1000;
-const bannerCache: Record<string, { data: BannerSettings; ts: number }> = {};
+export const BANNER_SETTINGS: Record<BannerSection, BannerConfig> = {
+  home: {
+    enabled: true,
+    type: "subscribe",
+    title: "Полный доступ к справочнику",
+    text: "Подпишитесь на новости, чтобы следить за пульсом интернет-сервиса.",
+    button_label: "Подписаться",
+    button_url: "https://t.me/qrnumber",
+    interval_hours: 24,
+  },
+  directory: {
+    enabled: true,
+    type: "subscribe",
+    title: "Будьте в курсе обновлений",
+    text: "Подписывайтесь на наш Telegram-канал — новые номера, изменения и полезные материалы",
+    button_label: "Подписаться",
+    button_url: "https://t.me/qrnumber",
+    interval_hours: 24,
+  },
+  nearby: {
+    enabled: true,
+    type: "subscribe",
+    title: "Будьте в курсе обновлений",
+    text: "Подписывайтесь на наш Telegram-канал — новые номера, изменения и полезные материалы",
+    button_label: "Подписаться",
+    button_url: "https://t.me/qrnumber",
+    interval_hours: 24,
+  },
+  faq: {
+    enabled: true,
+    type: "subscribe",
+    title: "Будьте в курсе обновлений",
+    text: "Подписывайтесь на наш Telegram-канал — новые номера, изменения и полезные материалы",
+    button_label: "Подписаться",
+    button_url: "https://t.me/qrnumber",
+    interval_hours: 24,
+  },
+};
 
-export function clearBannerCache() {
-  Object.keys(bannerCache).forEach((k) => delete bannerCache[k]);
-}
-
-function storageKey(section: string) {
+function storageKey(section: BannerSection) {
   return `promo_banner_dismissed_at_${section}`;
 }
 
-function isDismissed(section: string, intervalHours: number): boolean {
+function isDismissed(section: BannerSection, intervalHours: number): boolean {
   if (intervalHours <= 0) return false;
   try {
     const raw = localStorage.getItem(storageKey(section));
     if (!raw) return false;
-    const dismissedAt = parseInt(raw, 10);
-    const elapsed = (Date.now() - dismissedAt) / 1000 / 3600;
+    const elapsed = (Date.now() - parseInt(raw, 10)) / 1000 / 3600;
     return elapsed < intervalHours;
   } catch {
     return false;
   }
 }
 
-function dismiss(section: string) {
+export function dismissBanner(section: BannerSection) {
   localStorage.setItem(storageKey(section), String(Date.now()));
 }
 
+export function resetBannerDismiss(section: BannerSection) {
+  localStorage.removeItem(storageKey(section));
+}
+
+export function resetAllBannerDismiss() {
+  (Object.keys(BANNER_SETTINGS) as BannerSection[]).forEach((s) =>
+    localStorage.removeItem(storageKey(s))
+  );
+}
+
 interface Props {
-  section: "home" | "directory" | "nearby" | "faq";
+  section: BannerSection;
 }
 
 export default function PromoBanner({ section }: Props) {
-  const [settings, setSettings] = useState<BannerSettings | null>(null);
-  const [visible, setVisible] = useState(false);
+  const config = BANNER_SETTINGS[section];
+  const [hidden, setHidden] = useState(false);
 
-  useEffect(() => {
-    const cached = bannerCache[section];
-    if (cached && Date.now() - cached.ts < BANNER_CACHE_TTL) {
-      const data = cached.data;
-      setSettings(data);
-      if (data.enabled === "true") {
-        setVisible(!isDismissed(section, parseFloat(data.interval_hours)));
-      }
-      return;
-    }
-    fetchWithRetry(BANNER_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ _action: "get_banner", section }),
-    })
-      .then((r) => r.json())
-      .then((data: BannerSettings) => {
-        bannerCache[section] = { data, ts: Date.now() };
-        setSettings(data);
-        if (data.enabled === "true") {
-          setVisible(!isDismissed(section, parseFloat(data.interval_hours)));
-        }
-      })
-      .catch(() => {});
-  }, [section]);
-
-  if (!settings || !visible) return null;
+  if (hidden || !config.enabled || isDismissed(section, config.interval_hours)) return null;
 
   function handleClose() {
-    dismiss(section);
-    setVisible(false);
+    dismissBanner(section);
+    setHidden(true);
   }
 
-  const isSubscribe = settings.type === "subscribe";
-
-  if (isSubscribe) {
+  if (config.type === "subscribe") {
     return (
       <div className="relative bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-100 rounded-2xl p-6 mb-4 animate-fade-in">
         <button
@@ -105,11 +107,10 @@ export default function PromoBanner({ section }: Props) {
         >
           <Icon name="X" size={14} />
         </button>
-
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 pr-6">
           <div className="flex-1">
-            <h3 className="font-display text-lg font-bold text-foreground mb-1">{settings.title}</h3>
-            <p className="text-sm text-muted-foreground font-body">{settings.text}</p>
+            <h3 className="font-display text-lg font-bold text-foreground mb-1">{config.title}</h3>
+            <p className="text-sm text-muted-foreground font-body">{config.text}</p>
           </div>
           <div className="flex gap-3 flex-shrink-0">
             <a
@@ -145,27 +146,22 @@ export default function PromoBanner({ section }: Props) {
       >
         <Icon name="X" size={14} />
       </button>
-
       <div className="flex items-start gap-3 pr-6">
         <div className="w-9 h-9 rounded-xl bg-primary/15 flex items-center justify-center flex-shrink-0 mt-0.5">
           <Icon name="Megaphone" size={18} className="text-primary" />
         </div>
         <div className="flex-1 min-w-0">
-          <p className="font-display font-bold text-foreground text-sm leading-snug mb-1">
-            {settings.title}
-          </p>
-          <p className="text-xs font-body text-muted-foreground leading-relaxed mb-3">
-            {settings.text}
-          </p>
+          <p className="font-display font-bold text-foreground text-sm leading-snug mb-1">{config.title}</p>
+          <p className="text-xs font-body text-muted-foreground leading-relaxed mb-3">{config.text}</p>
           <a
-            href={settings.button_url}
+            href={config.button_url}
             target="_blank"
             rel="noopener noreferrer"
             onClick={handleClose}
             className="inline-flex items-center gap-1.5 px-4 py-2 bg-primary text-primary-foreground rounded-xl text-xs font-body font-semibold hover:bg-primary/90 transition-colors"
           >
             <Icon name="ArrowRight" size={13} />
-            {settings.button_label}
+            {config.button_label}
           </a>
         </div>
       </div>
