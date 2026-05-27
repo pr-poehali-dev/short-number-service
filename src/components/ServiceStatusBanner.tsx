@@ -50,20 +50,27 @@ export function ServiceStatusBanner() {
   }, []);
 
   useEffect(() => {
-    check();
+    if (!document.hidden) check();
     let interval: ReturnType<typeof setInterval>;
 
     const schedule = () => {
       clearInterval(interval);
       const delay = visible ? CHECK_INTERVAL_FAIL : CHECK_INTERVAL_OK;
       interval = setInterval(() => {
-        check();
-        schedule();
+        if (!document.hidden) check();
       }, delay);
     };
 
+    const handleVisibilityChange = () => {
+      if (!document.hidden) check();
+    };
+
     schedule();
-    return () => clearInterval(interval);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    return () => {
+      clearInterval(interval);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
   }, [check, visible]);
 
   if (!visible || !message) return null;
