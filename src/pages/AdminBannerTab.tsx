@@ -3,7 +3,7 @@ import Icon from "@/components/ui/icon";
 
 const NEARBY_URL = "https://functions.poehali.dev/d4b08b1e-6bd7-4d3b-81cf-02b5e4c6447f";
 
-async function fetchWithRetry(url: string, options: RequestInit, retries = 3, delay = 5000): Promise<Response> {
+async function fetchWithRetry(url: string, options: RequestInit, retries = 3, delay = 3000): Promise<Response> {
   for (let i = 0; i < retries; i++) {
     try {
       const res = await fetch(url, options);
@@ -13,6 +13,8 @@ async function fetchWithRetry(url: string, options: RequestInit, retries = 3, de
   }
   throw new Error("fetch failed after retries");
 }
+
+const allBannerCache: Partial<Record<BannerSection, BannerForm>> = {};
 
 type BannerSection = "home" | "directory" | "nearby" | "faq";
 
@@ -60,26 +62,15 @@ const DEFAULTS: Record<BannerSection, BannerForm> = {
   },
 };
 
-function BannerEditor({ section }: { section: BannerSection }) {
-  const [form, setForm] = useState<BannerForm>(DEFAULTS[section]);
-  const [loading, setLoading] = useState(false);
+function BannerEditor({ section, initialData }: { section: BannerSection; initialData: BannerForm | null }) {
+  const [form, setForm] = useState<BannerForm>(initialData ?? DEFAULTS[section]);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState("");
 
   useEffect(() => {
-    setLoading(true);
-    setError("");
-    fetchWithRetry(NEARBY_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ _action: "get_banner", section }),
-    })
-      .then((r) => r.json())
-      .then((data) => setForm({ ...DEFAULTS[section], ...data }))
-      .catch(() => setError("Не удалось загрузить настройки"))
-      .finally(() => setLoading(false));
-  }, [section]);
+    if (initialData) setForm(initialData);
+  }, [initialData]);
 
   async function handleSave() {
     setSaving(true);
@@ -101,14 +92,6 @@ function BannerEditor({ section }: { section: BannerSection }) {
   }
 
   const f = (key: keyof BannerForm, value: string) => setForm((p) => ({ ...p, [key]: value }));
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center py-16">
-        <Icon name="Loader" size={24} className="animate-spin text-primary" />
-      </div>
-    );
-  }
 
   return (
     <div className="space-y-6">
@@ -299,6 +282,33 @@ export function AdminBannerTab() {
   const [activeSection, setActiveSection] = useState<BannerSection>("home");
   const [resetting, setResetting] = useState(false);
   const [resetDone, setResetDone] = useState(false);
+  const [allData, setAllData] = useState<Partial<Record<BannerSection, BannerForm>>>({});
+  const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
+
+  useEffect(() => {
+    setLoading(true);
+    setLoadError(false);
+    const sections: BannerSection[] = ["home", "directory", "nearby", "faq"];
+    Promise.all(
+      sections.map((section) =>
+        fetch(NEARBY_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ _action: "get_banner", section }),
+        })
+          .then((r) => r.json())
+          .then((data) => ({ section, data: { ...DEFAULTS[section], ...data } as BannerForm }))
+      )
+    )
+      .then((results) => {
+        const map: Partial<Record<BannerSection, BannerForm>> = {};
+        results.forEach(({ section, data }) => { map[section] = data; });
+        setAllData(map);
+      })
+      .catch(() => setLoadError(true))
+      .finally(() => setLoading(false));
+  }, []);
 
   async function handleResetAll() {
     setResetting(true);
@@ -320,6 +330,20 @@ export function AdminBannerTab() {
     } finally {
       setResetting(false);
     }
+  }
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-24">
+        <Icon name="Loader" size={24} className="animate-spin text-primary" />
+      </div>
+    );
+  }
+
+  if (loadError) {
+    return (
+      <p className="text-sm text-red-600 font-body py-8 text-center">Не удалось загрузить настройки баннеров</p>
+    );
   }
 
   return (
@@ -356,7 +380,7 @@ export function AdminBannerTab() {
         </div>
       </div>
 
-      <BannerEditor key={activeSection} section={activeSection} />
+      <BannerEditor section={activeSection} initialData={allData[activeSection] ?? null} />
     </div>
   );
 }
