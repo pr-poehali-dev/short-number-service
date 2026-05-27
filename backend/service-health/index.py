@@ -1,7 +1,8 @@
 """
 Мониторинг доступности облачных сервисов (Polza.AI, 2GIS, Telegram).
 Проверяет каждый сервис, записывает результат в лог БД.
-Возвращает текущий статус всех сервисов и историю инцидентов.
+Поддерживает включение/отключение через _action: get_enabled / set_enabled.
+Когда отключён — возвращает последние данные из БД без новых проверок.
 """
 
 import json
@@ -83,6 +84,28 @@ def get_db():
     return psycopg2.connect(os.environ["DATABASE_URL"])
 
 
+def get_enabled(conn) -> bool:
+    with conn.cursor() as cur:
+        cur.execute(
+            f"SELECT value FROM {SCHEMA}.nearby_settings WHERE key = 'service_health_enabled'"
+        )
+        row = cur.fetchone()
+    return (row[0].lower() == "true") if row else False
+
+
+def set_enabled(conn, enabled: bool):
+    with conn.cursor() as cur:
+        cur.execute(
+            f"""
+            INSERT INTO {SCHEMA}.nearby_settings (key, value, updated_at)
+            VALUES ('service_health_enabled', %s, NOW())
+            ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value, updated_at = NOW()
+            """,
+            ("true" if enabled else "false",),
+        )
+    conn.commit()
+
+
 def save_log(conn, service_name: str, service_url: str, result: dict):
     with conn.cursor() as cur:
         cur.execute(
@@ -130,19 +153,90 @@ def get_recent_incidents(conn, limit: int = 50) -> list:
     ]
 
 
+def get_last_known_results(conn) -> dict:
+    with conn.cursor() as cur:
+        cur.execute(
+            f"""
+            SELECT DISTINCT ON (service_name)
+                service_name, status, http_code, response_ms, error_message
+            FROM {SCHEMA}.service_availability_log
+            ORDER BY service_name, checked_at DESC
+            """
+        )
+        rows = cur.fetchall()
+    return {
+        r[0]: {
+            "status": r[1],
+            "http_code": r[2],
+            "response_ms": r[3],
+            "error": r[4],
+        }
+        for r in rows
+    }
+
+
 def handler(event: dict, context) -> dict:
     cors = {
         "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "GET, OPTIONS",
-        "Access-Control-Allow-Headers": "Content-Type",
+        "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type, X-Admin-Token",
     }
 
     if event.get("httpMethod") == "OPTIONS":
         return {"statusCode": 200, "headers": cors, "body": ""}
 
-    results = {}
     conn = get_db()
 
+    body = {}
+    if event.get("body"):
+        try:
+            body = json.loads(event["body"])
+        except Exception:
+            pass
+
+    action = body.get("_action") or event.get("queryStringParameters", {}).get("_action")
+
+    if action == "get_enabled":
+        enabled = get_enabled(conn)
+        conn.close()
+        return {
+            "statusCode": 200,
+            "headers": {**cors, "Content-Type": "application/json"},
+            "body": json.dumps({"enabled": enabled}),
+        }
+
+    if action == "set_enabled":
+        enabled = bool(body.get("enabled", False))
+        set_enabled(conn, enabled)
+        conn.close()
+        return {
+            "statusCode": 200,
+            "headers": {**cors, "Content-Type": "application/json"},
+            "body": json.dumps({"ok": True, "enabled": enabled}),
+        }
+
+    enabled = get_enabled(conn)
+
+    if not enabled:
+        results = get_last_known_results(conn)
+        incidents = get_recent_incidents(conn)
+        conn.close()
+        return {
+            "statusCode": 200,
+            "headers": {**cors, "Content-Type": "application/json"},
+            "body": json.dumps(
+                {
+                    "ok": True,
+                    "enabled": False,
+                    "services": results,
+                    "incidents": incidents,
+                    "checked_at": datetime.now(timezone.utc).isoformat(),
+                },
+                ensure_ascii=False,
+            ),
+        }
+
+    results = {}
     for service in SERVICES:
         result = check_service(service)
         results[service["name"]] = {
@@ -164,6 +258,7 @@ def handler(event: dict, context) -> dict:
         "body": json.dumps(
             {
                 "ok": not has_issues,
+                "enabled": True,
                 "services": results,
                 "incidents": incidents,
                 "checked_at": datetime.now(timezone.utc).isoformat(),

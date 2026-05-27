@@ -22,6 +22,7 @@ interface ServiceResult {
 
 interface HealthResponse {
   ok: boolean;
+  enabled: boolean;
   services: Record<string, ServiceResult>;
   incidents: Incident[];
   checked_at: string;
@@ -96,6 +97,7 @@ export function AdminIncidentsTab() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [lastRefresh, setLastRefresh] = useState<Date | null>(null);
+  const [toggling, setToggling] = useState(false);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -117,6 +119,22 @@ export function AdminIncidentsTab() {
     load();
   }, [load]);
 
+  async function handleToggle(enable: boolean) {
+    setToggling(true);
+    try {
+      await fetch(HEALTH_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ _action: "set_enabled", enabled: enable }),
+      });
+      await load();
+    } finally {
+      setToggling(false);
+    }
+  }
+
+  const enabled = data?.enabled ?? false;
+
   return (
     <div className="space-y-6">
       {/* Header row */}
@@ -129,13 +147,44 @@ export function AdminIncidentsTab() {
             </p>
           )}
         </div>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={load}
+            disabled={loading}
+            className="flex items-center gap-1.5 text-sm px-3 py-1.5 rounded-lg border border-border text-muted-foreground hover:bg-muted font-body disabled:opacity-50"
+          >
+            <Icon name={loading ? "Loader" : "RefreshCw"} size={14} className={loading ? "animate-spin" : ""} />
+            Обновить
+          </button>
+        </div>
+      </div>
+
+      {/* Enable / Disable toggle */}
+      <div className={`flex items-center justify-between px-4 py-3 rounded-xl border font-body ${enabled ? "bg-green-50 border-green-200" : "bg-muted border-border"}`}>
+        <div className="flex items-center gap-3">
+          <div className={`w-2 h-2 rounded-full ${enabled ? "bg-green-500" : "bg-muted-foreground"}`} />
+          <div>
+            <p className="text-sm font-medium text-foreground">
+              Мониторинг {enabled ? "включён" : "отключён"}
+            </p>
+            <p className="text-xs text-muted-foreground mt-0.5">
+              {enabled
+                ? "Сервисы проверяются при каждом открытии вкладки"
+                : "Проверки не выполняются, вычислительное время не расходуется"}
+            </p>
+          </div>
+        </div>
         <button
-          onClick={load}
-          disabled={loading}
-          className="flex items-center gap-1.5 text-sm px-3 py-1.5 rounded-lg border border-border text-muted-foreground hover:bg-muted font-body disabled:opacity-50"
+          onClick={() => handleToggle(!enabled)}
+          disabled={toggling || loading}
+          className={`flex items-center gap-1.5 text-sm px-4 py-1.5 rounded-lg font-body font-medium transition-colors disabled:opacity-50 ${
+            enabled
+              ? "bg-red-50 text-red-600 border border-red-200 hover:bg-red-100"
+              : "bg-primary text-primary-foreground hover:bg-primary/90"
+          }`}
         >
-          <Icon name={loading ? "Loader" : "RefreshCw"} size={14} className={loading ? "animate-spin" : ""} />
-          Обновить
+          <Icon name={toggling ? "Loader" : enabled ? "PowerOff" : "Power"} size={14} className={toggling ? "animate-spin" : ""} />
+          {enabled ? "Отключить" : "Включить"}
         </button>
       </div>
 
@@ -147,12 +196,15 @@ export function AdminIncidentsTab() {
       )}
 
       {/* Current status */}
-      {data && (
+      {data && Object.keys(data.services).length > 0 && (
         <div className="bg-white rounded-xl border border-border overflow-hidden">
           <div className="px-4 py-3 border-b border-border bg-muted/30">
             <h3 className="font-body font-semibold text-foreground text-sm flex items-center gap-2">
               <Icon name="Activity" size={15} />
               Текущий статус
+              {!enabled && (
+                <span className="text-xs text-muted-foreground font-normal ml-1">(последние известные данные)</span>
+              )}
             </h3>
           </div>
           <div className="divide-y divide-border">
@@ -222,23 +274,15 @@ export function AdminIncidentsTab() {
                 <tbody className="divide-y divide-border">
                   {data.incidents.map((inc, i) => (
                     <tr key={i} className="hover:bg-muted/20 transition-colors">
-                      <td className="px-4 py-2.5 text-xs text-muted-foreground whitespace-nowrap">
-                        {formatDate(inc.checked_at)}
-                      </td>
-                      <td className="px-4 py-2.5 font-medium text-foreground">
-                        {inc.service}
-                      </td>
-                      <td className="px-4 py-2.5">
+                      <td className="px-4 py-2 text-muted-foreground">{formatDate(inc.checked_at)}</td>
+                      <td className="px-4 py-2 text-foreground font-medium">{inc.service}</td>
+                      <td className="px-4 py-2">
                         <StatusBadge status={inc.status} />
                       </td>
-                      <td className="px-4 py-2.5 text-muted-foreground">
-                        {inc.http_code ?? "—"}
-                      </td>
-                      <td className="px-4 py-2.5 text-muted-foreground whitespace-nowrap">
-                        {inc.response_ms != null ? `${inc.response_ms} мс` : "—"}
-                      </td>
-                      <td className="px-4 py-2.5 text-red-600 max-w-xs truncate text-xs" title={inc.error ?? ""}>
-                        {inc.error ?? "—"}
+                      <td className="px-4 py-2 text-muted-foreground">{inc.http_code ?? "-"}</td>
+                      <td className="px-4 py-2 text-muted-foreground">{inc.response_ms ?? "-"} мс</td>
+                      <td className="px-4 py-2 text-red-600 text-xs max-w-xs truncate" title={inc.error || ""}>
+                        {inc.error ?? "-"}
                       </td>
                     </tr>
                   ))}
@@ -246,12 +290,6 @@ export function AdminIncidentsTab() {
               </table>
             </div>
           )}
-        </div>
-      )}
-
-      {!data && !loading && !error && (
-        <div className="text-center text-muted-foreground font-body py-12 text-sm">
-          Нет данных
         </div>
       )}
     </div>

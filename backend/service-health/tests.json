@@ -1,11 +1,26 @@
 {
   "tests": [
     {
-      "name": "Health check all services",
+      "name": "OPTIONS preflight",
+      "method": "OPTIONS",
+      "path": "/",
+      "expectedStatus": 200
+    },
+    {
+      "name": "get_enabled returns enabled flag",
+      "method": "POST",
+      "path": "/",
+      "body": { "_action": "get_enabled" },
+      "expectedStatus": 200,
+      "expectedBody": { "enabled": false },
+      "bodyMatcher": "partial"
+    },
+    {
+      "name": "Health check returns data (disabled mode)",
       "method": "GET",
       "path": "/",
       "expectedStatus": 200,
-      "expectedBody": { "ok": true, "services": {} },
+      "expectedBody": { "enabled": false },
       "bodyMatcher": "partial"
     }
   ]
