@@ -3,6 +3,17 @@ import Icon from "@/components/ui/icon";
 
 const NEARBY_URL = "https://functions.poehali.dev/d4b08b1e-6bd7-4d3b-81cf-02b5e4c6447f";
 
+async function fetchWithRetry(url: string, options: RequestInit, retries = 3, delay = 5000): Promise<Response> {
+  for (let i = 0; i < retries; i++) {
+    try {
+      const res = await fetch(url, options);
+      if (res.ok) return res;
+    } catch (_) { /* retry */ }
+    if (i < retries - 1) await new Promise(r => setTimeout(r, delay));
+  }
+  throw new Error("fetch failed after retries");
+}
+
 type BannerSection = "home" | "directory" | "nearby" | "faq";
 
 interface BannerForm {
@@ -59,7 +70,7 @@ function BannerEditor({ section }: { section: BannerSection }) {
   useEffect(() => {
     setLoading(true);
     setError("");
-    fetch(NEARBY_URL, {
+    fetchWithRetry(NEARBY_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ _action: "get_banner", section }),
