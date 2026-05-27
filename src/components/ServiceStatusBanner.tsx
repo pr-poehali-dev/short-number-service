@@ -33,7 +33,7 @@ export function ServiceStatusBanner() {
 
   const check = useCallback(async () => {
     try {
-      const res = await fetch(HEALTH_URL, { signal: AbortSignal.timeout(12000) });
+      const res = await fetch(HEALTH_URL, { signal: AbortSignal.timeout(5000) });
       if (!res.ok) return;
       const data: HealthResponse = await res.json();
       if (data.ok) {
