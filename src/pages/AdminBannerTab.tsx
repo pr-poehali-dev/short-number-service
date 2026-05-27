@@ -155,25 +155,27 @@ function BannerEditor({ section, initialData }: { section: BannerSection; initia
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <label className="text-xs font-body font-semibold text-muted-foreground uppercase tracking-wide mb-1.5 block">Текст кнопки</label>
-              <input
-                value={form.button_label}
-                onChange={(e) => f("button_label", e.target.value)}
-                className="w-full px-4 py-3 border border-border rounded-xl font-body text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"
-              />
+          {form.type === "promo" && (
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="text-xs font-body font-semibold text-muted-foreground uppercase tracking-wide mb-1.5 block">Текст кнопки</label>
+                <input
+                  value={form.button_label}
+                  onChange={(e) => f("button_label", e.target.value)}
+                  className="w-full px-4 py-3 border border-border rounded-xl font-body text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"
+                />
+              </div>
+              <div>
+                <label className="text-xs font-body font-semibold text-muted-foreground uppercase tracking-wide mb-1.5 block">URL кнопки</label>
+                <input
+                  value={form.button_url}
+                  onChange={(e) => f("button_url", e.target.value)}
+                  placeholder="https://..."
+                  className="w-full px-4 py-3 border border-border rounded-xl font-body text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"
+                />
+              </div>
             </div>
-            <div>
-              <label className="text-xs font-body font-semibold text-muted-foreground uppercase tracking-wide mb-1.5 block">URL кнопки</label>
-              <input
-                value={form.button_url}
-                onChange={(e) => f("button_url", e.target.value)}
-                placeholder="https://..."
-                className="w-full px-4 py-3 border border-border rounded-xl font-body text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"
-              />
-            </div>
-          </div>
+          )}
 
           <div>
             <label className="text-xs font-body font-semibold text-muted-foreground uppercase tracking-wide mb-1.5 block">Периодичность показа</label>
