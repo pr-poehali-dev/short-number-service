@@ -16,6 +16,24 @@
       "bodyMatcher": "partial"
     },
     {
+      "name": "get_poll_settings returns intervals",
+      "method": "POST",
+      "path": "/",
+      "body": { "_action": "get_poll_settings" },
+      "expectedStatus": 200,
+      "expectedBody": { "interval_active": 5, "interval_new": 30 },
+      "bodyMatcher": "partial"
+    },
+    {
+      "name": "get_stats returns statistics",
+      "method": "POST",
+      "path": "/",
+      "body": { "_action": "get_stats" },
+      "expectedStatus": 200,
+      "expectedBody": { "service_health": {} },
+      "bodyMatcher": "partial"
+    },
+    {
       "name": "Health check returns data (disabled mode)",
       "method": "GET",
       "path": "/",
