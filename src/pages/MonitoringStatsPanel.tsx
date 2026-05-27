@@ -3,10 +3,21 @@ import { Stats, ENDPOINT_LABELS, ENDPOINT_TIMEOUTS } from "./incidents.types";
 
 interface MonitoringStatsPanelProps {
   stats: Stats;
+  intervalActive?: number;
+  intervalNew?: number;
 }
 
-export function MonitoringStatsPanel({ stats }: MonitoringStatsPanelProps) {
+export function MonitoringStatsPanel({ stats, intervalActive = 5, intervalNew = 30 }: MonitoringStatsPanelProps) {
   const totalHealthCallsEstimate = stats.service_health.calls_30d * 30;
+
+  const SERVICES_COUNT = 3;
+  const FUNC_TIMEOUT = 30;
+  const callsPerDayActive = Math.ceil(24 * 60 / intervalActive) * SERVICES_COUNT;
+  const callsPerDayNew = Math.ceil(24 * 60 / intervalNew) * SERVICES_COUNT;
+  const secondsPerDayActive = callsPerDayActive * FUNC_TIMEOUT;
+  const secondsPerDayNew = callsPerDayNew * FUNC_TIMEOUT;
+  const hoursPerMonthActive = Math.round(secondsPerDayActive * 30 / 3600);
+  const hoursPerMonthNew = Math.round(secondsPerDayNew * 30 / 3600);
 
   return (
     <div className="bg-white rounded-xl border border-border overflow-hidden">
@@ -58,7 +69,7 @@ export function MonitoringStatsPanel({ stats }: MonitoringStatsPanelProps) {
 
       {/* Other functions */}
       {stats.other_functions.length > 0 && (
-        <div className="px-4 py-3">
+        <div className="px-4 py-3 border-b border-border">
           <p className="text-xs font-medium text-muted-foreground font-body uppercase tracking-wide mb-2">Другие функции (из rate-limit лога)</p>
           <div className="space-y-2">
             {stats.other_functions.map((f) => (
@@ -78,6 +89,30 @@ export function MonitoringStatsPanel({ stats }: MonitoringStatsPanelProps) {
           </div>
         </div>
       )}
+
+      {/* Forecast */}
+      <div className="px-4 py-3 bg-blue-50/50">
+        <p className="text-xs font-medium text-muted-foreground font-body uppercase tracking-wide mb-2 flex items-center gap-1.5">
+          <Icon name="TrendingUp" size={12} />
+          Прогноз расхода при текущих настройках — в месяц
+        </p>
+        <div className="grid grid-cols-2 gap-3">
+          <div className="bg-white rounded-lg border border-border px-3 py-2">
+            <p className="text-xs text-muted-foreground font-body mb-1">Мониторинг включён (каждые {intervalActive} мин)</p>
+            <p className="text-lg font-bold font-display text-foreground">{hoursPerMonthActive} ч</p>
+            <p className="text-xs text-muted-foreground font-body">{callsPerDayActive.toLocaleString("ru-RU")} вызовов/день × {FUNC_TIMEOUT} с таймаут</p>
+          </div>
+          <div className="bg-white rounded-lg border border-border px-3 py-2">
+            <p className="text-xs text-muted-foreground font-body mb-1">Мониторинг включён (каждые {intervalNew} мин)</p>
+            <p className="text-lg font-bold font-display text-foreground">{hoursPerMonthNew} ч</p>
+            <p className="text-xs text-muted-foreground font-body">{callsPerDayNew.toLocaleString("ru-RU")} вызовов/день × {FUNC_TIMEOUT} с таймаут</p>
+          </div>
+        </div>
+        <p className="text-xs text-muted-foreground font-body mt-2">
+          При отключённом мониторинге — <span className="font-medium text-foreground">0 ч</span> (проверки не выполняются).
+          Запрос статуса этой страницы тратит ~{FUNC_TIMEOUT} с за открытие.
+        </p>
+      </div>
     </div>
   );
 }
