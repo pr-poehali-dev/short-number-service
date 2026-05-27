@@ -22,7 +22,7 @@ const NEARBY_CACHE_TTL = 5 * 60 * 1000;
 const nearbyCache = new Map<string, { places: Place[]; ts: number }>();
 
 const PROMPT_CACHE_TTL = 10 * 60 * 1000;
-const promptCache: { prompt: string; city: string; ts: number } | null = null;
+let promptCache: { prompt: string; city: string; ts: number } | null = null;
 
 function getCacheKey(lat: number, lon: number) {
   return `${lat.toFixed(4)},${lon.toFixed(4)}`;
@@ -85,7 +85,8 @@ export function NearbySection() {
       const res = await fetch(NEARBY_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ _action: "get_prompt" })
+        body: JSON.stringify({ _action: "get_prompt" }),
+        signal: AbortSignal.timeout(5000),
       });
       if (res.ok) {
         const data = await res.json();
@@ -173,7 +174,8 @@ export function NearbySection() {
       const res = await fetch(NEARBY_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json", ...getAdminHeaders() },
-        body: JSON.stringify({ address: addr, city })
+        body: JSON.stringify({ address: addr, city }),
+        signal: AbortSignal.timeout(5000),
       });
       const data = await res.json();
       if (res.ok && data.places) {
@@ -209,7 +211,8 @@ export function NearbySection() {
       const res = await fetch(NEARBY_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json", ...getAdminHeaders() },
-        body: JSON.stringify({ lat, lon })
+        body: JSON.stringify({ lat, lon }),
+        signal: AbortSignal.timeout(5000),
       });
       const data = await res.json();
       if (res.ok && data.places) {
