@@ -11,7 +11,7 @@ import { AdminPinScreen } from "./AdminPinScreen";
 import { AdminRuTab, DeleteModal } from "./AdminRuTab";
 import { AdminEnTab } from "./AdminEnTab";
 import { AdminIncidentsTab } from "./AdminIncidentsTab";
-import { AdminBannerTab } from "./AdminBannerTab";
+import AdminBannerTab from "./AdminBannerTab";
 
 const STORAGE_KEY = "admin_numbers_v1";
 const SESSION_KEY = "admin_auth_v1";
