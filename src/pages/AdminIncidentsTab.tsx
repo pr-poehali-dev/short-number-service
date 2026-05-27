@@ -85,7 +85,7 @@ export function AdminIncidentsTab() {
     if (timerRef.current) clearInterval(timerRef.current);
 
     timerRef.current = setInterval(() => {
-      if (paused) return;
+      if (paused || document.hidden) return;
       countdownRef.current -= 1;
       setCountdown(countdownRef.current);
       if (countdownRef.current <= 0) {
@@ -94,8 +94,17 @@ export function AdminIncidentsTab() {
       }
     }, 1000);
 
+    const handleVisibilityChange = () => {
+      if (!document.hidden && countdownRef.current <= 0) {
+        load();
+        loadStats();
+      }
+    };
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
     return () => {
       if (timerRef.current) clearInterval(timerRef.current);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
   }, [load, loadStats, paused]);
 
