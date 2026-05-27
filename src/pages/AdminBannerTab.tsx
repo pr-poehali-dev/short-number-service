@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import Icon from "@/components/ui/icon";
+import { clearBannerCache } from "@/components/PromoBanner";
 
 const BANNER_URL = "https://functions.poehali.dev/bab250b6-9b44-4c92-b8f6-e3d80cd06c33";
 
@@ -345,6 +346,7 @@ export function AdminBannerTab() {
           })
         )
       );
+      clearBannerCache();
       setResetDone(true);
       setTimeout(() => setResetDone(false), 3000);
     } finally {

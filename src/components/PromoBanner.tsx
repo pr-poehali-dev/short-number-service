@@ -27,11 +27,16 @@ export interface BannerSettings {
 const BANNER_CACHE_TTL = 10 * 60 * 1000;
 const bannerCache: Record<string, { data: BannerSettings; ts: number }> = {};
 
+export function clearBannerCache() {
+  Object.keys(bannerCache).forEach((k) => delete bannerCache[k]);
+}
+
 function storageKey(section: string) {
   return `promo_banner_dismissed_at_${section}`;
 }
 
 function isDismissed(section: string, intervalHours: number): boolean {
+  if (intervalHours <= 0) return false;
   try {
     const raw = localStorage.getItem(storageKey(section));
     if (!raw) return false;
@@ -61,7 +66,7 @@ export default function PromoBanner({ section }: Props) {
       const data = cached.data;
       setSettings(data);
       if (data.enabled === "true") {
-        setVisible(!isDismissed(section, parseFloat(data.interval_hours) || 24));
+        setVisible(!isDismissed(section, parseFloat(data.interval_hours)));
       }
       return;
     }
@@ -75,7 +80,7 @@ export default function PromoBanner({ section }: Props) {
         bannerCache[section] = { data, ts: Date.now() };
         setSettings(data);
         if (data.enabled === "true") {
-          setVisible(!isDismissed(section, parseFloat(data.interval_hours) || 24));
+          setVisible(!isDismissed(section, parseFloat(data.interval_hours)));
         }
       })
       .catch(() => {});
