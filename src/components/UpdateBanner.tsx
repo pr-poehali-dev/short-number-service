@@ -28,7 +28,7 @@ export default function UpdateBanner() {
     });
   }, []);
 
-  const handleUpdate = () => {
+  const handleUpdateClick = () => {
     if (!waitingSW || updating) return;
     setUpdating(true);
     const fallback = setTimeout(() => window.location.reload(), 3000);
@@ -45,7 +45,7 @@ export default function UpdateBanner() {
     <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 flex items-center gap-3 bg-gray-900 text-white px-4 py-3 rounded-xl shadow-lg text-sm whitespace-nowrap">
       <span>{updating ? 'Обновляем…' : 'Доступно обновление'}</span>
       <button
-        onClick={handleUpdate}
+        onClick={handleUpdateClick}
         disabled={updating}
         className="flex items-center gap-2 bg-blue-500 hover:bg-blue-400 disabled:bg-blue-500 text-white px-3 py-1 rounded-lg font-medium transition-colors"
       >
