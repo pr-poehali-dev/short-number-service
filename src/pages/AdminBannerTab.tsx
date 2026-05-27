@@ -290,21 +290,63 @@ function BannerEditor({ section }: { section: BannerSection }) {
 
 export function AdminBannerTab() {
   const [activeSection, setActiveSection] = useState<BannerSection>("home");
+  const [resetting, setResetting] = useState(false);
+  const [resetDone, setResetDone] = useState(false);
+
+  async function handleResetAll() {
+    setResetting(true);
+    setResetDone(false);
+    const token = sessionStorage.getItem("admin_token") || "";
+    const sections: BannerSection[] = ["home", "directory", "nearby", "faq"];
+    try {
+      await Promise.all(
+        sections.map((section) =>
+          fetchWithRetry(NEARBY_URL, {
+            method: "POST",
+            headers: { "Content-Type": "application/json", "X-Admin-Token": token },
+            body: JSON.stringify({ _action: "update_banner", section, interval_hours: "0" }),
+          })
+        )
+      );
+      setResetDone(true);
+      setTimeout(() => setResetDone(false), 3000);
+    } finally {
+      setResetting(false);
+    }
+  }
 
   return (
     <div className="space-y-4">
-      <div className="flex gap-1 bg-white border border-border rounded-xl p-1 w-fit">
-        {(["home", "directory", "nearby", "faq"] as BannerSection[]).map((s) => (
+      <div className="flex flex-wrap items-center gap-3">
+        <div className="flex gap-1 bg-white border border-border rounded-xl p-1">
+          {(["home", "directory", "nearby", "faq"] as BannerSection[]).map((s) => (
+            <button
+              key={s}
+              onClick={() => setActiveSection(s)}
+              className={`px-4 py-2 rounded-lg text-sm font-body font-medium transition-colors ${
+                activeSection === s ? "bg-primary text-white" : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              {SECTION_LABELS[s]}
+            </button>
+          ))}
+        </div>
+
+        <div className="ml-auto flex items-center gap-2">
+          {resetDone && (
+            <span className="text-sm text-green-600 font-body flex items-center gap-1">
+              <Icon name="Check" size={14} /> Сброшено — баннеры снова покажутся всем
+            </span>
+          )}
           <button
-            key={s}
-            onClick={() => setActiveSection(s)}
-            className={`px-4 py-2 rounded-lg text-sm font-body font-medium transition-colors ${
-              activeSection === s ? "bg-primary text-white" : "text-muted-foreground hover:text-foreground"
-            }`}
+            onClick={handleResetAll}
+            disabled={resetting}
+            className="flex items-center gap-2 px-4 py-2.5 bg-amber-500 text-white rounded-xl font-body font-semibold text-sm hover:bg-amber-600 disabled:opacity-60 transition-colors"
           >
-            {SECTION_LABELS[s]}
+            {resetting ? <Icon name="Loader" size={14} className="animate-spin" /> : <Icon name="RefreshCw" size={14} />}
+            {resetting ? "Сбрасываю..." : "Сбросить показы у всех"}
           </button>
-        ))}
+        </div>
       </div>
 
       <BannerEditor key={activeSection} section={activeSection} />
