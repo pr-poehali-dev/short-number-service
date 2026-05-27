@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import Icon from "@/components/ui/icon";
 
-const NEARBY_URL = "https://functions.poehali.dev/d4b08b1e-6bd7-4d3b-81cf-02b5e4c6447f";
+const BANNER_URL = "https://functions.poehali.dev/2fe70b2f-a867-4c86-a53a-399202a6f17d";
 
 async function fetchWithRetry(url: string, options: RequestInit, retries = 3, delay = 5000): Promise<Response> {
   for (let i = 0; i < retries; i++) {
@@ -65,7 +65,7 @@ export default function PromoBanner({ section }: Props) {
       }
       return;
     }
-    fetchWithRetry(NEARBY_URL, {
+    fetchWithRetry(BANNER_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ _action: "get_banner", section }),
