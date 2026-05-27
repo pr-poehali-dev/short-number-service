@@ -288,34 +288,39 @@ export function AdminBannerTab() {
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState(false);
 
+  async function fetchBannerSection(section: BannerSection, retries = 4): Promise<{ section: BannerSection; data: BannerForm }> {
+    for (let i = 0; i < retries; i++) {
+      try {
+        const r = await fetch(NEARBY_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ _action: "get_banner", section }),
+        });
+        if (!r.ok) throw new Error("not ok");
+        const data = await r.json();
+        return { section, data: { ...DEFAULTS[section], ...data } as BannerForm };
+      } catch {
+        if (i < retries - 1) await new Promise(r => setTimeout(r, 2000 * (i + 1)));
+      }
+    }
+    return { section, data: DEFAULTS[section] };
+  }
+
   async function loadAllBanners() {
     setLoading(true);
     setLoadError(false);
-    const sections: BannerSection[] = ["home", "directory", "nearby", "faq"];
-    for (let attempt = 0; attempt < 3; attempt++) {
-      try {
-        const results = await Promise.all(
-          sections.map((section) =>
-            fetch(NEARBY_URL, {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ _action: "get_banner", section }),
-            })
-              .then((r) => { if (!r.ok) throw new Error("not ok"); return r.json(); })
-              .then((data) => ({ section, data: { ...DEFAULTS[section], ...data } as BannerForm }))
-          )
-        );
-        const map: Partial<Record<BannerSection, BannerForm>> = {};
-        results.forEach(({ section, data }) => { map[section] = data; });
-        setAllData(map);
-        setLoading(false);
-        return;
-      } catch {
-        if (attempt < 2) await new Promise(r => setTimeout(r, 3000));
-      }
+    try {
+      const sections: BannerSection[] = ["home", "directory", "nearby", "faq"];
+      const first = await fetchBannerSection("home");
+      const rest = await Promise.all(sections.slice(1).map((s) => fetchBannerSection(s)));
+      const map: Partial<Record<BannerSection, BannerForm>> = {};
+      [first, ...rest].forEach(({ section, data }) => { map[section] = data; });
+      setAllData(map);
+    } catch {
+      setLoadError(true);
+    } finally {
+      setLoading(false);
     }
-    setLoadError(true);
-    setLoading(false);
   }
 
   useEffect(() => {
