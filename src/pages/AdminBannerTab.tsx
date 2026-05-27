@@ -288,29 +288,42 @@ export function AdminBannerTab() {
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState(false);
 
-  useEffect(() => {
+  async function loadAllBanners() {
     setLoading(true);
     setLoadError(false);
     const sections: BannerSection[] = ["home", "directory", "nearby", "faq"];
-    Promise.all(
-      sections.map((section) =>
-        fetch(NEARBY_URL, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ _action: "get_banner", section }),
-        })
-          .then((r) => r.json())
-          .then((data) => ({ section, data: { ...DEFAULTS[section], ...data } as BannerForm }))
-      )
-    )
-      .then((results) => {
+    for (let attempt = 0; attempt < 3; attempt++) {
+      try {
+        const results = await Promise.all(
+          sections.map((section) =>
+            fetch(NEARBY_URL, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ _action: "get_banner", section }),
+            })
+              .then((r) => { if (!r.ok) throw new Error("not ok"); return r.json(); })
+              .then((data) => ({ section, data: { ...DEFAULTS[section], ...data } as BannerForm }))
+          )
+        );
         const map: Partial<Record<BannerSection, BannerForm>> = {};
         results.forEach(({ section, data }) => { map[section] = data; });
         setAllData(map);
-      })
-      .catch(() => setLoadError(true))
-      .finally(() => setLoading(false));
+        setLoading(false);
+        return;
+      } catch {
+        if (attempt < 2) await new Promise(r => setTimeout(r, 3000));
+      }
+    }
+    setLoadError(true);
+    setLoading(false);
+  }
+
+  useEffect(() => {
+    loadAllBanners();
+   
   }, []);
+
+
 
   async function handleResetAll() {
     setResetting(true);
@@ -344,7 +357,15 @@ export function AdminBannerTab() {
 
   if (loadError) {
     return (
-      <p className="text-sm text-red-600 font-body py-8 text-center">Не удалось загрузить настройки баннеров</p>
+      <div className="flex flex-col items-center gap-3 py-12">
+        <p className="text-sm text-red-600 font-body">Не удалось загрузить настройки баннеров</p>
+        <button
+          onClick={loadAllBanners}
+          className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-xl font-body text-sm font-medium hover:bg-primary/90 transition-colors"
+        >
+          <Icon name="RefreshCw" size={14} /> Попробовать снова
+        </button>
+      </div>
     );
   }
 
