@@ -45,7 +45,10 @@ export function AdminIncidentsTab() {
         setCountdown(interval * 60);
       }
     } catch (e: unknown) {
-      setError(e instanceof Error ? e.message : "Ошибка запроса");
+      const msg = e instanceof Error ? e.message : "Ошибка запроса";
+      setError(msg === "Failed to fetch" ? "Не удалось подключиться к серверу мониторинга. Проверьте соединение." : msg);
+      countdownRef.current = 60;
+      setCountdown(60);
     } finally {
       setLoading(false);
     }
