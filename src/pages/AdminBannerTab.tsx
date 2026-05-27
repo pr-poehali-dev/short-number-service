@@ -238,6 +238,13 @@ function BannerEditor({ section }: { section: BannerSection }) {
             </span>
           )}
         </div>
+
+        <div className="flex items-start gap-2.5 mt-4 bg-amber-50 border border-amber-200 rounded-xl px-4 py-3">
+          <Icon name="Info" size={15} className="text-amber-600 shrink-0 mt-0.5" />
+          <p className="text-xs font-body text-amber-800 leading-relaxed">
+            Если вы обновили срочное объявление — нажмите <strong>«Сбросить показы у всех»</strong> вверху страницы, чтобы баннер снова показался тем, кто его уже закрывал.
+          </p>
+        </div>
       </div>
 
       {/* Превью */}
