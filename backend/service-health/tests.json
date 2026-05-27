@@ -21,7 +21,7 @@
       "path": "/",
       "body": { "_action": "get_poll_settings" },
       "expectedStatus": 200,
-      "expectedBody": { "interval_active": 5, "interval_new": 30 },
+      "expectedBody": { "interval_active": 15, "interval_new": 60 },
       "bodyMatcher": "partial"
     },
     {

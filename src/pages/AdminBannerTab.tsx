@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import Icon from "@/components/ui/icon";
 
-const BANNER_URL = "https://functions.poehali.dev/2fe70b2f-a867-4c86-a53a-399202a6f17d";
+const BANNER_URL = "https://functions.poehali.dev/bab250b6-9b44-4c92-b8f6-e3d80cd06c33";
 
 async function fetchWithRetry(url: string, options: RequestInit, retries = 3, delay = 3000): Promise<Response> {
   for (let i = 0; i < retries; i++) {

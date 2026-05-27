@@ -326,6 +326,50 @@ def handler(event: dict, context) -> dict:
             "body": json.dumps({"ok": True, "interval_active": interval_active, "interval_new": interval_new}),
         }
 
+    if action == "get_banner":
+        section = body.get("section", "directory")
+        BANNER_SECTIONS = {"home", "directory", "nearby", "faq"}
+        BANNER_DEFAULTS = {
+            "home":      {"enabled": "true", "type": "subscribe", "title": "Полный доступ к справочнику", "text": "Подпишитесь на новости, чтобы следить за пульсом интернет-сервиса.", "button_label": "Подписаться", "button_url": "https://t.me/qrnumber", "interval_hours": "24"},
+            "directory": {"enabled": "true", "type": "subscribe", "title": "Будьте в курсе обновлений", "text": "Подписывайтесь на наш Telegram-канал — новые номера, изменения и полезные материалы", "button_label": "Подписаться", "button_url": "https://t.me/qrnumber", "interval_hours": "24"},
+            "nearby":    {"enabled": "true", "type": "subscribe", "title": "Будьте в курсе обновлений", "text": "Подписывайтесь на наш Telegram-канал — новые номера, изменения и полезные материалы", "button_label": "Подписаться", "button_url": "https://t.me/qrnumber", "interval_hours": "24"},
+            "faq":       {"enabled": "true", "type": "subscribe", "title": "Будьте в курсе обновлений", "text": "Подписывайтесь на наш Telegram-канал — новые номера, изменения и полезные материалы", "button_label": "Подписаться", "button_url": "https://t.me/qrnumber", "interval_hours": "24"},
+        }
+        if section not in BANNER_SECTIONS:
+            section = "directory"
+        with conn.cursor() as cur:
+            cur.execute(f"SELECT key, value FROM {SCHEMA}.banner_settings WHERE section = %s", (section,))
+            rows = cur.fetchall()
+        settings = dict(BANNER_DEFAULTS[section])
+        for k, v in rows:
+            settings[k] = v
+        conn.close()
+        return {"statusCode": 200, "headers": {**cors, "Content-Type": "application/json"}, "body": json.dumps(settings)}
+
+    if action == "update_banner":
+        admin_token = os.environ.get("ADMIN_TOKEN", "")
+        req_token = (event.get("headers") or {}).get("X-Admin-Token", "")
+        if not admin_token or req_token != admin_token:
+            conn.close()
+            return {"statusCode": 403, "headers": {**cors, "Content-Type": "application/json"}, "body": json.dumps({"error": "Forbidden"})}
+        section = body.get("section", "directory")
+        BANNER_KEYS = {"enabled", "type", "title", "text", "button_label", "button_url", "interval_hours"}
+        BANNER_SECTIONS = {"home", "directory", "nearby", "faq"}
+        if section not in BANNER_SECTIONS:
+            section = "directory"
+        with conn.cursor() as cur:
+            for k, v in body.items():
+                if k not in BANNER_KEYS:
+                    continue
+                cur.execute(
+                    f"INSERT INTO {SCHEMA}.banner_settings (key, value, section) VALUES (%s, %s, %s) "
+                    f"ON CONFLICT (key, section) DO UPDATE SET value = EXCLUDED.value, updated_at = NOW()",
+                    (k, str(v), section)
+                )
+        conn.commit()
+        conn.close()
+        return {"statusCode": 200, "headers": {**cors, "Content-Type": "application/json"}, "body": json.dumps({"ok": True})}
+
     if action == "get_stats":
         stats = get_stats(conn)
         conn.close()
