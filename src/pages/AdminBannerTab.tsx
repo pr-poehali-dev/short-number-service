@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import Icon from "@/components/ui/icon";
+import { clearBannerCache } from "@/components/PromoBanner";
 
 const NEARBY_URL = "https://functions.poehali.dev/d4b08b1e-6bd7-4d3b-81cf-02b5e4c6447f";
 
@@ -279,21 +280,62 @@ function BannerEditor({ section }: { section: BannerSection }) {
 
 export function AdminBannerTab() {
   const [activeSection, setActiveSection] = useState<BannerSection>("home");
+  const [resetting, setResetting] = useState(false);
+  const [resetDone, setResetDone] = useState(false);
+
+  async function handleResetAll() {
+    setResetting(true);
+    setResetDone(false);
+    const token = sessionStorage.getItem("admin_token") || "";
+    const sections: BannerSection[] = ["home", "directory", "nearby", "faq"];
+    try {
+      await Promise.all(
+        sections.map((section) =>
+          fetch(NEARBY_URL, {
+            method: "POST",
+            headers: { "Content-Type": "application/json", "X-Admin-Token": token },
+            body: JSON.stringify({ _action: "update_banner", section, interval_hours: "0" }),
+          })
+        )
+      );
+      clearBannerCache();
+      setResetDone(true);
+      setTimeout(() => setResetDone(false), 3000);
+    } finally {
+      setResetting(false);
+    }
+  }
 
   return (
     <div className="space-y-4">
-      <div className="flex gap-1 bg-white border border-border rounded-xl p-1 w-fit">
-        {(["home", "directory", "nearby", "faq"] as BannerSection[]).map((s) => (
-          <button
-            key={s}
-            onClick={() => setActiveSection(s)}
-            className={`px-4 py-2 rounded-lg text-sm font-body font-medium transition-colors ${
-              activeSection === s ? "bg-primary text-white" : "text-muted-foreground hover:text-foreground"
-            }`}
-          >
-            {SECTION_LABELS[s]}
-          </button>
-        ))}
+      <div className="flex items-center justify-between gap-4 flex-wrap">
+        <div className="flex gap-1 bg-white border border-border rounded-xl p-1 w-fit">
+          {(["home", "directory", "nearby", "faq"] as BannerSection[]).map((s) => (
+            <button
+              key={s}
+              onClick={() => setActiveSection(s)}
+              className={`px-4 py-2 rounded-lg text-sm font-body font-medium transition-colors ${
+                activeSection === s ? "bg-primary text-white" : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              {SECTION_LABELS[s]}
+            </button>
+          ))}
+        </div>
+
+        <button
+          onClick={handleResetAll}
+          disabled={resetting}
+          className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-border bg-white text-sm font-body font-medium hover:bg-muted/60 transition-colors disabled:opacity-60"
+        >
+          {resetting ? (
+            <><Icon name="Loader" size={15} className="animate-spin" /> Сбрасываю...</>
+          ) : resetDone ? (
+            <><Icon name="Check" size={15} className="text-green-500" /> Сброшено</>
+          ) : (
+            <><Icon name="RotateCcw" size={15} /> Сбросить показы у всех</>
+          )}
+        </button>
       </div>
 
       <BannerEditor key={activeSection} section={activeSection} />
