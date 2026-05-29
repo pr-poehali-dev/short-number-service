@@ -6,7 +6,10 @@ import { NearbyBookmarks } from "@/pages/NearbyBookmarks";
 import { NearbyResults } from "@/pages/NearbyResults";
 import SubscribeModal from "@/components/SubscribeModal";
 import PromoBanner from "@/components/PromoBanner";
+import NearbyVoteModal from "@/components/NearbyVoteModal";
 import { useAdviceLimit, AdviceGateResult } from "@/hooks/useAdviceLimit";
+
+const VOTE_URL = "https://functions.poehali.dev/ab122f27-9496-402b-a89e-b78c74ddbe32";
 
 const NEARBY_URL = "https://functions.poehali.dev/d4b08b1e-6bd7-4d3b-81cf-02b5e4c6447f";
 const ANALYZE_URL = "https://functions.poehali.dev/f314b7e4-d728-4c13-bfd3-c1962a5861fc";
@@ -69,11 +72,28 @@ export function NearbySection() {
   const [manualCoords, setManualCoords] = useState("");
   const [manualAddress, setManualAddress] = useState("");
   const [subscribeModal, setSubscribeModal] = useState<AdviceGateResult | null>(null);
+  const [showVoteModal, setShowVoteModal] = useState(false);
+  const [accessApproved, setAccessApproved] = useState(false);
   const { check, consume, confirmSubscriber, cooldownMs } = useAdviceLimit();
 
   useEffect(() => {
     saveBookmarks(bookmarks);
   }, [bookmarks]);
+
+  useEffect(() => {
+    fetch(VOTE_URL)
+      .then(r => r.json())
+      .then(d => { if (d.approved) setAccessApproved(true); })
+      .catch(() => {});
+  }, []);
+
+  function requireAccess(action: () => void) {
+    if (accessApproved) {
+      action();
+    } else {
+      setShowVoteModal(true);
+    }
+  }
 
   async function loadPrompt() {
     if (promptCache && Date.now() - promptCache.ts < PROMPT_CACHE_TTL) {
@@ -334,6 +354,12 @@ export function NearbySection() {
           onClose={() => setSubscribeModal(null)}
         />
       )}
+      {showVoteModal && (
+        <NearbyVoteModal
+          onClose={() => setShowVoteModal(false)}
+          onApproved={() => { setAccessApproved(true); setShowVoteModal(false); }}
+        />
+      )}
       {showPromptEditor && (
         <NearbyPromptEditor
           prompt={prompt}
@@ -370,8 +396,8 @@ export function NearbySection() {
         remainingRequests={remainingRequests}
         bookmarks={bookmarks}
         savedId={savedId}
-        onFind={findNearby}
-        onFindByAddress={findByAddress}
+        onFind={() => requireAccess(findNearby)}
+        onFindByAddress={() => requireAccess(findByAddress)}
         onReset={() => setStatus("idle")}
         onAddBookmark={addBookmark}
         onOpenSettings={() => { setShowPromptEditor(!showPromptEditor); if (!prompt) loadPrompt(); }}

@@ -1,0 +1,3 @@
+ALTER TABLE t_p25384465_short_number_service.nearby_votes
+    ADD COLUMN IF NOT EXISTS phone TEXT,
+    ADD COLUMN IF NOT EXISTS approved BOOLEAN NOT NULL DEFAULT FALSE;
