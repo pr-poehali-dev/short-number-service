@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import Icon from "@/components/ui/icon";
 
 const NEARBY_URL = "https://functions.poehali.dev/d4b08b1e-6bd7-4d3b-81cf-02b5e4c6447f";
+const VOTE_URL = "https://functions.poehali.dev/ab122f27-9496-402b-a89e-b78c74ddbe32";
 
 export interface BannerSettings {
   enabled: string;
@@ -24,6 +25,10 @@ function storageKey(section: string) {
   return `promo_banner_dismissed_at_${section}`;
 }
 
+function voteKey(section: string) {
+  return `promo_banner_voted_${section}`;
+}
+
 function isDismissed(section: string, intervalHours: number): boolean {
   if (intervalHours <= 0) return false;
   try {
@@ -43,6 +48,133 @@ function dismiss(section: string) {
 
 interface Props {
   section: "home" | "directory" | "nearby" | "faq";
+}
+
+function VoteBanner({ settings, onClose }: { settings: BannerSettings; onClose: () => void }) {
+  const [step, setStep] = useState<"vote" | "form" | "done">(() =>
+    localStorage.getItem(voteKey("nearby")) === "1" ? "done" : "vote"
+  );
+  const [count, setCount] = useState<number | null>(null);
+  const [comment, setComment] = useState("");
+  const [sending, setSending] = useState(false);
+
+  useEffect(() => {
+    fetch(VOTE_URL).then((r) => r.json()).then((d) => setCount(d.count)).catch(() => {});
+  }, []);
+
+  async function handleVote() {
+    setStep("form");
+  }
+
+  async function handleSubmit() {
+    setSending(true);
+    try {
+      const res = await fetch(VOTE_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ comment }),
+      });
+      const data = await res.json();
+      localStorage.setItem(voteKey("nearby"), "1");
+      setCount(data.count);
+      setStep("done");
+    } finally {
+      setSending(false);
+    }
+  }
+
+  function handleSkipComment() {
+    handleSubmit();
+  }
+
+  return (
+    <div className="relative bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-200 rounded-2xl p-5 mb-4 animate-fade-in">
+      <button
+        onClick={onClose}
+        className="absolute top-3 right-3 w-6 h-6 flex items-center justify-center rounded-full hover:bg-amber-100 text-muted-foreground hover:text-foreground transition-colors"
+        title="Скрыть"
+      >
+        <Icon name="X" size={14} />
+      </button>
+
+      {step === "vote" && (
+        <div className="pr-6">
+          <div className="flex items-start gap-3 mb-4">
+            <div className="w-9 h-9 rounded-xl bg-amber-100 flex items-center justify-center flex-shrink-0">
+              <Icon name="MapPin" size={18} className="text-amber-600" />
+            </div>
+            <div>
+              <h3 className="font-display font-bold text-foreground text-base leading-snug mb-1">
+                {settings.title}
+              </h3>
+              <p className="text-sm text-muted-foreground font-body leading-relaxed">
+                {settings.text}
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center gap-3 flex-wrap">
+            <button
+              onClick={handleVote}
+              className="flex items-center gap-2 px-5 py-2.5 bg-amber-500 hover:bg-amber-600 text-white rounded-xl font-body font-semibold text-sm transition-colors"
+            >
+              <Icon name="ThumbsUp" size={15} />
+              Голосую «За»
+            </button>
+            {count !== null && (
+              <span className="text-sm text-muted-foreground font-body">
+                {count} {count === 1 ? "голос" : count >= 2 && count <= 4 ? "голоса" : "голосов"}
+              </span>
+            )}
+          </div>
+        </div>
+      )}
+
+      {step === "form" && (
+        <div className="pr-6">
+          <p className="font-display font-bold text-foreground text-sm mb-1">Расскажите, что важно для вас?</p>
+          <p className="text-xs text-muted-foreground font-body mb-3">Ваши мысли помогут нам сделать раздел лучше. Можно пропустить.</p>
+          <textarea
+            value={comment}
+            onChange={(e) => setComment(e.target.value)}
+            placeholder="Напишите, что было бы полезно..."
+            rows={3}
+            className="w-full px-3 py-2.5 border border-amber-200 rounded-xl font-body text-sm focus:outline-none focus:ring-2 focus:ring-amber-300 focus:border-amber-400 resize-none bg-white mb-3"
+          />
+          <div className="flex gap-2">
+            <button
+              onClick={handleSubmit}
+              disabled={sending}
+              className="flex items-center gap-2 px-4 py-2 bg-amber-500 hover:bg-amber-600 disabled:opacity-60 text-white rounded-xl font-body font-semibold text-sm transition-colors"
+            >
+              {sending ? <Icon name="Loader" size={14} className="animate-spin" /> : <Icon name="Send" size={14} />}
+              Отправить
+            </button>
+            <button
+              onClick={handleSkipComment}
+              disabled={sending}
+              className="px-4 py-2 border border-border bg-white hover:bg-muted/50 text-muted-foreground rounded-xl font-body text-sm transition-colors"
+            >
+              Пропустить
+            </button>
+          </div>
+        </div>
+      )}
+
+      {step === "done" && (
+        <div className="pr-6 flex items-start gap-3">
+          <div className="w-9 h-9 rounded-xl bg-green-100 flex items-center justify-center flex-shrink-0">
+            <Icon name="Check" size={18} className="text-green-600" />
+          </div>
+          <div>
+            <p className="font-display font-bold text-foreground text-sm mb-0.5">Спасибо за голос!</p>
+            <p className="text-xs text-muted-foreground font-body">
+              {count !== null ? `Уже ${count} ${count === 1 ? "человек" : count >= 2 && count <= 4 ? "человека" : "человек"} поддержали эту идею.` : "Ваш голос учтён."}
+            </p>
+          </div>
+        </div>
+      )}
+    </div>
+  );
 }
 
 export default function PromoBanner({ section }: Props) {
@@ -80,6 +212,10 @@ export default function PromoBanner({ section }: Props) {
   function handleClose() {
     dismiss(section);
     setVisible(false);
+  }
+
+  if (settings.type === "vote") {
+    return <VoteBanner settings={settings} onClose={handleClose} />;
   }
 
   const isSubscribe = settings.type === "subscribe";

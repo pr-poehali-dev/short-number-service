@@ -128,6 +128,7 @@ function BannerEditor({ section }: { section: BannerSection }) {
               {[
                 { id: "subscribe", label: "Подписка (Telegram/VK)", icon: "Bell" },
                 { id: "promo", label: "Произвольный текст", icon: "Megaphone" },
+                { id: "vote", label: "Голосование", icon: "ThumbsUp" },
               ].map((t) => (
                 <button
                   key={t.id}
@@ -136,7 +137,7 @@ function BannerEditor({ section }: { section: BannerSection }) {
                     form.type === t.id ? "bg-primary text-white border-primary" : "bg-white text-foreground border-border hover:border-primary/40"
                   }`}
                 >
-                  <Icon name={t.icon as "Bell" | "Megaphone"} size={14} />
+                  <Icon name={t.icon as "Bell" | "Megaphone" | "ThumbsUp"} size={14} />
                   {t.label}
                 </button>
               ))}
