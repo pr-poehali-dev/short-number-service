@@ -316,9 +316,9 @@ export function Header({
   }, []);
 
   const navItems = [
-    { id: "directory",  label: "Справочник" },
-    { id: "nearby",     label: "Быстрый ответ (анонс)" },
-    { id: "faq",        label: "FAQ" },
+    { id: "directory",  label: "Справочник",   badge: null },
+    { id: "nearby",     label: "Быстрый ответ", badge: "АНОНС" },
+    { id: "faq",        label: "FAQ",           badge: null },
   ];
 
   return (
@@ -341,10 +341,15 @@ export function Header({
               <button
                 key={item.id}
                 onClick={() => onNav(item.id)}
-                className={`px-3 py-1.5 rounded-md text-sm font-body font-medium transition-colors ${
+                className={`relative px-3 py-1.5 rounded-md text-sm font-body font-medium transition-colors ${
                   activeSection === item.id ? "bg-primary text-white" : "text-foreground hover:bg-muted"
                 }`}
               >
+                {item.badge && (
+                  <span className="absolute -top-2.5 left-1/2 -translate-x-1/2 bg-amber-400 text-amber-900 text-[9px] font-bold font-body tracking-widest px-1.5 py-0.5 rounded-sm leading-none whitespace-nowrap">
+                    {item.badge}
+                  </span>
+                )}
                 {item.label}
               </button>
             ))}
