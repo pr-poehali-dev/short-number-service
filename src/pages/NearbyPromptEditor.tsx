@@ -20,9 +20,7 @@ export function NearbyPromptEditor({ prompt, city, promptLoading, promptSaved, o
       >
         <Icon name="X" size={16} />
       </button>
-      <p className="text-sm font-body font-semibold text-amber-800 mb-2 flex items-center gap-1.5">
-        <Icon name="MapPin" size={14} /> Мой город
-      </p>
+      <p className="text-sm font-body font-semibold text-amber-800 mb-2 flex items-center gap-1.5">Город</p>
       <input
         type="text"
         value={city}
