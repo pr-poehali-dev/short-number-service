@@ -49,7 +49,7 @@ export function NearbyPromptEditor({ prompt, city, promptLoading, promptSaved, o
         </button>
 
         <span className="text-xs text-amber-700 font-body">
-          Перечислите свои категории, например: <code className="bg-amber-100 px-1 rounded">кафе,банк,парк</code>
+          Перечислите свои категории, например: <code className="bg-amber-100 px-1 rounded">кафе,аптека,банк</code>
         </span>
       </div>
     </div>
