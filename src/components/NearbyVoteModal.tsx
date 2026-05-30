@@ -63,9 +63,7 @@ export default function NearbyVoteModal({ onClose, onApproved: _onApproved }: Pr
                 <p className="text-sm text-muted-foreground font-body">Проголосуйте, чтобы получить доступ</p>
               </div>
             </div>
-            <p className="text-sm font-body text-muted-foreground leading-relaxed mb-5">
-              Поиск мест рядом работает через коммерческий API 2ГИС. Мы запустим его для тех, кто поддержит эту идею — оставьте голос и свой номер телефона. Как только наберём достаточно голосов, откроем доступ.
-            </p>
+            <p className="text-sm font-body text-muted-foreground leading-relaxed mb-5">Представьте себе сайт (веб-приложение), открыв который, Вы узнаете, как лучше (именно Вам!), по мнению нейросети, провести свое свободной время. Нужно лишь найти места, которые Вы посещаете или планируете, и сохранить, как избранное. Мы запустим сервис для тех, кто поддержит это начинание — оставьте голос и свой номер телефона. Как только наберём 1000 голосов, откроем персональный доступ.</p>
             <button
               onClick={() => setStep("form")}
               className="w-full flex items-center justify-center gap-2 px-5 py-3 bg-amber-500 hover:bg-amber-600 text-white rounded-xl font-body font-semibold transition-colors"
