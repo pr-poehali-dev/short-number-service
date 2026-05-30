@@ -68,7 +68,7 @@ export function AdminVotesTab() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="font-display font-bold text-foreground text-xl">Голоса за «Быстрый ответ»</h2>
+          <h2 className="font-display font-bold text-foreground text-xl">Голоса за «Быстрый ответ (анонс)»</h2>
           <p className="text-sm text-muted-foreground font-body mt-0.5">
             Всего: <b>{votes.length}</b> · Одобрено: <b>{approved.length}</b> · Ожидают: <b>{pending.length}</b>
           </p>
