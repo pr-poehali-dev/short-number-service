@@ -355,7 +355,7 @@ export function NearbyBookmarks({
       {/* Header */}
       <div className="flex items-center gap-2 mb-3">
         <Icon name="Star" size={15} className="text-primary" />
-        <span className="font-display font-semibold text-foreground text-sm">Избранное с нейрогидом</span>
+        <span className="font-display font-semibold text-foreground text-sm">Избранное (с нейрогидом)</span>
 
         {bookmarks.length > 0 && (
           <>
