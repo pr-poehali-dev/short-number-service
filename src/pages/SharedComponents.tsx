@@ -341,10 +341,15 @@ export function Header({
               <button
                 key={item.id}
                 onClick={() => onNav(item.id)}
-                className={`px-3 py-1.5 rounded-md text-sm font-body font-medium transition-colors ${
+                className={`relative px-3 py-1.5 rounded-md text-sm font-body font-medium transition-colors ${
                   activeSection === item.id ? "bg-primary text-white" : "text-foreground hover:bg-muted"
                 }`}
               >
+                {item.id === "nearby" && (
+                  <span className="absolute -top-2.5 left-1/2 -translate-x-1/2 flex items-center gap-0.5 bg-violet-100 text-violet-700 text-[9px] font-bold font-body tracking-wide px-1.5 py-0.5 rounded-sm leading-none whitespace-nowrap border border-violet-200">
+                    ✦ ИИ
+                  </span>
+                )}
                 {item.label}
               </button>
             ))}
