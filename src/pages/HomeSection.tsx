@@ -126,7 +126,7 @@ function NumberForm() {
       )}
 
       <h3 className="font-display text-xl font-bold text-foreground mb-1">Станьте частью справочника</h3>
-      <p className="text-sm text-muted-foreground font-body mb-4">Добавьте короткий номер, предложите правку или поделитесь фото</p>
+      <p className="text-sm text-muted-foreground font-body mb-4">Добавьте новый номер, измените описание или поделитесь фото</p>
 
       <div className="flex gap-2 mb-5 flex-wrap">
         {([
