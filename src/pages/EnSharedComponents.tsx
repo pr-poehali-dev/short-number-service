@@ -20,15 +20,12 @@ function generateContactPhoto(number: string): string {
   ctx.arc(size * 0.85, size * 0.15, size * 0.4, 0, Math.PI * 2);
   ctx.fill();
   const digits = number.replace(/\D/g, "");
-  const fontSize = digits.length <= 3 ? 80 : digits.length <= 4 ? 68 : 52;
+  const fontSize = digits.length <= 3 ? 88 : digits.length <= 4 ? 76 : 58;
   ctx.fillStyle = "#ffffff";
   ctx.font = `bold ${fontSize}px Arial`;
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
-  ctx.fillText(number, size / 2, size / 2 - 10);
-  ctx.fillStyle = "rgba(255,255,255,0.55)";
-  ctx.font = "bold 18px Arial";
-  ctx.fillText("2407.rf", size / 2, size / 2 + fontSize / 2 + 16);
+  ctx.fillText(number, size / 2, size / 2);
   return canvas.toDataURL("image/jpeg", 0.85).split(",")[1];
 }
 
