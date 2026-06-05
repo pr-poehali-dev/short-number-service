@@ -2,6 +2,7 @@ import { useState } from "react";
 import Icon from "@/components/ui/icon";
 import { NUMBERS, LAST_UPDATED, PhoneNumber } from "./data";
 import PromoBanner from "@/components/PromoBanner";
+import { APP_VERSION } from "@/lib/version";
 
 type IconName = Parameters<typeof Icon>[0]["name"];
 
@@ -318,7 +319,7 @@ export function HomeSection({ onNav }: { onNav: (s: string, category?: string) =
   return (
     <div className="animate-fade-in">
       {/* Hero */}
-      <div className="bg-gradient-to-br from-[#0376BB] to-[#025a90] text-white py-16 px-4">
+      <div className="bg-gradient-to-br from-[#0376BB] to-[#025a90] text-white py-16 px-4 relative">
         <div className="max-w-3xl mx-auto text-center">
 
           <h1 className="font-display text-4xl md:text-5xl font-bold mb-4 leading-tight">Короткие номера и быстрые ответы</h1>
@@ -336,6 +337,7 @@ export function HomeSection({ onNav }: { onNav: (s: string, category?: string) =
             ><Icon name="Sparkles" size={18} /> Быстрый ответ</button>
           </div>
         </div>
+        <span className="absolute bottom-3 left-4 text-xs text-white/40 font-body">{APP_VERSION}</span>
       </div>
 
       {/* Stats */}
