@@ -37,7 +37,7 @@ export default function IndexEn() {
             <Link to="/" className="flex items-center gap-2">
               <div className="font-display text-base font-bold text-black leading-tight tracking-wide">
                 <span className="md:hidden">2407.rf</span>
-                <span className="hidden md:inline">Short Phone Numbers of Russia "2407"</span>
+                <span className="hidden md:inline">Short Numbers of Russia "2407"</span>
               </div>
             </Link>
 
