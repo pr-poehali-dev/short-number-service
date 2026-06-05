@@ -10,10 +10,14 @@ export default function NearbyVoteModal({ onClose }: Props) {
   const [step, setStep] = useState<"vote" | "pending">("vote");
 
   function handleVote() {
+    setStep("pending");
+  }
+
+  function handleSendMail() {
     const subject = encodeURIComponent('Голосую "ЗА" интернет-сервис "Быстрый ответ"');
     window.location.href = `mailto:vote@incode.ru?subject=${subject}`;
     localStorage.setItem("nearby_voted", "1");
-    setStep("pending");
+    onClose();
   }
 
   return (
@@ -60,10 +64,11 @@ export default function NearbyVoteModal({ onClose }: Props) {
               Откроется ваш почтовый клиент с готовым письмом. Просто отправьте его — и голос будет засчитан.
             </p>
             <button
-              onClick={onClose}
-              className="w-full py-2.5 px-5 bg-primary text-primary-foreground rounded-xl font-body font-semibold hover:bg-primary/90 transition-colors"
+              onClick={handleSendMail}
+              className="w-full flex items-center justify-center gap-2 py-2.5 px-5 bg-amber-500 hover:bg-amber-600 text-white rounded-xl font-body font-semibold transition-colors"
             >
-              Понятно
+              <Icon name="Mail" size={16} />
+              Готово — открыть почту
             </button>
           </div>
         )}
