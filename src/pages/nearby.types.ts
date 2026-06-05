@@ -74,6 +74,18 @@ export function formatDate(iso: string): string {
 export const BOOKMARKS_KEY = "nearby_bookmarks";
 export const BOOKMARK_VIEW_KEY = "nearby_bookmark_view";
 export const COLLECTIONS_KEY = "nearby_collections";
+export const USER_UUID_KEY = "nearby_user_uuid";
+
+export const BOOKMARKS_API = "https://functions.poehali.dev/84e08bf7-c6dd-4bb2-8f6f-594f7a88b31d";
+
+export function getOrCreateUserUuid(): string {
+  let uuid = localStorage.getItem(USER_UUID_KEY);
+  if (!uuid) {
+    uuid = crypto.randomUUID();
+    localStorage.setItem(USER_UUID_KEY, uuid);
+  }
+  return uuid;
+}
 
 export type BookmarkView = "default" | "distance" | "type" | "collections";
 

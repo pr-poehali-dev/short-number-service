@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Place, Bookmark, loadBookmarks, saveBookmarks } from "@/pages/nearby.types";
+import { Place, Bookmark, loadBookmarks, saveBookmarks, getOrCreateUserUuid, BOOKMARKS_API } from "@/pages/nearby.types";
 import { ymGoal } from "@/lib/analytics";
 import { NearbyPromptEditor } from "@/pages/NearbyPromptEditor";
 import { NearbyBookmarks } from "@/pages/NearbyBookmarks";
@@ -281,10 +281,22 @@ export function NearbySection() {
     setSavedId(id);
     setTimeout(() => setSavedId(null), 1800);
     ymGoal("bookmark_add_nearby", { name: p.name, type: p.type, city: p.city || city });
+    const uuid = getOrCreateUserUuid();
+    fetch(`${BOOKMARKS_API}?uuid=${uuid}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ bookmark: bm }),
+    }).catch(() => {});
   }
 
   function removeBookmark(id: string) {
     setBookmarks((prev) => prev.filter((b) => b.id !== id));
+    const uuid = getOrCreateUserUuid();
+    fetch(`${BOOKMARKS_API}?uuid=${uuid}`, {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id }),
+    }).catch(() => {});
   }
 
   async function analyzeBookmarks() {

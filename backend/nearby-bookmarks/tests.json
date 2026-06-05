@@ -1,0 +1,54 @@
+{
+  "tests": [
+    {
+      "name": "GET bookmarks (empty user)",
+      "method": "GET",
+      "path": "/?uuid=test-user-uuid-000",
+      "expectedStatus": 200,
+      "expectedBody": {"bookmarks": []},
+      "bodyMatcher": "partial"
+    },
+    {
+      "name": "POST bookmark",
+      "method": "POST",
+      "path": "/?uuid=test-user-uuid-000",
+      "body": {
+        "bookmark": {
+          "id": "test_bm_001",
+          "savedAt": "2026-06-05T10:00:00.000Z",
+          "name": "Тестовое кафе",
+          "type": "кафе",
+          "description": "Уютное кафе",
+          "distance_approx": 150,
+          "address": "ул. Ленина, 1",
+          "city": "Москва",
+          "label": "кафе",
+          "profile": "",
+          "hours": "10:00–22:00",
+          "lat": 55.751,
+          "lon": 37.618
+        }
+      },
+      "expectedStatus": 200,
+      "expectedBody": {"ok": true},
+      "bodyMatcher": "partial"
+    },
+    {
+      "name": "GET bookmarks (with data)",
+      "method": "GET",
+      "path": "/?uuid=test-user-uuid-000",
+      "expectedStatus": 200,
+      "expectedBody": {"bookmarks": [{"name": "Тестовое кафе"}]},
+      "bodyMatcher": "partial"
+    },
+    {
+      "name": "DELETE bookmark",
+      "method": "DELETE",
+      "path": "/?uuid=test-user-uuid-000",
+      "body": {"id": "test_bm_001"},
+      "expectedStatus": 200,
+      "expectedBody": {"ok": true},
+      "bodyMatcher": "partial"
+    }
+  ]
+}
