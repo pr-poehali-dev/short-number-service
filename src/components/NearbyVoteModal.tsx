@@ -71,9 +71,7 @@ export default function NearbyVoteModal({ onClose, onApproved: _onApproved }: Pr
               <Icon name="ThumbsUp" size={16} />
               Голосую «За»
             </button>
-            <button onClick={onClose} className="w-full mt-2 py-2 text-sm text-muted-foreground font-body hover:text-foreground transition-colors">
-              Позже
-            </button>
+
           </div>
         )}
 
