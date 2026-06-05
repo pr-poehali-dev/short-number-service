@@ -3,7 +3,9 @@ import { createRoot } from 'react-dom/client'
 import App from './App'
 import './index.css'
 
-if ('serviceWorker' in navigator) {
+const IS_IFRAME = window.self !== window.top;
+
+if ('serviceWorker' in navigator && !IS_IFRAME) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('/sw.js').then((reg) => {
       const sw = reg.installing || reg.waiting || reg.active;
