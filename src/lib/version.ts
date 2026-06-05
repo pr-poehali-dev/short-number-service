@@ -1,1 +1,1 @@
-export const APP_VERSION = "05.06.2026, 16:09";
+export const APP_VERSION = import.meta.env.VITE_BUILD_TIME ?? "—";
