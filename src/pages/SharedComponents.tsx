@@ -52,7 +52,42 @@ export function NumberCard({ num, onClick }: { num: PhoneNumber; onClick: (n: Ph
   );
 }
 
+function generateContactPhoto(number: string): string {
+  const size = 240;
+  const canvas = document.createElement("canvas");
+  canvas.width = size;
+  canvas.height = size;
+  const ctx = canvas.getContext("2d")!;
+
+  const grad = ctx.createLinearGradient(0, 0, size, size);
+  grad.addColorStop(0, "#1a3a6b");
+  grad.addColorStop(1, "#0066cc");
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, size, size);
+
+  ctx.fillStyle = "rgba(255,255,255,0.06)";
+  ctx.beginPath();
+  ctx.arc(size * 0.85, size * 0.15, size * 0.4, 0, Math.PI * 2);
+  ctx.fill();
+
+  const digits = number.replace(/\D/g, "");
+  const fontSize = digits.length <= 3 ? 80 : digits.length <= 4 ? 68 : 52;
+  ctx.fillStyle = "#ffffff";
+  ctx.font = `bold ${fontSize}px Arial`;
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.fillText(number, size / 2, size / 2 - 10);
+
+  ctx.fillStyle = "rgba(255,255,255,0.55)";
+  ctx.font = "bold 18px Arial";
+  ctx.fillText("2407.рф", size / 2, size / 2 + fontSize / 2 + 16);
+
+  return canvas.toDataURL("image/jpeg", 0.85).split(",")[1];
+}
+
 function generateVCard(num: PhoneNumber): string {
+  const photo = generateContactPhoto(num.number);
+  const photoLine = `PHOTO;ENCODING=b;TYPE=JPEG:${photo}`;
   const lines = [
     "BEGIN:VCARD",
     "VERSION:3.0",
@@ -63,6 +98,7 @@ function generateVCard(num: PhoneNumber): string {
     `CATEGORIES:${num.category}`,
     `NOTE:${num.description.replace(/\n/g, "\\n")} | Оператор: ${num.operator}`,
     "URL:2407.рф",
+    photoLine,
     "END:VCARD",
   ];
   return lines.join("\r\n");
