@@ -1,3 +1,4 @@
+import { useState } from "react";
 import Icon from "@/components/ui/icon";
 import { PhoneNumber, OPERATOR_COLORS } from "./data";
 import { OPERATOR_MAP_EN, CATEGORY_MAP_EN } from "./data-en";
@@ -122,6 +123,18 @@ export function NumberModalEn({
   const desc = enNum?.description ?? num.description;
   const procedure = enNum?.procedure ?? num.procedure;
   const category = CATEGORY_MAP_EN[num.category] ?? num.category;
+  const [copied, setCopied] = useState(false);
+
+  async function handleShare() {
+    const text = `${name} — ${num.number}\n${desc}\n\n📞 Directory «2407.rf»`;
+    if (navigator.share) {
+      await navigator.share({ text });
+    } else {
+      await navigator.clipboard.writeText(text);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
+  }
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50" onClick={onClose}>
@@ -181,18 +194,27 @@ export function NumberModalEn({
           </div>
         </div>
 
-        <div className="mt-5 pt-4 border-t border-border flex gap-3">
+        <div className="mt-5 pt-4 border-t border-border flex gap-2">
           <a
             href={`tel:${num.number}`}
             className="flex items-center justify-center gap-2 flex-1 py-3 bg-primary text-white rounded-xl font-body font-semibold hover:bg-primary/90 transition-colors"
           >
-            <Icon name="Phone" size={18} /> Call
+            <Icon name="Phone" size={18} />
+            <span className="hidden sm:inline">Call</span>
           </a>
           <button
             onClick={() => saveVCard(num, name, desc)}
             className="flex items-center justify-center gap-2 flex-1 py-3 bg-white border-2 border-primary text-primary rounded-xl font-body font-semibold hover:bg-primary/5 transition-colors"
           >
-            <Icon name="UserPlus" size={18} /><span className="sm:hidden">Save</span><span className="hidden sm:inline">Save contact</span>
+            <Icon name="UserPlus" size={18} />
+            <span className="hidden sm:inline">Save contact</span>
+          </button>
+          <button
+            onClick={handleShare}
+            className="flex items-center justify-center w-12 h-12 my-auto bg-white text-muted-foreground rounded-xl hover:text-primary transition-colors flex-shrink-0"
+            title={copied ? "Copied!" : "Share"}
+          >
+            <Icon name={copied ? "Check" : "Share2"} size={18} className={copied ? "text-green-500" : ""} />
           </button>
         </div>
       </div>
