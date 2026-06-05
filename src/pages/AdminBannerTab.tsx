@@ -19,7 +19,7 @@ interface BannerForm {
 const SECTION_LABELS: Record<BannerSection, string> = {
   home: "Главная страница",
   directory: "Справочник",
-  nearby: "Быстрый ответ (анонс)",
+  nearby: "Быстрый ответ",
   faq: "FAQ",
 };
 
