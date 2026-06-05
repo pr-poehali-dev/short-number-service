@@ -340,23 +340,7 @@ export function HomeSection({ onNav }: { onNav: (s: string, category?: string) =
         <span className="absolute bottom-3 left-4 text-xs text-white/40 font-body">{APP_VERSION}</span>
       </div>
 
-      {/* Stats */}
-      <div className="max-w-6xl mx-auto px-4 -mt-8">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {[
-            { icon: "Phone",       count: `${NUMBERS.length}`,  label: "Номера в базе" },
-            { icon: "Wifi",        count: "4",                  label: "Операторы связи" },
-            { icon: "ShieldCheck", count: "5",                  label: "Экстренные службы" },
-            { icon: "RefreshCw",   count: LAST_UPDATED,         label: "Актуальность базы" },
-          ].map((s) => (
-            <div key={s.label} className="bg-white rounded-xl p-4 shadow-sm border border-border text-center hover-scale">
-              {s.icon ? <Icon name={s.icon as IconName} size={19} className="text-primary mx-auto mb-1" /> : <span className="block text-primary font-body font-light leading-none mx-auto mb-1 text-xl">N</span>}
-              <div className="font-display text-2xl font-bold text-foreground">{s.count}</div>
-              <div className="text-xs text-muted-foreground font-body">{s.label}</div>
-            </div>
-          ))}
-        </div>
-      </div>
+
 
       {/* Quick access */}
       <div className="max-w-6xl mx-auto px-4 py-10">
