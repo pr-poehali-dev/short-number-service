@@ -211,7 +211,7 @@ export function NumberModal({ num, onClose, onAddFavorite, isFavorite, maxReache
             className="flex items-center justify-center gap-2 flex-1 py-3 bg-white border-2 border-primary text-primary rounded-xl font-body font-semibold hover:bg-primary/5 transition-colors"
           >
             <Icon name="UserPlus" size={18} />
-            <span className="hidden sm:inline">Сохранить</span>
+            <span>Сохранить</span>
           </button>
           <button
             onClick={handleShare}
