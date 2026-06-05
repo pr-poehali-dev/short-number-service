@@ -4,6 +4,7 @@ import Icon from "@/components/ui/icon";
 import { PhoneNumber, Operator, OPERATOR_COLORS } from "./data";
 import { ymGoal } from "@/lib/analytics";
 import { ServiceStatusBanner } from "@/components/ServiceStatusBanner";
+import { APP_VERSION } from "@/lib/version";
 
 interface BeforeInstallPromptEvent extends Event {
   prompt(): Promise<void>;
@@ -331,6 +332,7 @@ export function Header({
               <span className="md:hidden">2407.рф</span>
               <span className="hidden md:inline">Короткие номера России "2407"</span>
             </div>
+            <span className="text-xs text-muted-foreground font-body font-normal">{APP_VERSION}</span>
             {isAdminAuthed && (
               <span className="absolute -top-1 -right-2 w-2 h-2 rounded-full bg-green-500 shadow-sm" title="Админ-режим активен" />
             )}

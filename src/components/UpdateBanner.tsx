@@ -24,8 +24,20 @@ export default function UpdateBanner() {
     };
 
     navigator.serviceWorker.getRegistration().then((reg) => {
-      if (reg) handleUpdate(reg);
+      if (!reg) return;
+      handleUpdate(reg);
+      // Принудительная проверка обновления при каждом открытии
+      reg.update().catch(() => {});
     });
+
+    // Повторная проверка каждые 60 секунд пока страница открыта
+    const interval = setInterval(() => {
+      navigator.serviceWorker.getRegistration().then((reg) => {
+        if (reg) reg.update().catch(() => {});
+      });
+    }, 60_000);
+
+    return () => clearInterval(interval);
   }, []);
 
   const handleUpdateClick = () => {
