@@ -2,7 +2,7 @@ import { useState } from "react";
 import { PhoneNumber, Operator } from "./data";
 import Icon from "@/components/ui/icon";
 
-const OPERATORS: Operator[] = ["МТС", "Билайн", "МегаФон", "Т2", "Универсальный", "Коммерческий"];
+const OPERATORS: Operator[] = ["МТС", "Билайн", "МегаФон", "Т2", "Универсальный"];
 const CATEGORIES = ["Экстренные", "Поддержка", "Автоинформатор", "Безопасность", "Социальные", "Здоровье", "Коммерческие"];
 const INDUSTRIES = ["Банк", "Транспорт", "Торговля", "Страхование", "Медицина", "Государственные", "Другое"];
 
