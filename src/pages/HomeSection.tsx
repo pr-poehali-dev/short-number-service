@@ -1,8 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Icon from "@/components/ui/icon";
 import { NUMBERS, LAST_UPDATED, PhoneNumber } from "./data";
 import PromoBanner from "@/components/PromoBanner";
-import { APP_VERSION } from "@/lib/version";
+import { fetchBuildTime } from "@/lib/version";
 
 type IconName = Parameters<typeof Icon>[0]["name"];
 
@@ -316,6 +316,12 @@ function NumberForm() {
 }
 
 export function HomeSection({ onNav }: { onNav: (s: string, category?: string) => void }) {
+  const [buildTime, setBuildTime] = useState("—");
+
+  useEffect(() => {
+    fetchBuildTime().then(setBuildTime);
+  }, []);
+
   return (
     <div className="animate-fade-in">
       {/* Hero */}
@@ -337,7 +343,7 @@ export function HomeSection({ onNav }: { onNav: (s: string, category?: string) =
             ><Icon name="Sparkles" size={18} /> Быстрый ответ</button>
           </div>
         </div>
-        <span className="absolute bottom-3 left-4 text-xs text-white/40 font-body">{APP_VERSION}</span>
+        <span className="absolute bottom-3 left-4 text-xs text-white/40 font-body">{buildTime}</span>
       </div>
 
 

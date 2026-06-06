@@ -1,11 +1,15 @@
-const buildTime = import.meta.env.VITE_BUILD_TIME;
+const BUILD_INFO_URL = "https://functions.poehali.dev/233bf647-2fcb-4d05-87c2-104561f450dc";
 
-function formatNow() {
-  return new Date().toLocaleString('ru-RU', {
-    timeZone: 'Europe/Moscow',
-    day: '2-digit', month: '2-digit', year: 'numeric',
-    hour: '2-digit', minute: '2-digit',
-  });
+let cachedVersion: string | null = null;
+
+export async function fetchBuildTime(): Promise<string> {
+  if (cachedVersion) return cachedVersion;
+  try {
+    const res = await fetch(BUILD_INFO_URL);
+    const data = await res.json();
+    cachedVersion = data.build_time ?? "—";
+  } catch {
+    cachedVersion = "—";
+  }
+  return cachedVersion!;
 }
-
-export const APP_VERSION = buildTime ?? formatNow();

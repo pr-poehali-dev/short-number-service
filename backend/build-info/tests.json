@@ -1,0 +1,12 @@
+{
+  "tests": [
+    {
+      "name": "Get build time",
+      "method": "GET",
+      "path": "/",
+      "expectedStatus": 200,
+      "expectedBody": {"build_time": "string"},
+      "bodyMatcher": "partial"
+    }
+  ]
+}
