@@ -12,7 +12,6 @@ import { AdminRuTab, DeleteModal } from "./AdminRuTab";
 import { AdminEnTab } from "./AdminEnTab";
 import { AdminIncidentsTab } from "./AdminIncidentsTab";
 import { AdminBannerTab } from "./AdminBannerTab";
-import { AdminVotesTab } from "./AdminVotesTab";
 
 const STORAGE_KEY = "admin_numbers_v1";
 const SESSION_KEY = "admin_auth_v1";
@@ -213,14 +212,7 @@ export default function AdminPage() {
               adminTab === "banner" ? "border-primary text-primary bg-primary/5" : "border-transparent text-muted-foreground hover:text-foreground"
             }`}
           >Баннеры</button>
-          <button
-            onClick={() => setAdminTab("votes")}
-            className={`flex items-center gap-1.5 px-4 py-2 rounded-t-lg text-sm font-body font-medium border-b-2 transition-colors ${
-              adminTab === "votes" ? "border-primary text-primary bg-primary/5" : "border-transparent text-muted-foreground hover:text-foreground"
-            }`}
-          >
-            <Icon name="ThumbsUp" size={14} /> Голоса
-          </button>
+
         </div>
       </div>
 
@@ -250,7 +242,7 @@ export default function AdminPage() {
 
         {adminTab === "incidents" && <AdminIncidentsTab />}
         {adminTab === "banner" && <AdminBannerTab />}
-        {adminTab === "votes" && <AdminVotesTab />}
+
       </main>
 
       {deleteId !== null && (
