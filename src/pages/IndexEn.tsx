@@ -86,7 +86,6 @@ export default function IndexEn() {
           onSelect={(ru, en) => setSelected({ ru, en })}
         />
 
-        <EnInfoSection />
       </main>
 
       <footer className="border-t border-border bg-white py-6 px-4">
