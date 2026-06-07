@@ -1,7 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Icon from "@/components/ui/icon";
 import { FAQ_ITEMS, PROCEDURES } from "./data";
 import PromoBanner from "@/components/PromoBanner";
+
+const NEARBY_URL = "https://functions.poehali.dev/d4b08b1e-6bd7-4d3b-81cf-02b5e4c6447f";
 
 type IconName = Parameters<typeof Icon>[0]["name"];
 
@@ -56,6 +58,18 @@ export function ProceduresSection() {
 
 export function FaqSection() {
   const [open, setOpen] = useState<number | null>(0);
+  const [items, setItems] = useState(FAQ_ITEMS);
+
+  useEffect(() => {
+    fetch(NEARBY_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ _action: "get_faq", lang: "ru" }),
+    })
+      .then((r) => r.json())
+      .then((data) => { if (data.items?.length) setItems(data.items); })
+      .catch(() => {});
+  }, []);
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-8 animate-fade-in">
@@ -63,7 +77,7 @@ export function FaqSection() {
       <p className="text-muted-foreground font-body mb-8">Ответы на популярные вопросы о коротких номерах</p>
 
       <div className="space-y-3">
-        {FAQ_ITEMS.map((item, i) => (
+        {items.map((item, i) => (
           <>
             <div key={i} className="bg-white border border-border rounded-xl overflow-hidden">
               <button

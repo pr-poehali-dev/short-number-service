@@ -176,6 +176,46 @@ def handler(event: dict, context) -> dict:
                 'body': json.dumps({'ok': True})
             }
 
+        if action == 'get_faq':
+            lang = body.get('lang', 'ru')
+            cur.execute(
+                f"SELECT id, question, answer, sort_order FROM {schema}.faq_items WHERE lang = %s ORDER BY sort_order",
+                (lang,)
+            )
+            rows = cur.fetchall()
+            items = [{'id': r[0], 'q': r[1], 'a': r[2], 'sort_order': r[3]} for r in rows]
+            return {
+                'statusCode': 200,
+                'headers': {'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json'},
+                'body': json.dumps({'items': items})
+            }
+
+        if action == 'update_faq':
+            admin_token = os.environ.get('ADMIN_TOKEN', '')
+            if not admin_token or event.get('headers', {}).get('X-Admin-Token', '') != admin_token:
+                return {
+                    'statusCode': 403,
+                    'headers': {'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json'},
+                    'body': json.dumps({'error': 'Forbidden'})
+                }
+            lang = body.get('lang', 'ru')
+            items = body.get('items', [])
+            cur.execute(f"DELETE FROM {schema}.faq_items WHERE lang = %s", (lang,))
+            for i, item in enumerate(items):
+                q = str(item.get('q', '')).strip()
+                a = str(item.get('a', '')).strip()
+                if q and a:
+                    cur.execute(
+                        f"INSERT INTO {schema}.faq_items (question, answer, sort_order, lang) VALUES (%s, %s, %s, %s)",
+                        (q, a, i + 1, lang)
+                    )
+            conn.commit()
+            return {
+                'statusCode': 200,
+                'headers': {'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json'},
+                'body': json.dumps({'ok': True})
+            }
+
         lat = body.get('lat')
         lon = body.get('lon')
         address = body.get('address', '').strip()

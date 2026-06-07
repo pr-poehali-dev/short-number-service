@@ -12,6 +12,7 @@ import { AdminRuTab, DeleteModal } from "./AdminRuTab";
 import { AdminEnTab } from "./AdminEnTab";
 import { AdminIncidentsTab } from "./AdminIncidentsTab";
 import { AdminBannerTab } from "./AdminBannerTab";
+import { AdminFaqTab } from "./AdminFaqTab";
 
 const STORAGE_KEY = "admin_numbers_v1";
 const SESSION_KEY = "admin_auth_v1";
@@ -32,7 +33,7 @@ function saveNumbers(nums: PhoneNumber[]) {
 
 export default function AdminPage() {
   const [authed, setAuthed] = useState(() => sessionStorage.getItem(SESSION_KEY) === "1");
-  const [adminTab, setAdminTab] = useState<"ru" | "en" | "incidents" | "banner" | "votes">("ru");
+  const [adminTab, setAdminTab] = useState<"ru" | "en" | "incidents" | "banner" | "faq">("ru");
 
   const [numbers, setNumbers] = useState<PhoneNumber[]>(loadNumbers);
   const [search, setSearch] = useState("");
@@ -212,6 +213,14 @@ export default function AdminPage() {
               adminTab === "banner" ? "border-primary text-primary bg-primary/5" : "border-transparent text-muted-foreground hover:text-foreground"
             }`}
           >Баннеры</button>
+          <button
+            onClick={() => setAdminTab("faq")}
+            className={`flex items-center gap-1.5 px-4 py-2 rounded-t-lg text-sm font-body font-medium border-b-2 transition-colors ${
+              adminTab === "faq" ? "border-primary text-primary bg-primary/5" : "border-transparent text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            <Icon name="HelpCircle" size={14} /> FAQ
+          </button>
 
         </div>
       </div>
@@ -242,6 +251,7 @@ export default function AdminPage() {
 
         {adminTab === "incidents" && <AdminIncidentsTab />}
         {adminTab === "banner" && <AdminBannerTab />}
+        {adminTab === "faq" && <AdminFaqTab />}
 
       </main>
 
