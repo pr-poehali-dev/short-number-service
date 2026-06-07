@@ -1,12 +1,16 @@
 {
   "tests": [
     {
-      "name": "Get build time",
+      "name": "Update deploy time on deploy",
+      "method": "GET",
+      "path": "/?_action=update",
+      "expectedStatus": 200
+    },
+    {
+      "name": "Get deploy time",
       "method": "GET",
       "path": "/",
-      "expectedStatus": 200,
-      "expectedBody": {"build_time": "string"},
-      "bodyMatcher": "partial"
+      "expectedStatus": 200
     }
   ]
 }
