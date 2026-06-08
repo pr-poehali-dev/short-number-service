@@ -1,5 +1,5 @@
-import { useState, useMemo } from "react";
-import { PhoneNumber } from "./data";
+import { useState, useEffect } from "react";
+import { PhoneNumber, NUMBERS } from "./data";
 import { Header, NumberModal } from "./SharedComponents";
 import { ymGoal } from "@/lib/analytics";
 import {
@@ -11,7 +11,8 @@ import {
   NearbySection,
 } from "./Sections";
 import { useFavorites } from "./useFavorites";
-import { loadNumbers } from "./AdminPage";
+
+const NEARBY_URL = "https://functions.poehali.dev/d4b08b1e-6bd7-4d3b-81cf-02b5e4c6447f";
 
 const DEFAULT_SECTION_COOKIE = "default_section";
 
@@ -32,7 +33,18 @@ export default function Index() {
   const [selected, setSelected] = useState<PhoneNumber | null>(null);
   const [directoryCategory, setDirectoryCategory] = useState<string | undefined>(undefined);
   const { favorites, addFavorite, removeFavorite, isFavorite, maxReached } = useFavorites();
-  const ruNumbers = useMemo(() => loadNumbers(), []);
+  const [ruNumbers, setRuNumbers] = useState<PhoneNumber[]>(NUMBERS);
+
+  useEffect(() => {
+    fetch(NEARBY_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ _action: "get_numbers" }),
+    })
+      .then((r) => r.json())
+      .then((data) => { if (data.numbers?.length) setRuNumbers(data.numbers); })
+      .catch(() => {});
+  }, []);
 
   function openById(id: number) {
     const num = ruNumbers.find((n) => n.id === id);

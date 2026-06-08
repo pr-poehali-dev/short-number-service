@@ -216,6 +216,55 @@ def handler(event: dict, context) -> dict:
                 'body': json.dumps({'ok': True})
             }
 
+        if action == 'get_numbers':
+            cur.execute(
+                f"SELECT id, number, name, description, operator, category, procedure, organization, device_access, industry, suggested_by "
+                f"FROM {schema}.phone_numbers ORDER BY sort_order, id"
+            )
+            rows = cur.fetchall()
+            cols = ['id','number','name','description','operator','category','procedure','organization','deviceAccess','industry','suggestedBy']
+            items = [dict(zip(cols, r)) for r in rows]
+            for it in items:
+                for k in ['procedure','organization','deviceAccess','industry','suggestedBy']:
+                    if it[k] is None:
+                        del it[k]
+            return {
+                'statusCode': 200,
+                'headers': {'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json'},
+                'body': json.dumps({'numbers': items})
+            }
+
+        if action == 'save_number':
+            admin_token = os.environ.get('ADMIN_TOKEN', '')
+            if not admin_token or event.get('headers', {}).get('X-Admin-Token', '') != admin_token:
+                return {'statusCode': 403, 'headers': {'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json'}, 'body': json.dumps({'error': 'Forbidden'})}
+            num = body.get('number_data', {})
+            nid = num.get('id')
+            if nid:
+                cur.execute(
+                    f"UPDATE {schema}.phone_numbers SET number=%s, name=%s, description=%s, operator=%s, category=%s, procedure=%s, organization=%s, device_access=%s, industry=%s, suggested_by=%s, updated_at=NOW() WHERE id=%s",
+                    (num.get('number',''), num.get('name',''), num.get('description',''), num.get('operator','Универсальный'), num.get('category',''), num.get('procedure'), num.get('organization'), num.get('deviceAccess'), num.get('industry'), num.get('suggestedBy'), nid)
+                )
+            else:
+                cur.execute(
+                    f"INSERT INTO {schema}.phone_numbers (number, name, description, operator, category, procedure, organization, device_access, industry, suggested_by, sort_order) "
+                    f"VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s, (SELECT COALESCE(MAX(sort_order),0)+1 FROM {schema}.phone_numbers)) RETURNING id",
+                    (num.get('number',''), num.get('name',''), num.get('description',''), num.get('operator','Универсальный'), num.get('category',''), num.get('procedure'), num.get('organization'), num.get('deviceAccess'), num.get('industry'), num.get('suggestedBy'))
+                )
+                nid = cur.fetchone()[0]
+            conn.commit()
+            return {'statusCode': 200, 'headers': {'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json'}, 'body': json.dumps({'ok': True, 'id': nid})}
+
+        if action == 'delete_number':
+            admin_token = os.environ.get('ADMIN_TOKEN', '')
+            if not admin_token or event.get('headers', {}).get('X-Admin-Token', '') != admin_token:
+                return {'statusCode': 403, 'headers': {'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json'}, 'body': json.dumps({'error': 'Forbidden'})}
+            nid = body.get('id')
+            if nid:
+                cur.execute(f"DELETE FROM {schema}.phone_numbers WHERE id = %s", (nid,))
+                conn.commit()
+            return {'statusCode': 200, 'headers': {'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json'}, 'body': json.dumps({'ok': True})}
+
         lat = body.get('lat')
         lon = body.get('lon')
         address = body.get('address', '').strip()

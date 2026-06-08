@@ -14,34 +14,46 @@ import { AdminIncidentsTab } from "./AdminIncidentsTab";
 import { AdminBannerTab } from "./AdminBannerTab";
 import { AdminFaqTab } from "./AdminFaqTab";
 
-const STORAGE_KEY = "admin_numbers_v1";
 const SESSION_KEY = "admin_auth_v1";
+const NEARBY_URL = "https://functions.poehali.dev/d4b08b1e-6bd7-4d3b-81cf-02b5e4c6447f";
 
 export function loadNumbers(): PhoneNumber[] {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) return JSON.parse(raw) as PhoneNumber[];
-  } catch (e) {
-    console.warn("loadNumbers error", e);
-  }
   return NUMBERS;
-}
-
-function saveNumbers(nums: PhoneNumber[]) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(nums));
 }
 
 export default function AdminPage() {
   const [authed, setAuthed] = useState(() => sessionStorage.getItem(SESSION_KEY) === "1");
   const [adminTab, setAdminTab] = useState<"ru" | "en" | "incidents" | "banner" | "faq">("ru");
 
-  const [numbers, setNumbers] = useState<PhoneNumber[]>(loadNumbers);
+  const [numbers, setNumbers] = useState<PhoneNumber[]>([]);
+  const [numbersLoading, setNumbersLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [deleteId, setDeleteId] = useState<number | null>(null);
   const [saved, setSaved] = useState(false);
 
   const [enNumbers, setEnNumbers] = useState<PhoneNumberEn[]>(loadNumbersEn);
   const [enSearch, setEnSearch] = useState("");
+
+  function getToken() {
+    return sessionStorage.getItem("admin_token") || "";
+  }
+
+  function fetchNumbers() {
+    setNumbersLoading(true);
+    fetch(NEARBY_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ _action: "get_numbers" }),
+    })
+      .then((r) => r.json())
+      .then((data) => { if (data.numbers) setNumbers(data.numbers); })
+      .catch(() => setNumbers(NUMBERS))
+      .finally(() => setNumbersLoading(false));
+  }
+
+  useEffect(() => {
+    if (authed) fetchNumbers();
+  }, [authed]);
 
   useEffect(() => {
     if (saved) {
@@ -50,30 +62,37 @@ export default function AdminPage() {
     }
   }, [saved]);
 
-  function handleSave(num: PhoneNumber) {
-    const isNew = !numbers.some((n) => n.id === num.id);
-    let updated: PhoneNumber[];
-    if (isNew) {
-      const maxId = numbers.reduce((m, n) => Math.max(m, n.id), 0);
-      updated = [...numbers, { ...num, id: maxId + 1 }];
-    } else {
-      updated = numbers.map((n) => (n.id === num.id ? num : n));
-    }
-    setNumbers(updated);
-    saveNumbers(updated);
+  async function handleSave(num: PhoneNumber) {
+    await fetch(NEARBY_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "X-Admin-Token": getToken() },
+      body: JSON.stringify({ _action: "save_number", number_data: num }),
+    });
+    fetchNumbers();
     setSaved(true);
   }
 
-  function handleDelete(id: number) {
-    const updated = numbers.filter((n) => n.id !== id);
-    setNumbers(updated);
-    saveNumbers(updated);
+  async function handleDelete(id: number) {
+    await fetch(NEARBY_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "X-Admin-Token": getToken() },
+      body: JSON.stringify({ _action: "delete_number", id }),
+    });
+    fetchNumbers();
     setDeleteId(null);
   }
 
   function handleReset() {
-    saveNumbers(NUMBERS);
-    setNumbers(NUMBERS);
+    if (!confirm("Сбросить все изменения и восстановить исходные данные?")) return;
+    Promise.all(
+      NUMBERS.map((num) =>
+        fetch(NEARBY_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "X-Admin-Token": getToken() },
+          body: JSON.stringify({ _action: "save_number", number_data: num }),
+        })
+      )
+    ).then(() => fetchNumbers());
     setSaved(true);
   }
 
@@ -160,9 +179,7 @@ export default function AdminPage() {
               <input type="file" accept=".json" onChange={handleImport} className="hidden" />
             </label>
             <button
-              onClick={() => {
-                if (confirm("Сбросить все изменения и восстановить исходные данные?")) handleReset();
-              }}
+              onClick={handleReset}
               className="text-sm px-3 py-1.5 rounded-lg border border-border text-muted-foreground hover:bg-muted font-body"
             >
               Сбросить
@@ -231,6 +248,7 @@ export default function AdminPage() {
             numbers={numbers}
             filtered={filtered}
             search={search}
+            loading={numbersLoading}
             onSearchChange={setSearch}
             onAdd={handleSave}
             onEdit={handleSave}

@@ -204,6 +204,7 @@ export function AdminRuTab({
   numbers,
   filtered,
   search,
+  loading,
   onSearchChange,
   onAdd,
   onEdit,
@@ -212,6 +213,7 @@ export function AdminRuTab({
   numbers: PhoneNumber[];
   filtered: PhoneNumber[];
   search: string;
+  loading?: boolean;
   onSearchChange: (v: string) => void;
   onAdd: (num: PhoneNumber) => void;
   onEdit: (num: PhoneNumber) => void;
@@ -224,6 +226,14 @@ export function AdminRuTab({
     onAdd(num);
     setEditing(null);
     setIsNew(false);
+  }
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-16">
+        <Icon name="Loader" size={24} className="animate-spin text-primary" />
+      </div>
+    );
   }
 
   return (
