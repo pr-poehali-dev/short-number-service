@@ -1,33 +1,43 @@
 import json
 import os
 import base64
+
 import urllib.request
 from rate_limit import check_rate_limit
 
 
-MAX_API_BASE = "https://botapi.max.ru"
+MAX_API_BASE = "https://platform-api.max.ru"
 
 
-def _auth_headers(token: str, extra: dict = {}) -> dict:
-    return {"Authorization": token, "Content-Type": "application/json", **extra}
+def _auth_headers(token: str) -> dict:
+    return {"Authorization": token, "Content-Type": "application/json"}
+
+
+def _max_request(url: str, payload: bytes, token: str) -> dict:
+    import urllib.error
+    req = urllib.request.Request(url, data=payload, headers=_auth_headers(token))
+    try:
+        resp = urllib.request.urlopen(req)
+        return json.loads(resp.read().decode("utf-8"))
+    except urllib.error.HTTPError as e:
+        error_body = e.read().decode("utf-8")
+        raise RuntimeError(f"MAX API {e.code}: {error_body}")
 
 
 def send_max_message(token: str, chat_id: str, text: str) -> dict:
     url = f"{MAX_API_BASE}/messages"
     payload = json.dumps({
         "recipient": {"chat_id": int(chat_id)},
-        "body": {"text": text}
+        "body": {"type": "text", "text": text}
     }).encode("utf-8")
-    req = urllib.request.Request(url, data=payload, headers=_auth_headers(token))
-    resp = urllib.request.urlopen(req)
-    return json.loads(resp.read().decode("utf-8"))
+    return _max_request(url, payload, token)
 
 
 def upload_photo_max(token: str, photo_bytes: bytes, photo_name: str) -> str:
     """Загружает фото через MAX API и возвращает token вложения."""
     # 1. Получить upload URL
-    url = f"{MAX_API_BASE}/uploads?type=photo"
-    req = urllib.request.Request(url, method="POST", headers=_auth_headers(token))
+    url = f"{MAX_API_BASE}/uploads?type=image"
+    req = urllib.request.Request(url, method="POST", headers={"Authorization": token})
     resp = urllib.request.urlopen(req)
     upload_data = json.loads(resp.read().decode("utf-8"))
     upload_url = upload_data["url"]
@@ -54,12 +64,10 @@ def send_max_photo(token: str, chat_id: str, photo_token: str, caption: str) -> 
     url = f"{MAX_API_BASE}/messages"
     payload = json.dumps({
         "recipient": {"chat_id": int(chat_id)},
-        "body": {"text": caption},
+        "body": {"type": "text", "text": caption},
         "attachments": [{"type": "image", "payload": {"token": photo_token}}]
     }).encode("utf-8")
-    req = urllib.request.Request(url, data=payload, headers=_auth_headers(token))
-    resp = urllib.request.urlopen(req)
-    return json.loads(resp.read().decode("utf-8"))
+    return _max_request(url, payload, token)
 
 
 def handler(event: dict, context) -> dict:
