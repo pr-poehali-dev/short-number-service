@@ -33,7 +33,7 @@ function CommercialCard({ num, onClick }: { num: PhoneNumber; onClick: (n: Phone
             </span>
           ) : (
             <span className="inline-flex items-center gap-1 text-xs text-blue-700 bg-blue-50 border border-blue-200 rounded-full px-2 py-0.5 font-body">
-              <Icon name="Smartphone" size={11} /> Только смартфон
+              <Icon name="Smartphone" size={11} /> Смартфон
             </span>
           )}
         </div>
@@ -202,7 +202,7 @@ export function DirectorySection({ numbers, onSelect, initialCategory, favorites
             <div className="flex gap-2 sm:ml-auto flex-wrap">
               {([
                 { val: "all",    label: "Все устройства",    icon: "Smartphone" },
-                { val: "mobile", label: "Только смартфон",   icon: "Smartphone" },
+                { val: "mobile", label: "Смартфон",   icon: "Smartphone" },
                 { val: "any",    label: "Смартфон + телефон", icon: "Phone" },
               ] as const).map((d) => (
                 <button

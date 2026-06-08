@@ -112,7 +112,7 @@ export function EditModal({
                   className={inputCls}
                 >
                   <option value="">— не указано —</option>
-                  <option value="mobile">Только смартфон</option>
+                  <option value="mobile">Смартфон</option>
                   <option value="any">Смартфон + обычный телефон</option>
                 </select>
               </Field>

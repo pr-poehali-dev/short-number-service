@@ -55,7 +55,7 @@ export function NumberCard({ num, onClick }: { num: PhoneNumber; onClick: (n: Ph
               </span>
             ) : (
               <span className="inline-flex items-center gap-1 text-xs text-blue-700 bg-blue-50 border border-blue-200 rounded-full px-2 py-0.5 font-body">
-                <Icon name="Smartphone" size={11} /> Только смартфон
+                <Icon name="Smartphone" size={11} /> Смартфон
               </span>
             )}
           </div>
@@ -66,7 +66,7 @@ export function NumberCard({ num, onClick }: { num: PhoneNumber; onClick: (n: Ph
               <Icon name="Signal" size={11} /> Только с {num.operator}
             </span>
             <span className="inline-flex items-center gap-1 text-xs text-blue-700 bg-blue-50 border border-blue-200 rounded-full px-2 py-0.5 font-body">
-              <Icon name="Smartphone" size={11} /> Только смартфон
+              <Icon name="Smartphone" size={11} /> Смартфон
             </span>
           </div>
         )}
@@ -229,7 +229,7 @@ export function NumberModal({ num, onClose, onAddFavorite, isFavorite, maxReache
                 <Icon name="Signal" size={13} /> Только с {num.operator}
               </span>
               <span className="inline-flex items-center gap-1.5 text-sm text-blue-700 bg-blue-50 border border-blue-200 rounded-full px-3 py-1 font-body">
-                <Icon name="Smartphone" size={13} /> Только смартфон
+                <Icon name="Smartphone" size={13} /> Смартфон
               </span>
             </div>
           )}
