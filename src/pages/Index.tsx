@@ -76,6 +76,7 @@ export default function Index() {
         {section === "nearby" && <NearbySection />}
         {section === "directory" && (
           <DirectorySection
+            numbers={ruNumbers}
             onSelect={setSelected}
             initialCategory={directoryCategory}
             favorites={favorites}
@@ -83,8 +84,8 @@ export default function Index() {
             onSelectFavorite={openById}
           />
         )}
-        {section === "operators" && <OperatorsSection onSelect={setSelected} />}
-        {section === "universal" && <UniversalSection onSelect={setSelected} />}
+        {section === "operators" && <OperatorsSection numbers={ruNumbers} onSelect={setSelected} />}
+        {section === "universal" && <UniversalSection numbers={ruNumbers} onSelect={setSelected} />}
         {section === "faq" && <FaqSection />}
       </main>
 

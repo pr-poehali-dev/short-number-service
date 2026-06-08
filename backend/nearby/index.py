@@ -265,6 +265,21 @@ def handler(event: dict, context) -> dict:
                 conn.commit()
             return {'statusCode': 200, 'headers': {'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json'}, 'body': json.dumps({'ok': True})}
 
+        if action == 'replace_numbers':
+            admin_token = os.environ.get('ADMIN_TOKEN', '')
+            if not admin_token or event.get('headers', {}).get('X-Admin-Token', '') != admin_token:
+                return {'statusCode': 403, 'headers': {'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json'}, 'body': json.dumps({'error': 'Forbidden'})}
+            numbers_list = body.get('numbers', [])
+            cur.execute(f"DELETE FROM {schema}.phone_numbers")
+            for i, num in enumerate(numbers_list):
+                cur.execute(
+                    f"INSERT INTO {schema}.phone_numbers (number, name, description, operator, category, procedure, organization, device_access, industry, suggested_by, sort_order) "
+                    f"VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",
+                    (num.get('number',''), num.get('name',''), num.get('description',''), num.get('operator','Универсальный'), num.get('category',''), num.get('procedure'), num.get('organization'), num.get('deviceAccess'), num.get('industry'), num.get('suggestedBy'), i + 1)
+                )
+            conn.commit()
+            return {'statusCode': 200, 'headers': {'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json'}, 'body': json.dumps({'ok': True, 'count': len(numbers_list)})}
+
         lat = body.get('lat')
         lon = body.get('lon')
         address = body.get('address', '').strip()

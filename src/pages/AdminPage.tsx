@@ -82,17 +82,18 @@ export default function AdminPage() {
     setDeleteId(null);
   }
 
+  async function replaceAllNumbers(nums: PhoneNumber[]) {
+    await fetch(NEARBY_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "X-Admin-Token": getToken() },
+      body: JSON.stringify({ _action: "replace_numbers", numbers: nums }),
+    });
+    fetchNumbers();
+  }
+
   function handleReset() {
     if (!confirm("Сбросить все изменения и восстановить исходные данные?")) return;
-    Promise.all(
-      NUMBERS.map((num) =>
-        fetch(NEARBY_URL, {
-          method: "POST",
-          headers: { "Content-Type": "application/json", "X-Admin-Token": getToken() },
-          body: JSON.stringify({ _action: "save_number", number_data: num }),
-        })
-      )
-    ).then(() => fetchNumbers());
+    replaceAllNumbers(NUMBERS);
     setSaved(true);
   }
 
@@ -130,8 +131,8 @@ export default function AdminPage() {
       try {
         const parsed = JSON.parse(ev.target?.result as string) as PhoneNumber[];
         if (!Array.isArray(parsed) || !parsed[0]?.number) throw new Error("bad format");
-        setNumbers(parsed);
-        saveNumbers(parsed);
+        if (!confirm(`Импортировать ${parsed.length} номеров? Текущий справочник будет полностью заменён.`)) return;
+        replaceAllNumbers(parsed);
         setSaved(true);
       } catch {
         alert("Ошибка: файл не является корректным JSON-справочником");

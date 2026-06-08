@@ -1,8 +1,7 @@
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import Icon from "@/components/ui/icon";
 import { OPERATOR_COLORS, PhoneNumber, Operator } from "./data";
 import { NumberCard } from "./SharedComponents";
-import { loadNumbers } from "./AdminPage";
 import { ymGoal } from "@/lib/analytics";
 import { FavoritesBar } from "./FavoritesBar";
 import { Favorite } from "./useFavorites";
@@ -47,7 +46,7 @@ type Tab = "all" | "operators" | "universal" | "commercial";
 
 const COMMERCIAL_INDUSTRIES = ["Все", "Банк", "Транспорт", "Торговля"];
 
-export function DirectorySection({ onSelect, initialCategory, favorites = [], onRemoveFavorite, onSelectFavorite }: { onSelect: (n: PhoneNumber) => void; initialCategory?: string; favorites?: Favorite[]; onRemoveFavorite?: (id: number) => void; onSelectFavorite?: (id: number) => void }) {
+export function DirectorySection({ numbers, onSelect, initialCategory, favorites = [], onRemoveFavorite, onSelectFavorite }: { numbers: PhoneNumber[]; onSelect: (n: PhoneNumber) => void; initialCategory?: string; favorites?: Favorite[]; onRemoveFavorite?: (id: number) => void; onSelectFavorite?: (id: number) => void }) {
   const [tab, setTab] = useState<Tab>(() => initialCategory === "Коммерческие" ? "commercial" : "all");
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState(initialCategory ?? "Все");
@@ -64,19 +63,17 @@ export function DirectorySection({ onSelect, initialCategory, favorites = [], on
 
   const categories = ["Все", "Экстренные", "Поддержка", "Автоинформатор", "Безопасность", "Социальные", "Здоровье", "Коммерческие"];
 
-  const NUMBERS = useMemo(() => loadNumbers(), []);
-
-  const filteredAll = NUMBERS.filter((n) => {
+  const filteredAll = numbers.filter((n) => {
     const q = query.toLowerCase();
     const matchQ = !q || n.number.includes(q) || n.name.toLowerCase().includes(q) || n.description.toLowerCase().includes(q) || n.operator.toLowerCase().includes(q);
     const matchC = category === "Все" || n.category === category;
     return matchQ && matchC;
   });
 
-  const filteredOp = NUMBERS.filter((n) => n.operator === activeOp);
-  const universal = NUMBERS.filter((n) => n.operator === "Универсальный");
+  const filteredOp = numbers.filter((n) => n.operator === activeOp);
+  const universal = numbers.filter((n) => n.operator === "Универсальный");
 
-  const commercial = NUMBERS.filter((n) => {
+  const commercial = numbers.filter((n) => {
     if (n.category !== "Коммерческие") return false;
     const matchI = commIndustry === "Все" || n.industry === commIndustry;
     const matchD = commDevice === "all" || n.deviceAccess === commDevice;
@@ -250,9 +247,9 @@ export function DirectorySection({ onSelect, initialCategory, favorites = [], on
   );
 }
 
-export function OperatorsSection({ onSelect }: { onSelect: (n: PhoneNumber) => void }) {
+export function OperatorsSection({ numbers, onSelect }: { numbers: PhoneNumber[]; onSelect: (n: PhoneNumber) => void }) {
   const [activeOp, setActiveOp] = useState<Operator>("МТС");
-  const filtered = loadNumbers().filter((n) => n.operator === activeOp);
+  const filtered = numbers.filter((n) => n.operator === activeOp);
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-8 animate-fade-in">
@@ -288,8 +285,8 @@ export function OperatorsSection({ onSelect }: { onSelect: (n: PhoneNumber) => v
   );
 }
 
-export function UniversalSection({ onSelect }: { onSelect: (n: PhoneNumber) => void }) {
-  const universal = loadNumbers().filter((n) => n.operator === "Универсальный");
+export function UniversalSection({ numbers, onSelect }: { numbers: PhoneNumber[]; onSelect: (n: PhoneNumber) => void }) {
+  const universal = numbers.filter((n) => n.operator === "Универсальный");
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-8 animate-fade-in">
