@@ -44,7 +44,7 @@ export const NUMBERS: PhoneNumber[] = [
   { id: 27, number: "*5420",  name: "AFI ПРОМ",        description: "Производственные помещения в Москве", operator: "Универсальный", category: "Коммерческие", organization: "AFI ПРОМ", industry: "Недвижимость", procedure: "Доступен со всех смартфонов.", deviceAccess: "mobile" },
 ];
 
-export const LAST_UPDATED = "03.2026";
+export const LAST_UPDATED = "08.06.2026";
 
 export const OPERATOR_COLORS: Record<Operator, { bg: string; text: string; border: string }> = {
   "МТС":           { bg: "bg-red-50",    text: "text-red-700",    border: "border-red-200" },
