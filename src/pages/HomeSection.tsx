@@ -36,6 +36,7 @@ function NumberForm() {
       description: n.description,
       procedure: n.procedure ?? "",
       category: n.category,
+      contactInfo: "",
     });
   }
 
