@@ -117,6 +117,16 @@ export function NumberCardEn({ num, enNum, onClick }: {
             )}
           </div>
         )}
+        {(num.operator === "МТС" || num.operator === "Билайн" || num.operator === "МегаФон" || num.operator === "Т2") && (
+          <div className="mt-1.5 flex items-center gap-1.5 flex-wrap">
+            <span className="inline-flex items-center gap-1 text-xs text-orange-700 bg-orange-50 border border-orange-200 rounded-full px-2 py-0.5 font-body">
+              <Icon name="Signal" size={11} /> {OPERATOR_MAP_EN[num.operator] ?? num.operator} only
+            </span>
+            <span className="inline-flex items-center gap-1 text-xs text-blue-700 bg-blue-50 border border-blue-200 rounded-full px-2 py-0.5 font-body">
+              <Icon name="Smartphone" size={11} /> Smartphone only
+            </span>
+          </div>
+        )}
       </div>
     </button>
   );
@@ -203,7 +213,7 @@ export function NumberModalEn({
             </div>
           )}
           {num.category === "Коммерческие" && (
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 flex-wrap">
               {num.deviceAccess === "any" ? (
                 <span className="inline-flex items-center gap-1.5 text-sm text-green-700 bg-green-50 border border-green-200 rounded-full px-3 py-1 font-body">
                   <Icon name="CheckCircle" size={13} /> Works on smartphones and regular phones
@@ -213,6 +223,16 @@ export function NumberModalEn({
                   <Icon name="Smartphone" size={13} /> Smartphones only (star number)
                 </span>
               )}
+            </div>
+          )}
+          {(num.operator === "МТС" || num.operator === "Билайн" || num.operator === "МегаФон" || num.operator === "Т2") && (
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="inline-flex items-center gap-1.5 text-sm text-orange-700 bg-orange-50 border border-orange-200 rounded-full px-3 py-1 font-body">
+                <Icon name="Signal" size={13} /> {OPERATOR_MAP_EN[num.operator] ?? num.operator} network only
+              </span>
+              <span className="inline-flex items-center gap-1.5 text-sm text-blue-700 bg-blue-50 border border-blue-200 rounded-full px-3 py-1 font-body">
+                <Icon name="Smartphone" size={13} /> Smartphone only
+              </span>
             </div>
           )}
           <div className="flex items-center gap-2">
