@@ -12,6 +12,7 @@ interface BeforeInstallPromptEvent extends Event {
 }
 
 export function OperatorBadge({ operator }: { operator: Operator }) {
+  if (operator === "Универсальный") return null;
   const c = OPERATOR_COLORS[operator];
   return (
     <span className={`flex-shrink-0 text-xs px-2 py-0.5 rounded-full font-body font-medium border ${c.bg} ${c.text} ${c.border}`}>

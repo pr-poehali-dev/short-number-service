@@ -62,6 +62,7 @@ function saveVCard(num: PhoneNumber, name: string, description: string) {
 }
 
 export function OperatorBadgeEn({ operator }: { operator: string }) {
+  if (operator === "Универсальный") return null;
   const c = OPERATOR_COLORS[operator as keyof typeof OPERATOR_COLORS] ?? {
     bg: "bg-gray-50", text: "text-gray-700", border: "border-gray-200",
   };
