@@ -2,7 +2,6 @@ import json
 import os
 import base64
 
-
 import urllib.request
 from rate_limit import check_rate_limit
 
@@ -28,8 +27,8 @@ def _max_request(url: str, payload: bytes, token: str) -> dict:
 def send_max_message(token: str, chat_id: str, text: str) -> dict:
     url = f"{MAX_API_BASE}/messages"
     payload = json.dumps({
-        "recipient": {"chat_id": int(chat_id)},
-        "body": {"type": "text", "text": text}
+        "recipient": {"user_id": int(chat_id)},
+        "text": text
     }).encode("utf-8")
     return _max_request(url, payload, token)
 
