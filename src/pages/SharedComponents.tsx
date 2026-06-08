@@ -60,16 +60,19 @@ export function NumberCard({ num, onClick }: { num: PhoneNumber; onClick: (n: Ph
             )}
           </div>
         )}
-        {(num.operator === "МТС" || num.operator === "Билайн" || num.operator === "МегаФон" || num.operator === "Т2") && (
-          <div className="mt-1.5 flex items-center gap-1.5 flex-wrap">
-            <span className="inline-flex items-center gap-1 text-xs text-orange-700 bg-orange-50 border border-orange-200 rounded-full px-2 py-0.5 font-body">
-              <Icon name="Signal" size={11} /> Только с {num.operator}
-            </span>
-            <span className="inline-flex items-center gap-1 text-xs text-blue-700 bg-blue-50 border border-blue-200 rounded-full px-2 py-0.5 font-body">
-              <Icon name="Smartphone" size={11} /> Смартфон
-            </span>
-          </div>
-        )}
+        {(num.operator === "МТС" || num.operator === "Билайн" || num.operator === "МегаФон" || num.operator === "Т2") && (() => {
+          const c = OPERATOR_COLORS[num.operator];
+          return (
+            <div className="mt-1.5 flex items-center gap-1.5 flex-wrap">
+              <span className={`inline-flex items-center gap-1 text-xs ${c.text} ${c.bg} ${c.border} border rounded-full px-2 py-0.5 font-body`}>
+                <Icon name="Signal" size={11} /> Только с {num.operator}
+              </span>
+              <span className="inline-flex items-center gap-1 text-xs text-blue-700 bg-blue-50 border border-blue-200 rounded-full px-2 py-0.5 font-body">
+                <Icon name="Smartphone" size={11} /> Смартфон
+              </span>
+            </div>
+          );
+        })()}
       </div>
     </button>
   );
