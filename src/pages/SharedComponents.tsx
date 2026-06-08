@@ -42,7 +42,6 @@ export function NumberCard({ num, onClick }: { num: PhoneNumber; onClick: (n: Ph
       <div className="flex-1 min-w-0">
         <div className="flex items-start justify-between gap-2 mb-1">
           <h3 className="font-display font-semibold text-foreground text-base leading-tight truncate">{num.name}</h3>
-          <OperatorBadge operator={num.operator} />
         </div>
         {!short && (
           <p className="font-display font-bold text-primary text-sm mb-1 tracking-wide">{num.number}</p>
@@ -178,7 +177,7 @@ export function NumberModal({ num, onClose, onAddFavorite, isFavorite, maxReache
               {!short && (
                 <p className="font-display font-bold text-primary text-base tracking-wide mb-0.5">{num.number}</p>
               )}
-              <OperatorBadge operator={num.operator} />
+
             </div>
           </div>
           <div className="flex items-center gap-1">
