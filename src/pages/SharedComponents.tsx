@@ -47,6 +47,19 @@ export function NumberCard({ num, onClick }: { num: PhoneNumber; onClick: (n: Ph
           <p className="font-display font-bold text-primary text-sm mb-1 tracking-wide">{num.number}</p>
         )}
         <p className="text-sm text-muted-foreground font-body line-clamp-2">{num.description}</p>
+        {num.category === "Коммерческие" && (
+          <div className="mt-1.5">
+            {num.deviceAccess === "any" ? (
+              <span className="inline-flex items-center gap-1 text-xs text-green-700 bg-green-50 border border-green-200 rounded-full px-2 py-0.5 font-body">
+                <Icon name="CheckCircle" size={11} /> Смартфон и телефон
+              </span>
+            ) : (
+              <span className="inline-flex items-center gap-1 text-xs text-blue-700 bg-blue-50 border border-blue-200 rounded-full px-2 py-0.5 font-body">
+                <Icon name="Smartphone" size={11} /> Только смартфон
+              </span>
+            )}
+          </div>
+        )}
       </div>
     </button>
   );
@@ -185,6 +198,19 @@ export function NumberModal({ num, onClose, onAddFavorite, isFavorite, maxReache
                 <Icon name="Info" size={14} /> Как воспользоваться
               </p>
               <p className="text-sm text-blue-800 font-body">{num.procedure}</p>
+            </div>
+          )}
+          {num.category === "Коммерческие" && (
+            <div className="flex items-center gap-2">
+              {num.deviceAccess === "any" ? (
+                <span className="inline-flex items-center gap-1.5 text-sm text-green-700 bg-green-50 border border-green-200 rounded-full px-3 py-1 font-body">
+                  <Icon name="CheckCircle" size={13} /> Доступен со смартфона и с обычного телефона
+                </span>
+              ) : (
+                <span className="inline-flex items-center gap-1.5 text-sm text-blue-700 bg-blue-50 border border-blue-200 rounded-full px-3 py-1 font-body">
+                  <Icon name="Smartphone" size={13} /> Только со смартфона (номер со звёздочкой)
+                </span>
+              )}
             </div>
           )}
           <div className="flex items-center gap-2 flex-wrap">
