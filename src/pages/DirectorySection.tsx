@@ -55,7 +55,7 @@ export function DirectorySection({ numbers, onSelect, initialCategory, favorites
   const [commDevice, setCommDevice] = useState<"all" | "mobile" | "any">("all");
 
   const tabs: { id: Tab; label: string; icon: string }[] = [
-    { id: "all",        label: "Служебные",     icon: "List" },
+    { id: "all",        label: "Все номера",    icon: "List" },
     { id: "operators",  label: "По операторам", icon: "Wifi" },
     { id: "commercial", label: "Коммерческие",  icon: "Building2" },
   ];

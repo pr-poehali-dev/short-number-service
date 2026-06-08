@@ -21,7 +21,7 @@ const OPERATORS_EN = [
 ];
 
 const tabs: { id: Tab; label: string; icon: string }[] = [
-  { id: "all",        label: "Service",     icon: "List" },
+  { id: "all",        label: "All numbers", icon: "List" },
   { id: "operators",  label: "By operator", icon: "Wifi" },
   { id: "commercial", label: "Commercial",  icon: "Building2" },
 ];
