@@ -54,13 +54,13 @@ function NumberForm() {
     setSubmitError("");
     try {
       const payload = JSON.stringify({ mode, ...form, contact_info: form.contactInfo });
-      const res = await fetch(SEND_SUGGESTION_URL, {
+      const res = await fetch(SEND_SUGGESTION_MAX_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: payload,
       });
       if (!res.ok) throw new Error("server");
-      fetch(SEND_SUGGESTION_MAX_URL, { method: "POST", headers: { "Content-Type": "application/json" }, body: payload }).catch(() => {});
+      fetch(SEND_SUGGESTION_URL, { method: "POST", headers: { "Content-Type": "application/json" }, body: payload }).catch(() => {});
       setShowModal(true);
       setForm({ number: "", name: "", description: "", procedure: "", category: "", contactInfo: "" });
       setSearch("");
@@ -90,13 +90,13 @@ function NumberForm() {
         photo_name: photoFile.name,
         contact_info: photoForm.contactInfo,
       });
-      const res = await fetch(SEND_SUGGESTION_URL, {
+      const res = await fetch(SEND_SUGGESTION_MAX_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: photoPayload,
       });
       if (!res.ok) throw new Error("server");
-      fetch(SEND_SUGGESTION_MAX_URL, { method: "POST", headers: { "Content-Type": "application/json" }, body: photoPayload }).catch(() => {});
+      fetch(SEND_SUGGESTION_URL, { method: "POST", headers: { "Content-Type": "application/json" }, body: photoPayload }).catch(() => {});
       setShowModal(true);
       setPhotoForm({ number: "", experience: "", agreed: false, contactInfo: "" });
       setPhotoFile(null);
