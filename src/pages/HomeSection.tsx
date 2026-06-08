@@ -159,7 +159,7 @@ function NumberForm() {
               <Icon name="Search" size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground" />
               <input
                 value={search}
-                onChange={(e) => { setSearch(e.target.value); setSelected(null); setForm({ number: "", name: "", description: "", procedure: "", category: "" }); }}
+                onChange={(e) => { setSearch(e.target.value); setSelected(null); setForm({ number: "", name: "", description: "", procedure: "", category: "", contactInfo: "" }); }}
                 placeholder="Найдите номер для редактирования..."
                 className="w-full pl-9 pr-4 py-3 border border-border rounded-xl font-body text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"
               />
