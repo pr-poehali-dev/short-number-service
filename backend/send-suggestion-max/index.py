@@ -8,13 +8,17 @@ from rate_limit import check_rate_limit
 MAX_API_BASE = "https://botapi.max.ru"
 
 
+def _auth_headers(token: str, extra: dict = {}) -> dict:
+    return {"Authorization": token, "Content-Type": "application/json", **extra}
+
+
 def send_max_message(token: str, chat_id: str, text: str) -> dict:
-    url = f"{MAX_API_BASE}/messages?access_token={token}"
+    url = f"{MAX_API_BASE}/messages"
     payload = json.dumps({
         "recipient": {"chat_id": int(chat_id)},
         "body": {"text": text}
     }).encode("utf-8")
-    req = urllib.request.Request(url, data=payload, headers={"Content-Type": "application/json"})
+    req = urllib.request.Request(url, data=payload, headers=_auth_headers(token))
     resp = urllib.request.urlopen(req)
     return json.loads(resp.read().decode("utf-8"))
 
@@ -22,8 +26,8 @@ def send_max_message(token: str, chat_id: str, text: str) -> dict:
 def upload_photo_max(token: str, photo_bytes: bytes, photo_name: str) -> str:
     """Загружает фото через MAX API и возвращает token вложения."""
     # 1. Получить upload URL
-    url = f"{MAX_API_BASE}/uploads?access_token={token}&type=photo"
-    req = urllib.request.Request(url, method="POST")
+    url = f"{MAX_API_BASE}/uploads?type=photo"
+    req = urllib.request.Request(url, method="POST", headers=_auth_headers(token))
     resp = urllib.request.urlopen(req)
     upload_data = json.loads(resp.read().decode("utf-8"))
     upload_url = upload_data["url"]
@@ -47,13 +51,13 @@ def upload_photo_max(token: str, photo_bytes: bytes, photo_name: str) -> str:
 
 
 def send_max_photo(token: str, chat_id: str, photo_token: str, caption: str) -> dict:
-    url = f"{MAX_API_BASE}/messages?access_token={token}"
+    url = f"{MAX_API_BASE}/messages"
     payload = json.dumps({
         "recipient": {"chat_id": int(chat_id)},
         "body": {"text": caption},
         "attachments": [{"type": "image", "payload": {"token": photo_token}}]
     }).encode("utf-8")
-    req = urllib.request.Request(url, data=payload, headers={"Content-Type": "application/json"})
+    req = urllib.request.Request(url, data=payload, headers=_auth_headers(token))
     resp = urllib.request.urlopen(req)
     return json.loads(resp.read().decode("utf-8"))
 
