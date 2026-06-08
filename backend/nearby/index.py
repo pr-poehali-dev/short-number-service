@@ -265,6 +265,49 @@ def handler(event: dict, context) -> dict:
                 conn.commit()
             return {'statusCode': 200, 'headers': {'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json'}, 'body': json.dumps({'ok': True})}
 
+        if action == 'get_numbers_en':
+            cur.execute(f"SELECT id, name, description, procedure FROM {schema}.phone_numbers_en ORDER BY id")
+            rows = cur.fetchall()
+            items = []
+            for r in rows:
+                item = {'id': r[0], 'name': r[1], 'description': r[2]}
+                if r[3] is not None:
+                    item['procedure'] = r[3]
+                items.append(item)
+            return {
+                'statusCode': 200,
+                'headers': {'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json'},
+                'body': json.dumps({'numbers': items})
+            }
+
+        if action == 'save_number_en':
+            admin_token = os.environ.get('ADMIN_TOKEN', '')
+            if not admin_token or event.get('headers', {}).get('X-Admin-Token', '') != admin_token:
+                return {'statusCode': 403, 'headers': {'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json'}, 'body': json.dumps({'error': 'Forbidden'})}
+            num = body.get('number_data', {})
+            nid = num.get('id')
+            cur.execute(
+                f"INSERT INTO {schema}.phone_numbers_en (id, name, description, procedure, updated_at) VALUES (%s,%s,%s,%s,NOW()) "
+                f"ON CONFLICT (id) DO UPDATE SET name=EXCLUDED.name, description=EXCLUDED.description, procedure=EXCLUDED.procedure, updated_at=NOW()",
+                (nid, num.get('name',''), num.get('description',''), num.get('procedure'))
+            )
+            conn.commit()
+            return {'statusCode': 200, 'headers': {'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json'}, 'body': json.dumps({'ok': True})}
+
+        if action == 'replace_numbers_en':
+            admin_token = os.environ.get('ADMIN_TOKEN', '')
+            if not admin_token or event.get('headers', {}).get('X-Admin-Token', '') != admin_token:
+                return {'statusCode': 403, 'headers': {'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json'}, 'body': json.dumps({'error': 'Forbidden'})}
+            numbers_list = body.get('numbers', [])
+            cur.execute(f"DELETE FROM {schema}.phone_numbers_en")
+            for num in numbers_list:
+                cur.execute(
+                    f"INSERT INTO {schema}.phone_numbers_en (id, name, description, procedure) VALUES (%s,%s,%s,%s)",
+                    (num.get('id'), num.get('name',''), num.get('description',''), num.get('procedure'))
+                )
+            conn.commit()
+            return {'statusCode': 200, 'headers': {'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json'}, 'body': json.dumps({'ok': True, 'count': len(numbers_list)})}
+
         if action == 'replace_numbers':
             admin_token = os.environ.get('ADMIN_TOKEN', '')
             if not admin_token or event.get('headers', {}).get('X-Admin-Token', '') != admin_token:

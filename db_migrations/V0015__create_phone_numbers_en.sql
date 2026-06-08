@@ -1,0 +1,36 @@
+CREATE TABLE t_p25384465_short_number_service.phone_numbers_en (
+  id INT PRIMARY KEY,
+  name VARCHAR(300) NOT NULL DEFAULT '',
+  description TEXT NOT NULL DEFAULT '',
+  procedure TEXT,
+  updated_at TIMESTAMP DEFAULT NOW()
+);
+
+INSERT INTO t_p25384465_short_number_service.phone_numbers_en (id, name, description, procedure) VALUES
+  (1,  'Emergency Services',              'Single emergency call number. Works free from all phones, including without a SIM card.',              'Free call. Available without registration and even without a SIM card.'),
+  (2,  'Fire Department / EMERCOM',       'Call fire service and EMERCOM. Reports fires and emergency situations.',                                'Free from all operators and landline phones.'),
+  (3,  'Police',                          'Call the police. For reporting offenses, crimes, and incidents.',                                       'Free from all operators.'),
+  (4,  'Ambulance',                       'Call emergency medical service. Accepts calls 24/7.',                                                   'Free from all operators, including while roaming.'),
+  (5,  'Gas Emergency Service',           'Emergency gas service. In case of gas leak or smell of gas indoors.',                                   'Free from all operators and landline phones.'),
+  (6,  'MTS Support',                     'MTS contact center. Help with tariffs, services, and technical support.',                               'Free only from MTS number. From other operators — standard rate.'),
+  (7,  'Beeline Support',                 'Beeline contact center. Information about tariffs, services, and settings.',                            'Free from Beeline numbers. From others — standard rate.'),
+  (8,  'MegaFon Support',                 'MegaFon contact center. Consultations on services, tariffs, and balance.',                             'Free from MegaFon numbers.'),
+  (9,  'T2 Support',                      'T2 (Tele2) contact center. Customer support on services and tariffs.',                                  'Free from T2 numbers.'),
+  (10, 'MTS IVR',                         'MTS voice menu: balance, itemized bill, blocking, tariff information.',                                 'Free from MTS numbers.'),
+  (11, 'Beeline IVR',                     'Check balance, manage services and subscriptions through voice menu.',                                  'Free from Beeline numbers.'),
+  (12, 'MTS SIM Block',                   'Emergency SIM card blocking for MTS in case of loss or theft.',                                         'Available from any phone. Passport details of the owner required.'),
+  (13, 'MTS Support (from other networks)','Free call to MTS support from other operator phones.',                                                 NULL),
+  (14, 'Children''s Helpline',            'Free psychological help for children and teenagers. Works 24/7, anonymously.',                         'Free, anonymous. Available from all operators.'),
+  (15, 'Doctor Appointment / EMIAS',      'Single number for doctor appointments and medical institution information.',                            'Free. Available in most regions of Russia.'),
+  (16, 'Children''s Helpline (Federal)',  'Federal children''s helpline. Free, anonymous, 24/7.',                                                  NULL),
+  (17, 'MegaFon IVR',                     'Automatic balance check, tariff plan and connected MegaFon services.',                                  'Free from MegaFon numbers.'),
+  (18, 'T2 IVR',                          'T2 voice menu: balance, tariff, service management.',                                                   'Free from T2 numbers.'),
+  (19, 'Sberbank',                        'Sberbank support. Questions about cards, accounts, blocks, and fraud.',                                 'Available from all smartphones for free. Also accessible from landline.'),
+  (20, 'VTB',                             'VTB Bank support. Consultations on products, cards, and transactions.',                                 'Available from all smartphones for free. Also accessible from landline.'),
+  (21, 'Aeroflot',                        'Aeroflot information center. Booking, check-in, flight information.',                                   'Available from all smartphones.'),
+  (22, 'Raiffeisen Bank',                 'Raiffeisen Bank hotline. Customer support for banking services.',                                        'Available from all smartphones.'),
+  (23, 'METRO Cash&Carry',               'METRO retail chain customer support.',                                                                   'Available from all smartphones.'),
+  (24, 'L''Etoile',                       'L''Etoile perfume and cosmetics chain hotline.',                                                        'Available from all smartphones.'),
+  (25, 'Avtodor',                         'Avtodor information service. Toll roads and transponder questions.',                                    'Available from all smartphones.'),
+  (26, 'Gazprombank',                     'Gazprombank support. Cards, loans, and deposits consultations.',                                        'Available from all smartphones.'),
+  (27, 'AFI PROM',                        'Industrial premises in Moscow.',                                                                        'Available from all smartphones.');

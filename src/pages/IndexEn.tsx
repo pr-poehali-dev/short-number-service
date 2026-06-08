@@ -1,8 +1,9 @@
-import { useState, useMemo } from "react";
-import Icon from "@/components/ui/icon";
-import { PhoneNumber } from "./data";
-import { loadNumbers } from "./AdminPage";
-import { loadNumbersEn, PhoneNumberEn } from "./data-en";
+import { useState, useEffect } from "react";
+import { PhoneNumber, NUMBERS } from "./data";
+import { PhoneNumberEn, NUMBERS_EN_DEFAULT } from "./data-en";
+
+const NEARBY_URL = "https://functions.poehali.dev/d4b08b1e-6bd7-4d3b-81cf-02b5e4c6447f";
+
 import { Link } from "react-router-dom";
 import { NumberModalEn } from "./EnSharedComponents";
 import { EnHeroSection } from "./EnHeroSection";
@@ -13,10 +14,29 @@ import { useFavoritesEn } from "./useFavoritesEn";
 
 export default function IndexEn() {
   const [selected, setSelected] = useState<{ ru: PhoneNumber; en: PhoneNumberEn | undefined } | null>(null);
-
-  const ruNumbers = useMemo(() => loadNumbers(), []);
-  const enNumbers = useMemo(() => loadNumbersEn(), []);
+  const [ruNumbers, setRuNumbers] = useState<PhoneNumber[]>(NUMBERS);
+  const [enNumbers, setEnNumbers] = useState<PhoneNumberEn[]>(NUMBERS_EN_DEFAULT);
   const { favorites, addFavorite, removeFavorite, isFavorite, maxReached } = useFavoritesEn();
+
+  useEffect(() => {
+    fetch(NEARBY_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ _action: "get_numbers" }),
+    })
+      .then((r) => r.json())
+      .then((data) => { if (data.numbers?.length) setRuNumbers(data.numbers); })
+      .catch(() => {});
+
+    fetch(NEARBY_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ _action: "get_numbers_en" }),
+    })
+      .then((r) => r.json())
+      .then((data) => { if (data.numbers?.length) setEnNumbers(data.numbers); })
+      .catch(() => {});
+  }, []);
 
   function getEn(id: number) {
     return enNumbers.find((e) => e.id === id);

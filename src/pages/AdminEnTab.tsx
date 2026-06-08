@@ -7,6 +7,7 @@ export function AdminEnTab({
   ruNumbers,
   enNumbers,
   enSearch,
+  loading,
   onSearchChange,
   onSave,
   onReset,
@@ -14,6 +15,7 @@ export function AdminEnTab({
   ruNumbers: PhoneNumber[];
   enNumbers: PhoneNumberEn[];
   enSearch: string;
+  loading?: boolean;
   onSearchChange: (v: string) => void;
   onSave: (updated: PhoneNumberEn) => void;
   onReset: () => void;
@@ -32,6 +34,14 @@ export function AdminEnTab({
     onSave(enEditForm);
     setEnEditingId(null);
     setEnEditForm(null);
+  }
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-16">
+        <Icon name="Loader" size={24} className="animate-spin text-primary" />
+      </div>
+    );
   }
 
   const enFiltered = ruNumbers.filter((n) => {

@@ -1,11 +1,6 @@
 import { useState, useEffect } from "react";
 import { PhoneNumber, NUMBERS } from "./data";
-import {
-  PhoneNumberEn,
-  loadNumbersEn,
-  saveNumbersEn,
-  NUMBERS_EN_DEFAULT,
-} from "./data-en";
+import { PhoneNumberEn, NUMBERS_EN_DEFAULT } from "./data-en";
 import Icon from "@/components/ui/icon";
 import { AdminPinScreen } from "./AdminPinScreen";
 import { AdminRuTab, DeleteModal } from "./AdminRuTab";
@@ -31,7 +26,8 @@ export default function AdminPage() {
   const [deleteId, setDeleteId] = useState<number | null>(null);
   const [saved, setSaved] = useState(false);
 
-  const [enNumbers, setEnNumbers] = useState<PhoneNumberEn[]>(loadNumbersEn);
+  const [enNumbers, setEnNumbers] = useState<PhoneNumberEn[]>([]);
+  const [enLoading, setEnLoading] = useState(true);
   const [enSearch, setEnSearch] = useState("");
 
   function getToken() {
@@ -51,8 +47,21 @@ export default function AdminPage() {
       .finally(() => setNumbersLoading(false));
   }
 
+  function fetchEnNumbers() {
+    setEnLoading(true);
+    fetch(NEARBY_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ _action: "get_numbers_en" }),
+    })
+      .then((r) => r.json())
+      .then((data) => { if (data.numbers) setEnNumbers(data.numbers); })
+      .catch(() => setEnNumbers(NUMBERS_EN_DEFAULT))
+      .finally(() => setEnLoading(false));
+  }
+
   useEffect(() => {
-    if (authed) fetchNumbers();
+    if (authed) { fetchNumbers(); fetchEnNumbers(); }
   }, [authed]);
 
   useEffect(() => {
@@ -97,18 +106,24 @@ export default function AdminPage() {
     setSaved(true);
   }
 
-  function handleEnSave(updated: PhoneNumberEn) {
-    const next = enNumbers.some((e) => e.id === updated.id)
-      ? enNumbers.map((e) => (e.id === updated.id ? updated : e))
-      : [...enNumbers, updated];
-    setEnNumbers(next);
-    saveNumbersEn(next);
+  async function handleEnSave(updated: PhoneNumberEn) {
+    await fetch(NEARBY_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "X-Admin-Token": getToken() },
+      body: JSON.stringify({ _action: "save_number_en", number_data: updated }),
+    });
+    fetchEnNumbers();
     setSaved(true);
   }
 
-  function handleEnReset() {
-    saveNumbersEn(NUMBERS_EN_DEFAULT);
-    setEnNumbers(NUMBERS_EN_DEFAULT);
+  async function handleEnReset() {
+    if (!confirm("Сбросить все переводы до стандартных?")) return;
+    await fetch(NEARBY_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "X-Admin-Token": getToken() },
+      body: JSON.stringify({ _action: "replace_numbers_en", numbers: NUMBERS_EN_DEFAULT }),
+    });
+    fetchEnNumbers();
     setSaved(true);
   }
 
@@ -262,6 +277,7 @@ export default function AdminPage() {
             ruNumbers={numbers}
             enNumbers={enNumbers}
             enSearch={enSearch}
+            loading={enLoading}
             onSearchChange={setEnSearch}
             onSave={handleEnSave}
             onReset={handleEnReset}

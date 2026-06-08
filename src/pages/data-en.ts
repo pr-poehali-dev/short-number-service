@@ -36,21 +36,6 @@ export const NUMBERS_EN_DEFAULT: PhoneNumberEn[] = [
   { id: 26, name: "Gazprombank",                  description: "Gazprombank support. Cards, loans, and deposits consultations.", procedure: "Available from all smartphones." },
 ];
 
-export const STORAGE_KEY_EN = "admin_numbers_en_v1";
-
-export function loadNumbersEn(): PhoneNumberEn[] {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY_EN);
-    if (raw) return JSON.parse(raw) as PhoneNumberEn[];
-  } catch (e) {
-    console.warn("loadNumbersEn error", e);
-  }
-  return NUMBERS_EN_DEFAULT;
-}
-
-export function saveNumbersEn(nums: PhoneNumberEn[]) {
-  localStorage.setItem(STORAGE_KEY_EN, JSON.stringify(nums));
-}
 
 export const FAQ_ITEMS_EN = [
   {
