@@ -6,7 +6,7 @@ import { NumberCardEn } from "./EnSharedComponents";
 
 type Tab = "all" | "operators" | "commercial";
 
-const CATEGORIES_EN = ["All", "Emergency", "Support", "IVR", "Security", "Social", "Health", "Commercial"];
+const CATEGORIES_EN = ["All", "Emergency", "Support", "IVR", "Security", "Social", "Health"];
 
 const CATEGORY_MAP_REVERSE: Record<string, string> = Object.fromEntries(
   Object.entries(CATEGORY_MAP_EN).map(([ru, en]) => [en, ru])
@@ -47,6 +47,7 @@ export function EnDirectorySection({
   const COMMERCIAL_INDUSTRIES_EN = ["All", "Bank", "Transport", "Retail"];
 
   const filteredAll = ruNumbers.filter((n) => {
+    if (n.category === "Коммерческие") return false;
     const q = query.toLowerCase();
     const en = getEn(n.id);
     const matchQ = !q
