@@ -13,7 +13,7 @@ LIMITS = {
     "nearby-ai":            5,
     "analyze-bookmarks":    5,
     "send-suggestion":      5,
-    "send-suggestion-max":  5,
+    "send-suggestion-max":  20,
 }
 
 
