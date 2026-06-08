@@ -25,11 +25,8 @@ def _max_request(url: str, payload: bytes, token: str) -> dict:
 
 
 def send_max_message(token: str, chat_id: str, text: str) -> dict:
-    url = f"{MAX_API_BASE}/messages"
-    payload = json.dumps({
-        "recipient": {"user_id": int(chat_id)},
-        "text": text
-    }).encode("utf-8")
+    url = f"{MAX_API_BASE}/messages?user_id={chat_id}"
+    payload = json.dumps({"text": text}).encode("utf-8")
     return _max_request(url, payload, token)
 
 
@@ -61,10 +58,9 @@ def upload_photo_max(token: str, photo_bytes: bytes, photo_name: str) -> str:
 
 
 def send_max_photo(token: str, chat_id: str, photo_token: str, caption: str) -> dict:
-    url = f"{MAX_API_BASE}/messages"
+    url = f"{MAX_API_BASE}/messages?user_id={chat_id}"
     payload = json.dumps({
-        "recipient": {"chat_id": int(chat_id)},
-        "body": {"type": "text", "text": caption},
+        "text": caption,
         "attachments": [{"type": "image", "payload": {"token": photo_token}}]
     }).encode("utf-8")
     return _max_request(url, payload, token)
