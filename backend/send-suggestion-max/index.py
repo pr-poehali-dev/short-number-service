@@ -93,6 +93,7 @@ def handler(event: dict, context) -> dict:
     mode = body.get("mode", "add")
     token = os.environ["MAX_BOT_TOKEN"]
     chat_id = os.environ["MAX_CHAT_ID"]
+    print(f"[DEBUG] chat_id='{chat_id}' len={len(chat_id)} repr={repr(chat_id)}")
 
     if mode == "photo":
         number = body.get("number", "").strip()
