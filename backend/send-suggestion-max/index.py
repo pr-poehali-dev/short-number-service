@@ -1,9 +1,8 @@
 import json
 import os
 import base64
-
-
 import urllib.request
+import urllib.error
 from rate_limit import check_rate_limit
 
 
@@ -15,7 +14,6 @@ def _auth_headers(token: str) -> dict:
 
 
 def _max_request(url: str, payload: bytes, token: str) -> dict:
-    import urllib.error
     req = urllib.request.Request(url, data=payload, headers=_auth_headers(token))
     try:
         resp = urllib.request.urlopen(req)
@@ -90,7 +88,6 @@ def handler(event: dict, context) -> dict:
     mode = body.get("mode", "add")
     token = os.environ["MAX_BOT_TOKEN"]
     chat_id = os.environ["MAX_CHAT_ID"]
-    print(f"[DEBUG] chat_id='{chat_id}' len={len(chat_id)} repr={repr(chat_id)}")
 
     if mode == "photo":
         number = body.get("number", "").strip()
