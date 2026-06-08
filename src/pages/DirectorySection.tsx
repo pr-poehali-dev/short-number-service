@@ -44,7 +44,7 @@ function CommercialCard({ num, onClick }: { num: PhoneNumber; onClick: (n: Phone
 
 type Tab = "all" | "operators" | "universal" | "commercial";
 
-const COMMERCIAL_INDUSTRIES = ["Все", "Банк", "Транспорт", "Торговля"];
+const COMMERCIAL_INDUSTRIES = ["Все", "Банк", "Транспорт", "Торговля", "Недвижимость", "Страхование", "Медицина", "Государственные", "Другое"];
 
 export function DirectorySection({ numbers, onSelect, initialCategory, favorites = [], onRemoveFavorite, onSelectFavorite }: { numbers: PhoneNumber[]; onSelect: (n: PhoneNumber) => void; initialCategory?: string; favorites?: Favorite[]; onRemoveFavorite?: (id: number) => void; onSelectFavorite?: (id: number) => void }) {
   const [tab, setTab] = useState<Tab>(() => initialCategory === "Коммерческие" ? "commercial" : "all");

@@ -105,7 +105,6 @@ export const OPERATOR_MAP_EN: Record<string, string> = {
   "МегаФон": "MegaFon",
   "Т2": "T2",
   "Универсальный": "Universal",
-  "Коммерческий": "Commercial",
 };
 
 export const CATEGORY_MAP_EN: Record<string, string> = {
@@ -122,6 +121,7 @@ export const INDUSTRY_MAP_EN: Record<string, string> = {
   "Банк": "Bank",
   "Транспорт": "Transport",
   "Торговля": "Retail",
+  "Недвижимость": "Real Estate",
   "Страхование": "Insurance",
   "Медицина": "Healthcare",
   "Государственные": "Government",
