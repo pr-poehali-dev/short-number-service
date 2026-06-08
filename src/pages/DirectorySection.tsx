@@ -42,7 +42,7 @@ function CommercialCard({ num, onClick }: { num: PhoneNumber; onClick: (n: Phone
   );
 }
 
-type Tab = "all" | "operators" | "universal" | "commercial";
+type Tab = "all" | "operators" | "commercial";
 
 const COMMERCIAL_INDUSTRIES = ["Все", "Банк", "Транспорт", "Торговля", "Недвижимость", "Страхование", "Медицина", "Государственные", "Другое"];
 
@@ -50,15 +50,14 @@ export function DirectorySection({ numbers, onSelect, initialCategory, favorites
   const [tab, setTab] = useState<Tab>(() => initialCategory === "Коммерческие" ? "commercial" : "all");
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState(initialCategory ?? "Все");
-  const [activeOp, setActiveOp] = useState<Operator>("МТС");
+  const [activeOp, setActiveOp] = useState<Operator | "Все">("Все");
   const [commIndustry, setCommIndustry] = useState("Все");
   const [commDevice, setCommDevice] = useState<"all" | "mobile" | "any">("all");
 
   const tabs: { id: Tab; label: string; icon: string }[] = [
-    { id: "all",        label: "Все номера",      icon: "List" },
-    { id: "operators",  label: "По операторам",   icon: "Wifi" },
-    { id: "universal",  label: "Универсальные",   icon: "Globe" },
-    { id: "commercial", label: "Коммерческие",    icon: "Building2" },
+    { id: "all",        label: "Все номера",    icon: "List" },
+    { id: "operators",  label: "По операторам", icon: "Wifi" },
+    { id: "commercial", label: "Коммерческие",  icon: "Building2" },
   ];
 
   const categories = ["Все", "Экстренные", "Поддержка", "Автоинформатор", "Безопасность", "Социальные", "Здоровье", "Коммерческие"];
@@ -70,8 +69,9 @@ export function DirectorySection({ numbers, onSelect, initialCategory, favorites
     return matchQ && matchC;
   });
 
-  const filteredOp = numbers.filter((n) => n.operator === activeOp);
-  const universal = numbers.filter((n) => n.operator === "Универсальный");
+  const filteredOp = activeOp === "Все"
+    ? numbers.filter((n) => n.operator !== "Универсальный" && ["МТС", "Билайн", "МегаФон", "Т2"].includes(n.operator))
+    : numbers.filter((n) => n.operator === activeOp);
 
   const commercial = numbers.filter((n) => {
     if (n.category !== "Коммерческие") return false;
@@ -155,8 +155,8 @@ export function DirectorySection({ numbers, onSelect, initialCategory, favorites
       {tab === "operators" && (
         <>
           <div className="flex gap-2 flex-wrap mb-6">
-            {(["МТС", "Билайн", "МегаФон", "Т2"] as Operator[]).map((op) => {
-              const c = OPERATOR_COLORS[op];
+            {(["Все", "МТС", "Билайн", "МегаФон", "Т2"] as (Operator | "Все")[]).map((op) => {
+              const c = op === "Все" ? { bg: "bg-primary", text: "text-white", border: "border-primary" } : OPERATOR_COLORS[op as Operator];
               return (
                 <button
                   key={op}
@@ -180,17 +180,6 @@ export function DirectorySection({ numbers, onSelect, initialCategory, favorites
               <p>Номеров для этого оператора пока нет</p>
             </div>
           )}
-        </>
-      )}
-
-      {tab === "universal" && (
-        <>
-          <div className="inline-flex items-center gap-1.5 bg-purple-50 border border-purple-100 text-purple-700 text-xs font-body font-medium px-3 py-1.5 rounded-full mb-6">
-            <Icon name="CheckCircle" size={13} /> Доступны со всех телефонов и операторов
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            {universal.map((n) => <NumberCard key={n.id} num={n} onClick={onSelect} />)}
-          </div>
         </>
       )}
 

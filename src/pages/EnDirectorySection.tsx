@@ -4,7 +4,7 @@ import { PhoneNumber, OPERATOR_COLORS } from "./data";
 import { PhoneNumberEn, CATEGORY_MAP_EN, INDUSTRY_MAP_EN } from "./data-en";
 import { NumberCardEn } from "./EnSharedComponents";
 
-type Tab = "all" | "operators" | "universal" | "commercial";
+type Tab = "all" | "operators" | "commercial";
 
 const CATEGORIES_EN = ["All", "Emergency", "Support", "IVR", "Security", "Social", "Health", "Commercial"];
 
@@ -13,6 +13,7 @@ const CATEGORY_MAP_REVERSE: Record<string, string> = Object.fromEntries(
 );
 
 const OPERATORS_EN = [
+  { ru: "Все",     en: "All" },
   { ru: "МТС",     en: "MTS" },
   { ru: "Билайн",  en: "Beeline" },
   { ru: "МегаФон", en: "MegaFon" },
@@ -22,7 +23,6 @@ const OPERATORS_EN = [
 const tabs: { id: Tab; label: string; icon: string }[] = [
   { id: "all",        label: "All numbers", icon: "List" },
   { id: "operators",  label: "By operator", icon: "Wifi" },
-  { id: "universal",  label: "Universal",   icon: "Globe" },
   { id: "commercial", label: "Commercial",  icon: "Building2" },
 ];
 
@@ -40,7 +40,7 @@ export function EnDirectorySection({
   const [tab, setTab] = useState<Tab>(initialTab ?? "all");
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState("All");
-  const [activeOp, setActiveOp] = useState("МТС");
+  const [activeOp, setActiveOp] = useState("Все");
   const [commIndustry, setCommIndustry] = useState("All");
   const [commDevice, setCommDevice] = useState<"all" | "mobile" | "any">("all");
 
@@ -59,8 +59,9 @@ export function EnDirectorySection({
     return matchQ && matchC;
   });
 
-  const filteredOp = ruNumbers.filter((n) => n.operator === activeOp);
-  const universal = ruNumbers.filter((n) => n.operator === "Универсальный");
+  const filteredOp = activeOp === "Все"
+    ? ruNumbers.filter((n) => ["МТС", "Билайн", "МегаФон", "Т2"].includes(n.operator))
+    : ruNumbers.filter((n) => n.operator === activeOp);
   const INDUSTRY_MAP_REVERSE: Record<string, string> = Object.fromEntries(
     Object.entries(INDUSTRY_MAP_EN).map(([ru, en]) => [en, ru])
   );
@@ -144,7 +145,9 @@ export function EnDirectorySection({
         <>
           <div className="flex gap-2 flex-wrap mb-6">
             {OPERATORS_EN.map((op) => {
-              const c = OPERATOR_COLORS[op.ru as keyof typeof OPERATOR_COLORS];
+              const c = op.ru === "Все"
+                ? { bg: "bg-primary", text: "text-white", border: "border-primary" }
+                : OPERATOR_COLORS[op.ru as keyof typeof OPERATOR_COLORS];
               return (
                 <button
                   key={op.ru}
@@ -158,28 +161,18 @@ export function EnDirectorySection({
               );
             })}
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            {filteredOp.map((n) => (
-              <NumberCardEn key={n.id} num={n} enNum={getEn(n.id)} onClick={onSelect} />
-            ))}
-          </div>
-          {filteredOp.length === 0 && (
+          {filteredOp.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              {filteredOp.map((n) => (
+                <NumberCardEn key={n.id} num={n} enNum={getEn(n.id)} onClick={onSelect} />
+              ))}
+            </div>
+          ) : (
             <div className="text-center py-12 text-muted-foreground font-body">
               <Icon name="PhoneOff" size={36} className="mx-auto mb-3 opacity-40" />
               <p>No numbers for this operator</p>
             </div>
           )}
-        </>
-      )}
-
-      {tab === "universal" && (
-        <>
-          <div className="inline-flex items-center gap-1.5 bg-purple-50 border border-purple-100 text-purple-700 text-xs font-body font-medium px-3 py-1.5 rounded-full mb-6">Available from all phones and operators, even without SIM (112)</div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            {universal.map((n) => (
-              <NumberCardEn key={n.id} num={n} enNum={getEn(n.id)} onClick={onSelect} />
-            ))}
-          </div>
         </>
       )}
 
