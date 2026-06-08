@@ -41,6 +41,7 @@ export const NUMBERS: PhoneNumber[] = [
   { id: 24, number: "*2345", name: "Л'Этуаль",        description: "Горячая линия парфюмерно-косметической сети Л'Этуаль.", operator: "Коммерческий", category: "Коммерческие", organization: "Л'Этуаль",        industry: "Торговля",  procedure: "Доступен со всех смартфонов.", deviceAccess: "mobile" },
   { id: 25, number: "*390",  name: "Автодор",         description: "Информационная служба государственной компании Автодор. Вопросы по платным дорогам и транспондерам.", operator: "Коммерческий", category: "Коммерческие", organization: "Автодор",         industry: "Транспорт", procedure: "Доступен со всех смартфонов.", deviceAccess: "mobile" },
   { id: 26, number: "*0701", name: "Газпромбанк",     description: "Служба поддержки Газпромбанка. Консультации по картам, кредитам и вкладам.", operator: "Коммерческий", category: "Коммерческие", organization: "Газпромбанк",     industry: "Банк",      procedure: "Доступен со всех смартфонов.", deviceAccess: "mobile" },
+  { id: 27, number: "*5420",  name: "AFI ПРОМ",        description: "Производственные помещения в Москве", operator: "Универсальный", category: "Коммерческие", organization: "AFI ПРОМ", industry: "Недвижимость", procedure: "Доступен со всех смартфонов.", deviceAccess: "mobile" },
 ];
 
 export const LAST_UPDATED = "03.2026";
