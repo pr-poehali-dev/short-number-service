@@ -229,26 +229,22 @@ export function EnDirectorySection({
                         <h3 className="font-display font-semibold text-foreground text-base leading-tight truncate">
                           {en?.name ?? n.name}
                         </h3>
-                        {n.industry && (
-                          <span className="flex-shrink-0 text-xs px-2 py-0.5 rounded-full font-body font-medium border bg-amber-50 text-amber-700 border-amber-200">
-                            {INDUSTRY_MAP_EN[n.industry] ?? n.industry}
-                          </span>
-                        )}
+                        <div className="flex-shrink-0 flex items-center gap-1">
+                          {n.deviceAccess !== "any" && (
+                            <span className="inline-flex items-center gap-1 text-xs text-blue-700 bg-blue-50 border border-blue-200 rounded-full px-2 py-0.5 font-body">
+                              <Icon name="Smartphone" size={11} /> Smartphone only
+                            </span>
+                          )}
+                          {n.industry && (
+                            <span className="text-xs px-2 py-0.5 rounded-full font-body font-medium border bg-amber-50 text-amber-700 border-amber-200">
+                              {INDUSTRY_MAP_EN[n.industry] ?? n.industry}
+                            </span>
+                          )}
+                        </div>
                       </div>
-                      <p className="text-sm text-muted-foreground font-body line-clamp-2 mb-1.5">
+                      <p className="text-sm text-muted-foreground font-body line-clamp-2">
                         {en?.description ?? n.description}
                       </p>
-                      <div className="flex items-center gap-1.5">
-                        {n.deviceAccess === "any" ? (
-                          <span className="inline-flex items-center gap-1 text-xs text-green-700 bg-green-50 border border-green-200 rounded-full px-2 py-0.5 font-body">
-                            <Icon name="CheckCircle" size={11} /> Smartphone & landline
-                          </span>
-                        ) : (
-                          <span className="inline-flex items-center gap-1 text-xs text-blue-700 bg-blue-50 border border-blue-200 rounded-full px-2 py-0.5 font-body">
-                            <Icon name="Smartphone" size={11} /> Smartphone only
-                          </span>
-                        )}
-                      </div>
                     </div>
                   </button>
                 );
