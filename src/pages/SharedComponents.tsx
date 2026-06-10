@@ -41,28 +41,28 @@ export function NumberCard({ num, onClick }: { num: PhoneNumber; onClick: (n: Ph
       )}
       <div className="flex-1 min-w-0">
         <div className="flex items-start justify-between gap-2 mb-1">
-          <div className="flex items-center gap-1.5 min-w-0 flex-1">
-            <h3 className="font-display font-semibold text-foreground text-base leading-tight truncate">{num.name}</h3>
+          <h3 className="font-display font-semibold text-foreground text-base leading-tight truncate">{num.name}</h3>
+          <div className="flex-shrink-0 flex items-center gap-1">
             {num.category === "Коммерческие" && (
               num.deviceAccess === "any" ? (
-                <span className="flex-shrink-0 inline-flex items-center gap-1 text-xs text-gray-600 bg-gray-100 border border-gray-300 rounded-full px-2 py-0.5 font-body">
+                <span className="inline-flex items-center gap-1 text-xs text-gray-600 bg-gray-100 border border-gray-300 rounded-full px-2 py-0.5 font-body">
                   <Icon name="CheckCircle" size={11} /> Смартфон и телефон
                 </span>
               ) : (
-                <span className="flex-shrink-0 inline-flex items-center gap-1 text-xs text-gray-600 bg-gray-100 border border-gray-300 rounded-full px-2 py-0.5 font-body">
+                <span className="inline-flex items-center gap-1 text-xs text-gray-600 bg-gray-100 border border-gray-300 rounded-full px-2 py-0.5 font-body">
                   <Icon name="Smartphone" size={11} /> Смартфон
                 </span>
               )
             )}
+            {(num.operator === "МТС" || num.operator === "Билайн" || num.operator === "МегаФон" || num.operator === "Т2") && (() => {
+              const c = OPERATOR_COLORS[num.operator];
+              return (
+                <span className={`inline-flex items-center gap-1 text-xs ${c.text} ${c.bg} ${c.border} border rounded-full px-2 py-0.5 font-body`}>
+                  <Icon name="Signal" size={11} /> Только с {num.operator}
+                </span>
+              );
+            })()}
           </div>
-          {(num.operator === "МТС" || num.operator === "Билайн" || num.operator === "МегаФон" || num.operator === "Т2") && (() => {
-            const c = OPERATOR_COLORS[num.operator];
-            return (
-              <span className={`flex-shrink-0 inline-flex items-center gap-1 text-xs ${c.text} ${c.bg} ${c.border} border rounded-full px-2 py-0.5 font-body`}>
-                <Icon name="Signal" size={11} /> Только с {num.operator}
-              </span>
-            );
-          })()}
         </div>
         {!short && (
           <p className="font-display font-bold text-primary text-sm mb-1 tracking-wide">{num.number}</p>
