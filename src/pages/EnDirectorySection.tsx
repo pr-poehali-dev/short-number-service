@@ -44,7 +44,7 @@ export function EnDirectorySection({
   const [commIndustry, setCommIndustry] = useState("All");
   const [commDevice, setCommDevice] = useState<"all" | "mobile">("all");
 
-  const COMMERCIAL_INDUSTRIES_EN = ["All", "Bank", "Transport", "Retail"];
+  const COMMERCIAL_INDUSTRIES_EN = ["All", "Bank", "Transport", "Retail", "Real Estate"];
 
   const filteredAll = ruNumbers.filter((n) => {
     const q = query.toLowerCase();
