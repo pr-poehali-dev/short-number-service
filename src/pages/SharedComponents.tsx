@@ -361,6 +361,7 @@ export function Header({
 
   function handleLogoTap() {
     onNav("home");
+    window.scrollTo({ top: 0, behavior: "smooth" });
     tapCount.current += 1;
     if (tapTimer.current) clearTimeout(tapTimer.current);
     if (tapCount.current >= 5) {
