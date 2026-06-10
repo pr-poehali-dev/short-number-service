@@ -64,6 +64,7 @@ export default function Index() {
     setCookie(DEFAULT_SECTION_COOKIE, s);
     setDirectoryCategory(category);
     setSection(s);
+    window.scrollTo({ top: 0, behavior: "smooth" });
     ymGoal(SECTION_GOALS[s] ?? "section_unknown", category ? { category } : undefined);
   }
 

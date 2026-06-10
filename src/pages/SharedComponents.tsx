@@ -353,9 +353,13 @@ export function Header({
   const tapTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const navigate = useNavigate();
 
-  function handleLogoTap() {
-    onNav("home");
+  function handleNav(section: string) {
+    onNav(section);
     window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  function handleLogoTap() {
+    handleNav("home");
     tapCount.current += 1;
     if (tapTimer.current) clearTimeout(tapTimer.current);
     if (tapCount.current >= 5) {
@@ -412,7 +416,7 @@ export function Header({
             {navItems.map((item) => (
               <button
                 key={item.id}
-                onClick={() => onNav(item.id)}
+                onClick={() => handleNav(item.id)}
                 className={`px-3 py-1.5 rounded-md text-sm font-body font-medium transition-colors ${
                   activeSection === item.id ? "bg-primary text-white" : "text-foreground hover:bg-muted"
                 }`}
@@ -424,7 +428,7 @@ export function Header({
 
           {(activeSection === "directory" || activeSection === "nearby") && (
             <button
-              onClick={() => onNav(activeSection === "directory" ? "nearby" : "directory")}
+              onClick={() => handleNav(activeSection === "directory" ? "nearby" : "directory")}
               className="md:hidden absolute left-1/2 -translate-x-1/2 px-3 py-1.5 rounded-md text-sm font-body font-medium text-foreground hover:bg-muted transition-colors whitespace-nowrap"
             >
               {activeSection === "directory" ? "Быстрый ответ" : "Справочник"}
@@ -462,7 +466,7 @@ export function Header({
           {navItems.map((item) => (
             <button
               key={item.id}
-              onClick={() => { onNav(item.id); setMenuOpen(false); }}
+              onClick={() => { handleNav(item.id); setMenuOpen(false); }}
               className={`w-full text-left px-5 py-3 text-sm font-body font-medium transition-colors ${
                 activeSection === item.id ? "bg-primary/10 text-primary" : "hover:bg-muted text-foreground"
               }`}
