@@ -37,7 +37,6 @@ def upload_photo_max(token: str, photo_bytes: bytes, photo_name: str) -> str:
     resp = urllib.request.urlopen(req)
     upload_data = json.loads(resp.read().decode("utf-8"))
     upload_url = upload_data["url"]
-    print(f"[DEBUG] upload_data={upload_data}")
 
     # 2. Загрузить файл через multipart/form-data с полем "file"
     boundary = "----MaxBoundaryUpload7MA4"
@@ -59,10 +58,11 @@ def upload_photo_max(token: str, photo_bytes: bytes, photo_name: str) -> str:
     )
     resp2 = urllib.request.urlopen(req2)
     result = json.loads(resp2.read().decode("utf-8"))
-    print(f"[DEBUG] upload_result={result}")
-    # MAX возвращает {token: "..."} или [{token: "..."}]
-    if isinstance(result, list):
-        return result[0].get("token", "")
+    # MAX возвращает {"photos": {"<photo_id>": {"token": "..."}}}
+    photos = result.get("photos", {})
+    if photos:
+        first = next(iter(photos.values()))
+        return first.get("token", "")
     return result.get("token", "")
 
 
