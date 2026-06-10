@@ -52,7 +52,7 @@ export function DirectorySection({ numbers, onSelect, initialCategory, favorites
   const [category, setCategory] = useState(initialCategory ?? "Все");
   const [activeOp, setActiveOp] = useState<Operator | "Все">("Все");
   const [commIndustry, setCommIndustry] = useState("Все");
-  const [commDevice, setCommDevice] = useState<"all" | "mobile" | "any">("all");
+  const [commDevice, setCommDevice] = useState<"all" | "mobile">("all");
 
   const tabs: { id: Tab; label: string; icon: string }[] = [
     { id: "all",        label: "Все номера",    icon: "List" },
@@ -201,9 +201,8 @@ export function DirectorySection({ numbers, onSelect, initialCategory, favorites
             </div>
             <div className="flex gap-2 sm:ml-auto flex-wrap">
               {([
-                { val: "all",    label: "Все устройства",    icon: "Smartphone" },
-                { val: "mobile", label: "Смартфон",   icon: "Smartphone" },
-                { val: "any",    label: "Смартфон + телефон", icon: "Phone" },
+                { val: "all",    label: "Все устройства", icon: "Smartphone" },
+                { val: "mobile", label: "Смартфон",       icon: "Smartphone" },
               ] as const).map((d) => (
                 <button
                   key={d.val}

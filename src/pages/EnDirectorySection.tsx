@@ -42,7 +42,7 @@ export function EnDirectorySection({
   const [category, setCategory] = useState("All");
   const [activeOp, setActiveOp] = useState("Все");
   const [commIndustry, setCommIndustry] = useState("All");
-  const [commDevice, setCommDevice] = useState<"all" | "mobile" | "any">("all");
+  const [commDevice, setCommDevice] = useState<"all" | "mobile">("all");
 
   const COMMERCIAL_INDUSTRIES_EN = ["All", "Bank", "Transport", "Retail"];
 
@@ -194,9 +194,8 @@ export function EnDirectorySection({
             </div>
             <div className="flex gap-2 sm:ml-auto flex-wrap">
               {([
-                { val: "all",    label: "All devices",          icon: "Smartphone" },
-                { val: "mobile", label: "Smartphone only",      icon: "Smartphone" },
-                { val: "any",    label: "Smartphone + landline", icon: "Phone" },
+                { val: "all",    label: "All devices",     icon: "Smartphone" },
+                { val: "mobile", label: "Smartphone only", icon: "Smartphone" },
               ] as const).map((d) => (
                 <button
                   key={d.val}
