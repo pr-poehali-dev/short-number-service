@@ -232,7 +232,7 @@ export function EnDirectorySection({
                         <div className="flex-shrink-0 flex items-center gap-1">
                           {n.deviceAccess !== "any" && (
                             <span className="inline-flex items-center gap-1 text-xs text-blue-700 bg-blue-50 border border-blue-200 rounded-full px-2 py-0.5 font-body">
-                              <Icon name="Smartphone" size={11} /> Smartphone only
+                              <Icon name="Smartphone" size={11} /> <span className="hidden sm:inline">Smartphone only</span>
                             </span>
                           )}
                           {n.industry && (
