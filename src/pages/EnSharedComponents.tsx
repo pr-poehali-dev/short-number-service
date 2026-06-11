@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Icon from "@/components/ui/icon";
 import { PhoneNumber, OPERATOR_COLORS } from "./data";
-import { OPERATOR_MAP_EN, CATEGORY_MAP_EN } from "./data-en";
+import { OPERATOR_MAP_EN, CATEGORY_MAP_EN, INDUSTRY_MAP_EN } from "./data-en";
 
 export const isShortNumber = (n: string) => n.replace(/\D/g, "").length <= 4;
 
@@ -99,9 +99,14 @@ export function NumberCardEn({ num, enNum, onClick }: {
         <div className="flex items-start justify-between gap-2 mb-1">
           <h3 className="font-display font-semibold text-foreground text-base leading-tight truncate">{name}</h3>
           <div className="flex-shrink-0 flex items-center gap-1">
+            {num.industry && (
+              <span className="text-xs px-2 py-0.5 rounded-full font-body font-medium border bg-amber-50 text-amber-700 border-amber-200">
+                {INDUSTRY_MAP_EN[num.industry] ?? num.industry}
+              </span>
+            )}
             {num.category === "Коммерческие" && num.deviceAccess !== "any" && (
-              <span className="inline-flex items-center gap-1 text-xs text-gray-600 bg-gray-100 border border-gray-300 rounded-full px-2 py-0.5 font-body">
-                <Icon name="Smartphone" size={11} /> Smartphone only
+              <span className="inline-flex items-center gap-1 text-xs text-blue-700 bg-blue-50 border border-blue-200 rounded-full px-2 py-0.5 font-body">
+                <Icon name="Smartphone" size={11} /> <span className="hidden sm:inline">Smartphone only</span>
               </span>
             )}
             {(num.operator === "МТС" || num.operator === "Билайн" || num.operator === "МегаФон" || num.operator === "Т2") && (() => {
