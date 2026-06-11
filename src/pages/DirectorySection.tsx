@@ -20,14 +20,14 @@ function CommercialCard({ num, onClick }: { num: PhoneNumber; onClick: (n: Phone
         <div className="flex items-start justify-between gap-2 mb-1">
           <h3 className="font-display font-semibold text-foreground text-base leading-tight truncate">{num.name}</h3>
           <div className="flex-shrink-0 flex items-center gap-1">
-            {num.deviceAccess !== "any" && (
-              <span className="inline-flex items-center gap-1 text-xs text-blue-700 bg-blue-50 border border-blue-200 rounded-full px-2 py-0.5 font-body">
-                <Icon name="Smartphone" size={11} /> <span className="hidden sm:inline">Смартфон</span>
-              </span>
-            )}
             {num.industry && (
               <span className="text-xs px-2 py-0.5 rounded-full font-body font-medium border bg-amber-50 text-amber-700 border-amber-200">
                 {num.industry}
+              </span>
+            )}
+            {num.deviceAccess !== "any" && (
+              <span className="inline-flex items-center gap-1 text-xs text-blue-700 bg-blue-50 border border-blue-200 rounded-full px-2 py-0.5 font-body">
+                <Icon name="Smartphone" size={11} /> <span className="hidden sm:inline">Смартфон</span>
               </span>
             )}
           </div>
