@@ -202,29 +202,7 @@ export function NumberModalEn({
               <p className="text-sm text-blue-800 font-body">{procedure}</p>
             </div>
           )}
-          {num.category === "Коммерческие" && (
-            <div className="flex items-center gap-2 flex-wrap">
-              {num.deviceAccess === "any" ? (
-                <span className="inline-flex items-center gap-1.5 text-sm text-green-700 bg-green-50 border border-green-200 rounded-full px-3 py-1 font-body">
-                  <Icon name="CheckCircle" size={13} /> Works on smartphones and regular phones
-                </span>
-              ) : (
-                <span className="inline-flex items-center gap-1.5 text-sm text-blue-700 bg-blue-50 border border-blue-200 rounded-full px-3 py-1 font-body">
-                  <Icon name="Smartphone" size={13} /> Smartphones only (star number)
-                </span>
-              )}
-            </div>
-          )}
-          {(num.operator === "МТС" || num.operator === "Билайн" || num.operator === "МегаФон" || num.operator === "Т2") && (
-            <div className="flex items-center gap-2 flex-wrap">
-              <span className="inline-flex items-center gap-1.5 text-sm text-orange-700 bg-orange-50 border border-orange-200 rounded-full px-3 py-1 font-body">
-                <Icon name="Signal" size={13} /> {OPERATOR_MAP_EN[num.operator] ?? num.operator} network only
-              </span>
-              <span className="inline-flex items-center gap-1.5 text-sm text-blue-700 bg-blue-50 border border-blue-200 rounded-full px-3 py-1 font-body">
-                <Icon name="Smartphone" size={13} /> Smartphone only
-              </span>
-            </div>
-          )}
+
           <div className="flex items-center gap-2">
             <span className="text-sm font-body text-muted-foreground">Category:</span>
             <span className="text-sm font-body font-semibold text-foreground">{category}</span>
