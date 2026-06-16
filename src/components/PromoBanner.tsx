@@ -21,6 +21,16 @@ export function clearBannerCache() {
   Object.keys(bannerCache).forEach((k) => delete bannerCache[k]);
 }
 
+const ALL_SECTIONS = ["home", "directory", "nearby", "faq"];
+
+export function clearDismissed() {
+  ALL_SECTIONS.forEach((s) => {
+    localStorage.removeItem(storageKey(s));
+    localStorage.removeItem(voteKey(s));
+  });
+  clearBannerCache();
+}
+
 function storageKey(section: string) {
   return `promo_banner_dismissed_at_${section}`;
 }

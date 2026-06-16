@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import Icon from "@/components/ui/icon";
-import { clearBannerCache } from "@/components/PromoBanner";
+import { clearDismissed } from "@/components/PromoBanner";
 
 const NEARBY_URL = "https://functions.poehali.dev/d4b08b1e-6bd7-4d3b-81cf-02b5e4c6447f";
 
@@ -286,27 +286,13 @@ export function AdminBannerTab() {
   const [resetting, setResetting] = useState(false);
   const [resetDone, setResetDone] = useState(false);
 
-  async function handleResetAll() {
+  function handleResetAll() {
     setResetting(true);
     setResetDone(false);
-    const token = sessionStorage.getItem("admin_token") || "";
-    const sections: BannerSection[] = ["home", "directory", "nearby", "faq"];
-    try {
-      await Promise.all(
-        sections.map((section) =>
-          fetch(NEARBY_URL, {
-            method: "POST",
-            headers: { "Content-Type": "application/json", "X-Admin-Token": token },
-            body: JSON.stringify({ _action: "update_banner", section, interval_hours: "0" }),
-          })
-        )
-      );
-      clearBannerCache();
-      setResetDone(true);
-      setTimeout(() => setResetDone(false), 3000);
-    } finally {
-      setResetting(false);
-    }
+    clearDismissed();
+    setResetDone(true);
+    setResetting(false);
+    setTimeout(() => setResetDone(false), 3000);
   }
 
   return (
