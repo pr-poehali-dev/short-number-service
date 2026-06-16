@@ -212,6 +212,9 @@ export default function PromoBanner({ section }: Props) {
   function handleClose() {
     dismiss(section);
     setVisible(false);
+    if (bannerCache[section]) {
+      bannerCache[section].data = { ...bannerCache[section].data, enabled: "false" };
+    }
   }
 
   if (settings.type === "vote") {
