@@ -243,7 +243,7 @@ export default function PromoBanner({ section }: Props) {
 
   if (isSubscribe) {
     return (
-      <div className="relative bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-100 rounded-2xl p-6 mb-4 animate-fade-in">
+      <div className="relative bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-100 rounded-2xl p-6 mb-4 mt-4 animate-fade-in">
         <button
           onClick={handleClose}
           className="absolute top-3 right-3 w-6 h-6 flex items-center justify-center rounded-full hover:bg-blue-100 text-muted-foreground hover:text-foreground transition-colors"
