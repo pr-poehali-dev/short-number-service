@@ -62,14 +62,7 @@ export default function IndexEn() {
             </Link>
 
             <nav className="hidden md:flex items-center gap-1">
-              <Link
-                to="/"
-                onClick={() => {
-                  const expires = new Date(Date.now() + 365 * 864e5).toUTCString();
-                  document.cookie = `default_section=${encodeURIComponent("nearby")}; expires=${expires}; path=/`;
-                }}
-                className="px-3 py-1.5 rounded-md text-sm font-body font-medium transition-colors text-foreground hover:bg-muted"
-              >QR (RUS)</Link>
+
               <button
                 onClick={() => document.getElementById("faq")?.scrollIntoView({ behavior: "smooth" })}
                 className="px-3 py-1.5 rounded-md text-sm font-body font-medium transition-colors text-foreground hover:bg-muted"
