@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import Icon from "@/components/ui/icon";
-import { NUMBERS, LAST_UPDATED, PhoneNumber } from "./data";
+import { NUMBERS, PhoneNumber } from "./data";
 import PromoBanner from "@/components/PromoBanner";
 
 type IconName = Parameters<typeof Icon>[0]["name"];
@@ -343,7 +343,7 @@ export function HomeSection({ onNav }: { onNav: (s: string, category?: string) =
             ><Icon name="Sparkles" size={18} /> Быстрый ответ</button>
           </div>
         </div>
-        <span className="absolute bottom-3 left-4 text-xs text-white/40 font-body">{LAST_UPDATED}</span>
+
       </div>
 
 
