@@ -259,6 +259,15 @@ export default function PromoBanner({ section }: Props) {
           </div>
           <div className="flex gap-3 flex-shrink-0 flex-wrap">
             <a
+              href="https://max.ru/id7814535230_biz2"
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={handleClose}
+              className="flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-[#7B2FF7] to-[#2AABEE] text-white rounded-xl font-body font-semibold text-sm hover:opacity-90 transition-opacity no-underline"
+            >
+              <Icon name="Zap" size={16} /> MAX
+            </a>
+            <a
               href="https://t.me/qrnumber"
               target="_blank"
               rel="noopener noreferrer"
@@ -275,15 +284,6 @@ export default function PromoBanner({ section }: Props) {
               className="flex items-center gap-2 px-4 py-2.5 bg-[#0077FF] text-white rounded-xl font-body font-semibold text-sm hover:bg-[#0066dd] transition-colors no-underline"
             >
               <Icon name="Users" size={16} /> ВКонтакте
-            </a>
-            <a
-              href="https://max.ru/id7814535230_biz2"
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={handleClose}
-              className="flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-[#7B2FF7] to-[#2AABEE] text-white rounded-xl font-body font-semibold text-sm hover:opacity-90 transition-opacity no-underline"
-            >
-              <Icon name="Zap" size={16} /> MAX
             </a>
           </div>
         </div>
