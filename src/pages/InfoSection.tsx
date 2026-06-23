@@ -78,8 +78,8 @@ export function FaqSection() {
 
       <div className="space-y-3">
         {items.map((item, i) => (
-          <>
-            <div key={i} className="bg-white border border-border rounded-xl overflow-hidden">
+          <div key={i}>
+            <div className="bg-white border border-border rounded-xl overflow-hidden">
               <button
                 onClick={() => setOpen(open === i ? null : i)}
                 className="w-full flex items-center justify-between px-5 py-4 text-left hover:bg-muted/50 transition-colors"
@@ -94,7 +94,7 @@ export function FaqSection() {
               )}
             </div>
             {i === 0 && <PromoBanner section="faq" />}
-          </>
+          </div>
         ))}
       </div>
     </div>
