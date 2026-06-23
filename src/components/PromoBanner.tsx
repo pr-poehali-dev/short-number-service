@@ -130,6 +130,14 @@ function VoteBanner({ settings, onClose }: { settings: BannerSettings; onClose: 
               <Icon name="ThumbsUp" size={15} />
               Голосую «За»
             </button>
+            <a
+              href="https://max.ru/id7814535230_biz2"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 px-4 py-2.5 bg-[#FF6B35] text-white rounded-xl font-body font-semibold text-sm hover:bg-[#e85f2a] transition-colors no-underline"
+            >
+              <Icon name="Zap" size={15} /> MAX
+            </a>
             {count !== null && (
               <span className="text-sm text-muted-foreground font-body">
                 {count} {count === 1 ? "голос" : count >= 2 && count <= 4 ? "голоса" : "голосов"}
@@ -249,7 +257,7 @@ export default function PromoBanner({ section }: Props) {
             <h3 className="font-display text-lg font-bold text-foreground mb-1">{settings.title}</h3>
             <p className="text-sm text-muted-foreground font-body">{settings.text}</p>
           </div>
-          <div className="flex gap-3 flex-shrink-0">
+          <div className="flex gap-3 flex-shrink-0 flex-wrap">
             <a
               href="https://t.me/qrnumber"
               target="_blank"
@@ -267,6 +275,15 @@ export default function PromoBanner({ section }: Props) {
               className="flex items-center gap-2 px-4 py-2.5 bg-[#0077FF] text-white rounded-xl font-body font-semibold text-sm hover:bg-[#0066dd] transition-colors no-underline"
             >
               <Icon name="Users" size={16} /> ВКонтакте
+            </a>
+            <a
+              href="https://max.ru/id7814535230_biz2"
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={handleClose}
+              className="flex items-center gap-2 px-4 py-2.5 bg-[#FF6B35] text-white rounded-xl font-body font-semibold text-sm hover:bg-[#e85f2a] transition-colors no-underline"
+            >
+              <Icon name="Zap" size={16} /> MAX
             </a>
           </div>
         </div>
@@ -295,16 +312,26 @@ export default function PromoBanner({ section }: Props) {
           <p className="text-xs font-body text-muted-foreground leading-relaxed mb-3">
             {settings.text}
           </p>
-          <a
-            href={settings.button_url}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={handleClose}
-            className="inline-flex items-center gap-1.5 px-4 py-2 bg-primary text-primary-foreground rounded-xl text-xs font-body font-semibold hover:bg-primary/90 transition-colors"
-          >
-            <Icon name="ArrowRight" size={13} />
-            {settings.button_label}
-          </a>
+          <div className="flex items-center gap-2 flex-wrap">
+            <a
+              href={settings.button_url}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={handleClose}
+              className="inline-flex items-center gap-1.5 px-4 py-2 bg-primary text-primary-foreground rounded-xl text-xs font-body font-semibold hover:bg-primary/90 transition-colors"
+            >
+              <Icon name="ArrowRight" size={13} />
+              {settings.button_label}
+            </a>
+            <a
+              href="https://max.ru/id7814535230_biz2"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 px-4 py-2 bg-[#FF6B35] text-white rounded-xl text-xs font-body font-semibold hover:bg-[#e85f2a] transition-colors no-underline"
+            >
+              <Icon name="Zap" size={13} /> MAX
+            </a>
+          </div>
         </div>
       </div>
     </div>
