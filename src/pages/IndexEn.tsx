@@ -63,12 +63,7 @@ export default function IndexEn() {
 
             <nav className="hidden md:flex items-center gap-1">
 
-              <button
-                onClick={() => document.getElementById("faq")?.scrollIntoView({ behavior: "smooth" })}
-                className="px-3 py-1.5 rounded-md text-sm font-body font-medium transition-colors text-foreground hover:bg-muted"
-              >
-                FAQ
-              </button>
+
             </nav>
 
             <div className="flex items-center gap-2">
