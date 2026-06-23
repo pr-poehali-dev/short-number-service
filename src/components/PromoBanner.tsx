@@ -134,7 +134,7 @@ function VoteBanner({ settings, onClose }: { settings: BannerSettings; onClose: 
               href="https://max.ru/id7814535230_biz2"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 px-4 py-2.5 bg-[#FF6B35] text-white rounded-xl font-body font-semibold text-sm hover:bg-[#e85f2a] transition-colors no-underline"
+              className="flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-[#7B2FF7] to-[#2AABEE] text-white rounded-xl font-body font-semibold text-sm hover:opacity-90 transition-opacity no-underline"
             >
               <Icon name="Zap" size={15} /> MAX
             </a>
@@ -281,7 +281,7 @@ export default function PromoBanner({ section }: Props) {
               target="_blank"
               rel="noopener noreferrer"
               onClick={handleClose}
-              className="flex items-center gap-2 px-4 py-2.5 bg-[#FF6B35] text-white rounded-xl font-body font-semibold text-sm hover:bg-[#e85f2a] transition-colors no-underline"
+              className="flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-[#7B2FF7] to-[#2AABEE] text-white rounded-xl font-body font-semibold text-sm hover:opacity-90 transition-opacity no-underline"
             >
               <Icon name="Zap" size={16} /> MAX
             </a>
@@ -327,7 +327,7 @@ export default function PromoBanner({ section }: Props) {
               href="https://max.ru/id7814535230_biz2"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 px-4 py-2 bg-[#FF6B35] text-white rounded-xl text-xs font-body font-semibold hover:bg-[#e85f2a] transition-colors no-underline"
+              className="inline-flex items-center gap-1.5 px-4 py-2 bg-gradient-to-r from-[#7B2FF7] to-[#2AABEE] text-white rounded-xl text-xs font-body font-semibold hover:opacity-90 transition-opacity no-underline"
             >
               <Icon name="Zap" size={13} /> MAX
             </a>
