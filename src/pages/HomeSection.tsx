@@ -334,9 +334,7 @@ export function HomeSection({ onNav }: { onNav: (s: string, category?: string) =
             <button
               onClick={() => onNav("directory")}
               className="px-6 py-3 bg-white text-primary rounded-xl font-body font-semibold hover:bg-white/90 transition-colors flex items-center gap-2 justify-center"
-            >
-              <Icon name="Search" size={18} /> Справочник
-            </button>
+            >Короткие номера</button>
             <button
               onClick={() => onNav("nearby")}
               className="px-6 py-3 bg-white/15 text-white rounded-xl font-body font-semibold hover:bg-white/25 transition-colors flex items-center gap-2 justify-center border border-white/30"
