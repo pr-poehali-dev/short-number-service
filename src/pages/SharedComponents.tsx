@@ -376,7 +376,7 @@ export function Header({
 
   const navItems = [
     { id: "directory",  label: "Справочник" },
-    { id: "nearby",     label: "Быстрый ответ" },
+    { id: "nearby",     label: "Нейрогид" },
     { id: "faq",        label: "FAQ" },
   ];
 
