@@ -338,7 +338,7 @@ export function HomeSection({ onNav }: { onNav: (s: string, category?: string) =
             <button
               onClick={() => onNav("nearby")}
               className="px-6 py-3 bg-white/15 text-white rounded-xl font-body font-semibold hover:bg-white/25 transition-colors flex items-center gap-2 justify-center border border-white/30"
-            ><Icon name="Zap" size={18} />Нейрогид</button>
+            ><Icon name="Zap" size={18} />Быстрые ответы</button>
           </div>
         </div>
 
