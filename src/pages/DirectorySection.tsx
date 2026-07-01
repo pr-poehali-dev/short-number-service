@@ -55,9 +55,9 @@ export function DirectorySection({ numbers, onSelect, initialCategory, favorites
   const [activeOp, setActiveOp] = useState<Operator | "Все">("Все");
   const [commIndustry, setCommIndustry] = useState("Все");
   const [commDevice, setCommDevice] = useState<"all" | "mobile">("all");
-  const [regionFilter, setRegionFilter] = useState("Все");
+  const [regionFilter, setRegionFilter] = useState("Все регионы");
 
-  const allRegions = ["Все", ...Array.from(new Set(numbers.flatMap((n) => n.regions ?? []))).sort()];
+  const allRegions = ["Все регионы", ...Array.from(new Set(numbers.flatMap((n) => n.regions ?? []))).sort()];
 
   const tabs: { id: Tab; label: string; icon: string }[] = [
     { id: "all",        label: "Все номера",    icon: "List" },
@@ -71,7 +71,7 @@ export function DirectorySection({ numbers, onSelect, initialCategory, favorites
     const q = query.toLowerCase();
     const matchQ = !q || n.number.includes(q) || n.name.toLowerCase().includes(q) || n.description.toLowerCase().includes(q) || n.operator.toLowerCase().includes(q);
     const matchC = category === "Все" || n.category === category;
-    const matchR = regionFilter === "Все" || (n.regions && n.regions.includes(regionFilter));
+    const matchR = regionFilter === "Все регионы" || (n.regions && n.regions.includes(regionFilter));
     return matchQ && matchC && matchR;
   });
 
@@ -83,7 +83,7 @@ export function DirectorySection({ numbers, onSelect, initialCategory, favorites
     if (n.category !== "Коммерческие") return false;
     const matchI = commIndustry === "Все" || n.industry === commIndustry;
     const matchD = commDevice === "all" || n.deviceAccess === commDevice;
-    const matchR = regionFilter === "Все" || (n.regions && n.regions.includes(regionFilter));
+    const matchR = regionFilter === "Все регионы" || (n.regions && n.regions.includes(regionFilter));
     return matchI && matchD && matchR;
   });
 
@@ -155,8 +155,8 @@ export function DirectorySection({ numbers, onSelect, initialCategory, favorites
               >
                 {allRegions.map((r) => <option key={r}>{r}</option>)}
               </select>
-              {regionFilter !== "Все" && (
-                <button onClick={() => setRegionFilter("Все")} className="text-xs text-muted-foreground hover:text-foreground">
+              {regionFilter !== "Все регионы" && (
+                <button onClick={() => setRegionFilter("Все регионы")} className="text-xs text-muted-foreground hover:text-foreground">
                   <Icon name="X" size={14} />
                 </button>
               )}
@@ -219,8 +219,8 @@ export function DirectorySection({ numbers, onSelect, initialCategory, favorites
               >
                 {allRegions.map((r) => <option key={r}>{r}</option>)}
               </select>
-              {regionFilter !== "Все" && (
-                <button onClick={() => setRegionFilter("Все")} className="text-xs text-muted-foreground hover:text-foreground">
+              {regionFilter !== "Все регионы" && (
+                <button onClick={() => setRegionFilter("Все регионы")} className="text-xs text-muted-foreground hover:text-foreground">
                   <Icon name="X" size={14} />
                 </button>
               )}
