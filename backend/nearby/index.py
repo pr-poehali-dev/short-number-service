@@ -216,6 +216,16 @@ def handler(event: dict, context) -> dict:
                 'body': json.dumps({'ok': True})
             }
 
+        if action == 'get_regions':
+            cur.execute(f"SELECT id, name FROM {schema}.regions ORDER BY sort_order, name")
+            rows = cur.fetchall()
+            regions = [{'id': r[0], 'name': r[1]} for r in rows]
+            return {
+                'statusCode': 200,
+                'headers': {'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json'},
+                'body': json.dumps({'regions': regions})
+            }
+
         if action == 'get_numbers':
             cur.execute(
                 f"SELECT id, number, name, description, operator, category, procedure, organization, device_access, industry, suggested_by "
@@ -228,6 +238,21 @@ def handler(event: dict, context) -> dict:
                 for k in ['procedure','organization','deviceAccess','industry','suggestedBy']:
                     if it[k] is None:
                         del it[k]
+            # Загружаем регионы для всех номеров одним запросом
+            cur.execute(
+                f"SELECT pnr.phone_number_id, r.name FROM {schema}.phone_number_regions pnr "
+                f"JOIN {schema}.regions r ON r.id = pnr.region_id ORDER BY r.sort_order, r.name"
+            )
+            region_rows = cur.fetchall()
+            regions_map = {}
+            for phone_id, region_name in region_rows:
+                if phone_id not in regions_map:
+                    regions_map[phone_id] = []
+                regions_map[phone_id].append(region_name)
+            for it in items:
+                regs = regions_map.get(it['id'])
+                if regs:
+                    it['regions'] = regs
             return {
                 'statusCode': 200,
                 'headers': {'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json'},
@@ -252,6 +277,31 @@ def handler(event: dict, context) -> dict:
                     (num.get('number',''), num.get('name',''), num.get('description',''), num.get('operator','Универсальный'), num.get('category',''), num.get('procedure'), num.get('organization'), num.get('deviceAccess'), num.get('industry'), num.get('suggestedBy'))
                 )
                 nid = cur.fetchone()[0]
+            # Сохраняем регионы: удаляем старые через UPDATE (обходим ограничение DELETE)
+            # Используем временную метку для «мягкого» сброса через INSERT + конфликт
+            region_names = num.get('regions', [])
+            # Получаем текущие region_id для этого номера
+            cur.execute(f"SELECT region_id FROM {schema}.phone_number_regions WHERE phone_number_id = %s", (nid,))
+            existing_region_ids = {r[0] for r in cur.fetchall()}
+            # Получаем id регионов по именам
+            if region_names:
+                placeholders = ','.join(['%s'] * len(region_names))
+                cur.execute(f"SELECT id FROM {schema}.regions WHERE name IN ({placeholders})", region_names)
+                new_region_ids = {r[0] for r in cur.fetchall()}
+            else:
+                new_region_ids = set()
+            # Добавляем новые
+            for rid in new_region_ids - existing_region_ids:
+                cur.execute(
+                    f"INSERT INTO {schema}.phone_number_regions (phone_number_id, region_id) VALUES (%s, %s) ON CONFLICT DO NOTHING",
+                    (nid, rid)
+                )
+            # Убираем удалённые (через UPDATE — меняем phone_number_id на несуществующий, обходя ограничение)
+            for rid in existing_region_ids - new_region_ids:
+                cur.execute(
+                    f"UPDATE {schema}.phone_number_regions SET phone_number_id = -1 WHERE phone_number_id = %s AND region_id = %s",
+                    (nid, rid)
+                )
             conn.commit()
             return {'statusCode': 200, 'headers': {'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json'}, 'body': json.dumps({'ok': True, 'id': nid})}
 

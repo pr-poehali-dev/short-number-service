@@ -33,6 +33,12 @@ function CommercialCard({ num, onClick }: { num: PhoneNumber; onClick: (n: Phone
           </div>
         </div>
         <p className="text-sm text-muted-foreground font-body line-clamp-2">{num.description}</p>
+        {num.regions && num.regions.length > 0 && (
+          <p className="text-xs text-amber-600 font-body mt-1 truncate flex items-center gap-1">
+            <Icon name="MapPin" size={11} className="flex-shrink-0" />
+            {num.regions.slice(0, 2).join(", ")}{num.regions.length > 2 ? "…" : ""}
+          </p>
+        )}
       </div>
     </button>
   );
@@ -49,6 +55,9 @@ export function DirectorySection({ numbers, onSelect, initialCategory, favorites
   const [activeOp, setActiveOp] = useState<Operator | "Все">("Все");
   const [commIndustry, setCommIndustry] = useState("Все");
   const [commDevice, setCommDevice] = useState<"all" | "mobile">("all");
+  const [regionFilter, setRegionFilter] = useState("Все");
+
+  const allRegions = ["Все", ...Array.from(new Set(numbers.flatMap((n) => n.regions ?? []))).sort()];
 
   const tabs: { id: Tab; label: string; icon: string }[] = [
     { id: "all",        label: "Все номера",    icon: "List" },
@@ -62,7 +71,8 @@ export function DirectorySection({ numbers, onSelect, initialCategory, favorites
     const q = query.toLowerCase();
     const matchQ = !q || n.number.includes(q) || n.name.toLowerCase().includes(q) || n.description.toLowerCase().includes(q) || n.operator.toLowerCase().includes(q);
     const matchC = category === "Все" || n.category === category;
-    return matchQ && matchC;
+    const matchR = regionFilter === "Все" || (n.regions && n.regions.includes(regionFilter));
+    return matchQ && matchC && matchR;
   });
 
   const filteredOp = activeOp === "Все"
@@ -73,7 +83,8 @@ export function DirectorySection({ numbers, onSelect, initialCategory, favorites
     if (n.category !== "Коммерческие") return false;
     const matchI = commIndustry === "Все" || n.industry === commIndustry;
     const matchD = commDevice === "all" || n.deviceAccess === commDevice;
-    return matchI && matchD;
+    const matchR = regionFilter === "Все" || (n.regions && n.regions.includes(regionFilter));
+    return matchI && matchD && matchR;
   });
 
   return (
@@ -121,7 +132,7 @@ export function DirectorySection({ numbers, onSelect, initialCategory, favorites
               </button>
             )}
           </div>
-          <div className="flex gap-2 flex-wrap mb-6">
+          <div className="flex flex-wrap gap-2 mb-4">
             {categories.map((c) => (
               <button
                 key={c}
@@ -134,6 +145,23 @@ export function DirectorySection({ numbers, onSelect, initialCategory, favorites
               </button>
             ))}
           </div>
+          {allRegions.length > 1 && (
+            <div className="flex items-center gap-2 mb-6">
+              <Icon name="MapPin" size={15} className="text-muted-foreground flex-shrink-0" />
+              <select
+                value={regionFilter}
+                onChange={(e) => { setRegionFilter(e.target.value); ymGoal("directory_region", { region: e.target.value }); }}
+                className="border border-border rounded-lg px-3 py-1.5 text-sm font-body bg-white focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"
+              >
+                {allRegions.map((r) => <option key={r}>{r}</option>)}
+              </select>
+              {regionFilter !== "Все" && (
+                <button onClick={() => setRegionFilter("Все")} className="text-xs text-muted-foreground hover:text-foreground">
+                  <Icon name="X" size={14} />
+                </button>
+              )}
+            </div>
+          )}
           <p className="text-sm text-muted-foreground font-body mb-4">Найдено: <strong>{filteredAll.length}</strong> номеров</p>
           {filteredAll.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -181,6 +209,23 @@ export function DirectorySection({ numbers, onSelect, initialCategory, favorites
 
       {tab === "commercial" && (
         <>
+          {allRegions.length > 1 && (
+            <div className="flex items-center gap-2 mb-4">
+              <Icon name="MapPin" size={15} className="text-muted-foreground flex-shrink-0" />
+              <select
+                value={regionFilter}
+                onChange={(e) => { setRegionFilter(e.target.value); ymGoal("directory_region", { region: e.target.value }); }}
+                className="border border-border rounded-lg px-3 py-1.5 text-sm font-body bg-white focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"
+              >
+                {allRegions.map((r) => <option key={r}>{r}</option>)}
+              </select>
+              {regionFilter !== "Все" && (
+                <button onClick={() => setRegionFilter("Все")} className="text-xs text-muted-foreground hover:text-foreground">
+                  <Icon name="X" size={14} />
+                </button>
+              )}
+            </div>
+          )}
           <div className="flex flex-col sm:flex-row gap-3 mb-6">
             <div className="flex gap-2 flex-wrap">
               {COMMERCIAL_INDUSTRIES.map((ind) => (

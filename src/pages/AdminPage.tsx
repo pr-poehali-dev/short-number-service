@@ -25,6 +25,7 @@ export default function AdminPage() {
   const [search, setSearch] = useState("");
   const [deleteId, setDeleteId] = useState<number | null>(null);
   const [saved, setSaved] = useState(false);
+  const [allRegions, setAllRegions] = useState<string[]>([]);
 
   const [enNumbers, setEnNumbers] = useState<PhoneNumberEn[]>([]);
   const [enLoading, setEnLoading] = useState(true);
@@ -61,7 +62,13 @@ export default function AdminPage() {
   }
 
   useEffect(() => {
-    if (authed) { fetchNumbers(); fetchEnNumbers(); }
+    if (authed) {
+      fetchNumbers();
+      fetchEnNumbers();
+      fetch(NEARBY_URL, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ _action: "get_regions" }) })
+        .then((r) => r.json())
+        .then((data) => { if (data.regions) setAllRegions(data.regions.map((r: { name: string }) => r.name)); });
+    }
   }, [authed]);
 
   useEffect(() => {
@@ -269,6 +276,7 @@ export default function AdminPage() {
             onAdd={handleSave}
             onEdit={handleSave}
             onDeleteRequest={setDeleteId}
+            allRegions={allRegions}
           />
         )}
 

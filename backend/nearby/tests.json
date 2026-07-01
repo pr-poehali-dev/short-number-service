@@ -22,6 +22,22 @@
       "method": "OPTIONS",
       "path": "/",
       "expectedStatus": 200
+    },
+    {
+      "name": "get_numbers returns numbers key",
+      "method": "POST",
+      "path": "/",
+      "body": {"_action": "get_numbers"},
+      "expectedStatus": 200,
+      "bodyMatcher": "partial"
+    },
+    {
+      "name": "get_regions returns regions key",
+      "method": "POST",
+      "path": "/",
+      "body": {"_action": "get_regions"},
+      "expectedStatus": 200,
+      "bodyMatcher": "partial"
     }
   ]
 }

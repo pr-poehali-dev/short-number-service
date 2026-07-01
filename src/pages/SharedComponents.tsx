@@ -67,6 +67,12 @@ export function NumberCard({ num, onClick }: { num: PhoneNumber; onClick: (n: Ph
           <p className="font-display font-bold text-primary text-sm mb-1 tracking-wide">{num.number}</p>
         )}
         <p className="text-sm text-muted-foreground font-body line-clamp-2">{num.description}</p>
+        {num.regions && num.regions.length > 0 && (
+          <p className="text-xs text-amber-600 font-body mt-1 truncate flex items-center gap-1">
+            <Icon name="MapPin" size={11} className="flex-shrink-0" />
+            {num.regions.slice(0, 2).join(", ")}{num.regions.length > 2 ? "…" : ""}
+          </p>
+        )}
       </div>
     </button>
   );
@@ -199,6 +205,14 @@ export function NumberModal({ num, onClose, onAddFavorite, isFavorite, maxReache
             <p className="text-xs font-body font-semibold text-muted-foreground uppercase tracking-wider mb-1.5">Описание</p>
             <p className="text-foreground font-body leading-relaxed">{num.description}</p>
           </div>
+          {num.regions && num.regions.length > 0 && (
+            <div className="flex items-start gap-1.5">
+              <Icon name="MapPin" size={14} className="text-amber-500 flex-shrink-0 mt-0.5" />
+              <p className="text-sm text-amber-700 font-body leading-snug">
+                Доступен в регионах: <span className="font-semibold">{num.regions.join(", ")}</span>
+              </p>
+            </div>
+          )}
           {num.procedure && (
             <div className="bg-blue-50 rounded-xl p-3.5 border border-blue-100">
               <p className="text-sm font-body font-semibold text-blue-700 mb-1 flex items-center gap-1.5">

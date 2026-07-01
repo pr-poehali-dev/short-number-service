@@ -25,16 +25,28 @@ export function EditModal({
   isNew,
   onSave,
   onClose,
+  allRegions = [],
 }: {
   num: PhoneNumber;
   isNew: boolean;
   onSave: (n: PhoneNumber) => void;
   onClose: () => void;
+  allRegions?: string[];
 }) {
   const [form, setForm] = useState<PhoneNumber>({ ...num });
 
   function set(field: keyof PhoneNumber, value: string) {
     setForm((f) => ({ ...f, [field]: value }));
+  }
+
+  function toggleRegion(region: string) {
+    setForm((f) => {
+      const current = f.regions ?? [];
+      const next = current.includes(region)
+        ? current.filter((r) => r !== region)
+        : [...current, region];
+      return { ...f, regions: next.length > 0 ? next : undefined };
+    });
   }
 
   function handleSubmit(e: React.FormEvent) {
@@ -149,6 +161,42 @@ export function EditModal({
             />
           </Field>
 
+          {allRegions.length > 0 && (
+            <div className="p-3 rounded-xl bg-orange-50 border border-orange-200">
+              <label className="block text-xs font-body font-semibold text-muted-foreground mb-2">
+                Регионы <span className="font-normal text-orange-600">(оставьте пустым для федерального номера)</span>
+              </label>
+              <div className="flex flex-wrap gap-1.5">
+                {allRegions.map((r) => {
+                  const active = (form.regions ?? []).includes(r);
+                  return (
+                    <button
+                      key={r}
+                      type="button"
+                      onClick={() => toggleRegion(r)}
+                      className={`px-2.5 py-1 rounded-full text-xs font-body font-medium transition-colors border ${
+                        active
+                          ? "bg-orange-500 text-white border-orange-500"
+                          : "bg-white text-foreground border-border hover:border-orange-300"
+                      }`}
+                    >
+                      {r}
+                    </button>
+                  );
+                })}
+              </div>
+              {form.regions && form.regions.length > 0 && (
+                <button
+                  type="button"
+                  onClick={() => setForm((f) => ({ ...f, regions: undefined }))}
+                  className="mt-2 text-xs text-muted-foreground hover:text-foreground underline"
+                >
+                  Сбросить регионы
+                </button>
+              )}
+            </div>
+          )}
+
           <div className="flex gap-3 pt-2">
             <button type="button" onClick={onClose} className="flex-1 py-2.5 rounded-xl border border-border font-body text-sm hover:bg-muted">
               Отмена
@@ -209,6 +257,7 @@ export function AdminRuTab({
   onAdd,
   onEdit,
   onDeleteRequest,
+  allRegions = [],
 }: {
   numbers: PhoneNumber[];
   filtered: PhoneNumber[];
@@ -218,6 +267,7 @@ export function AdminRuTab({
   onAdd: (num: PhoneNumber) => void;
   onEdit: (num: PhoneNumber) => void;
   onDeleteRequest: (id: number) => void;
+  allRegions?: string[];
 }) {
   const [editing, setEditing] = useState<PhoneNumber | null>(null);
   const [isNew, setIsNew] = useState(false);
@@ -274,6 +324,9 @@ export function AdminRuTab({
                 <p className="text-xs text-muted-foreground font-body">{num.organization}</p>
               )}
               <p className="text-xs text-muted-foreground font-body line-clamp-1">{num.description}</p>
+              {num.regions && num.regions.length > 0 && (
+                <p className="text-xs text-orange-600 font-body mt-0.5">📍 {num.regions.slice(0, 3).join(", ")}{num.regions.length > 3 ? ` +${num.regions.length - 3}` : ""}</p>
+              )}
             </div>
             <div className="flex gap-2 flex-shrink-0">
               <button
@@ -299,6 +352,7 @@ export function AdminRuTab({
           isNew={isNew}
           onSave={handleSave}
           onClose={() => { setEditing(null); setIsNew(false); }}
+          allRegions={allRegions}
         />
       )}
     </>
