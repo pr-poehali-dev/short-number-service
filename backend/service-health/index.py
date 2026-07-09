@@ -1,5 +1,5 @@
 """
-Мониторинг доступности облачных сервисов (Polza.AI, 2GIS, Telegram).
+Мониторинг доступности облачных сервисов (Polza.AI, 2GIS, MAX).
 Проверяет каждый сервис, записывает результат в лог БД.
 Поддерживает:
 - включение/отключение: _action=get_enabled / set_enabled
@@ -35,14 +35,6 @@ SERVICES = [
         "timeout": 8,
         "headers": {},
         "expected_codes": [200, 403, 404],
-    },
-    {
-        "name": "Telegram",
-        "url": "https://api.telegram.org",
-        "method": "GET",
-        "timeout": 8,
-        "headers": {},
-        "expected_codes": [200, 404],
     },
     {
         "name": "MAX",

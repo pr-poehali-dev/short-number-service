@@ -5,7 +5,6 @@ import PromoBanner from "@/components/PromoBanner";
 
 type IconName = Parameters<typeof Icon>[0]["name"];
 
-const SEND_SUGGESTION_URL = "https://functions.poehali.dev/0c640a47-5d45-45cb-901c-c7ba1f48d5ea";
 const SEND_SUGGESTION_MAX_URL = "https://functions.poehali.dev/65c5e9b2-3ef9-4b1d-974b-507483778196";
 
 function NumberForm() {
@@ -60,7 +59,6 @@ function NumberForm() {
         body: payload,
       });
       if (!res.ok) throw new Error("server");
-      fetch(SEND_SUGGESTION_URL, { method: "POST", headers: { "Content-Type": "application/json" }, body: payload }).catch(() => {});
       setShowModal(true);
       setForm({ number: "", name: "", description: "", procedure: "", category: "", contactInfo: "" });
       setSearch("");
@@ -96,7 +94,6 @@ function NumberForm() {
         body: photoPayload,
       });
       if (!res.ok) throw new Error("server");
-      fetch(SEND_SUGGESTION_URL, { method: "POST", headers: { "Content-Type": "application/json" }, body: photoPayload }).catch(() => {});
       setShowModal(true);
       setPhotoForm({ number: "", experience: "", agreed: false, contactInfo: "" });
       setPhotoFile(null);

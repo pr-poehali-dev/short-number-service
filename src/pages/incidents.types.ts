@@ -55,14 +55,14 @@ export interface Stats {
 export const ENDPOINT_LABELS: Record<string, string> = {
   nearby: "Поиск рядом",
   "analyze-bookmarks": "AI-анализ закладок",
-  "send-suggestion": "Предложения",
+  "send-suggestion-max": "Предложения",
   "nearby-ai": "Поиск рядом (AI)",
 };
 
 export const ENDPOINT_TIMEOUTS: Record<string, number> = {
   nearby: 30,
   "analyze-bookmarks": 30,
-  "send-suggestion": 30,
+  "send-suggestion-max": 30,
   "nearby-ai": 30,
 };
 
