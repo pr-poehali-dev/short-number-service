@@ -15,6 +15,7 @@ import urllib.request
 import urllib.error
 import psycopg2
 from datetime import datetime, timezone
+from concurrent.futures import ThreadPoolExecutor
 
 SCHEMA = "t_p25384465_short_number_service"
 
@@ -367,8 +368,9 @@ def handler(event: dict, context) -> dict:
         }
 
     results = {}
-    for service in SERVICES:
-        result = check_service(service)
+    with ThreadPoolExecutor(max_workers=len(SERVICES)) as executor:
+        check_results = list(executor.map(check_service, SERVICES))
+    for service, result in zip(SERVICES, check_results):
         results[service["name"]] = {
             "status": result["status"],
             "http_code": result["http_code"],

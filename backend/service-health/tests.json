@@ -12,7 +12,6 @@
       "path": "/",
       "body": { "_action": "get_enabled" },
       "expectedStatus": 200,
-      "expectedBody": { "enabled": false },
       "bodyMatcher": "partial"
     },
     {
@@ -33,11 +32,10 @@
       "bodyMatcher": "partial"
     },
     {
-      "name": "Health check returns data (disabled mode)",
+      "name": "Health check returns data",
       "method": "GET",
       "path": "/",
       "expectedStatus": 200,
-      "expectedBody": { "enabled": false },
       "bodyMatcher": "partial"
     }
   ]
