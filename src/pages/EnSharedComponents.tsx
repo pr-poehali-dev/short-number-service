@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Icon from "@/components/ui/icon";
 import { PhoneNumber, OPERATOR_COLORS } from "./data";
-import { OPERATOR_MAP_EN, CATEGORY_MAP_EN, INDUSTRY_MAP_EN } from "./data-en";
+import { OPERATOR_MAP_EN, CATEGORY_MAP_EN, INDUSTRY_MAP_EN, REGION_MAP_EN } from "./data-en";
 
 export const isShortNumber = (n: string) => n.replace(/\D/g, "").length <= 4;
 
@@ -123,6 +123,12 @@ export function NumberCardEn({ num, enNum, onClick }: {
           <p className="font-display font-bold text-primary text-sm mb-1 tracking-wide">{num.number}</p>
         )}
         <p className="text-sm text-muted-foreground font-body line-clamp-2">{desc}</p>
+        {num.regions && num.regions.length > 0 && (
+          <p className="text-xs text-amber-600 font-body mt-1 truncate flex items-center gap-1">
+            <Icon name="MapPin" size={11} className="flex-shrink-0" />
+            {num.regions.slice(0, 2).map((r) => REGION_MAP_EN[r] ?? r).join(", ")}{num.regions.length > 2 ? "…" : ""}
+          </p>
+        )}
       </div>
     </button>
   );
@@ -199,6 +205,14 @@ export function NumberModalEn({
             <p className="text-xs font-body font-semibold text-muted-foreground uppercase tracking-wider mb-1.5">Description</p>
             <p className="text-foreground font-body leading-relaxed">{desc}</p>
           </div>
+          {num.regions && num.regions.length > 0 && (
+            <div className="flex items-start gap-1.5">
+              <Icon name="MapPin" size={14} className="text-amber-500 flex-shrink-0 mt-0.5" />
+              <p className="text-sm text-amber-700 font-body leading-snug">
+                Available in regions: <span className="font-semibold">{num.regions.map((r) => REGION_MAP_EN[r] ?? r).join(", ")}</span>
+              </p>
+            </div>
+          )}
           {procedure && (
             <div className="bg-blue-50 rounded-xl p-3.5 border border-blue-100">
               <p className="text-sm font-body font-semibold text-blue-700 mb-1 flex items-center gap-1.5">

@@ -127,3 +127,26 @@ export const INDUSTRY_MAP_EN: Record<string, string> = {
   "Государственные": "Government",
   "Другое": "Other",
 };
+
+export const REGION_MAP_EN: Record<string, string> = {
+  "Москва": "Moscow",
+  "Санкт-Петербург": "Saint Petersburg",
+  "Московская область": "Moscow Region",
+  "Ленинградская область": "Leningrad Region",
+  "Краснодарский край": "Krasnodar Krai",
+  "Свердловская область": "Sverdlovsk Region",
+  "Новосибирская область": "Novosibirsk Region",
+  "Татарстан": "Tatarstan",
+  "Республика Башкортостан": "Republic of Bashkortostan",
+  "Нижегородская область": "Nizhny Novgorod Region",
+  "Самарская область": "Samara Region",
+  "Ростовская область": "Rostov Region",
+  "Челябинская область": "Chelyabinsk Region",
+  "Красноярский край": "Krasnoyarsk Krai",
+  "Омская область": "Omsk Region",
+  "Пермский край": "Perm Krai",
+  "Воронежская область": "Voronezh Region",
+  "Волгоградская область": "Volgograd Region",
+  "Саратовская область": "Saratov Region",
+  "Тюменская область": "Tyumen Region",
+};
