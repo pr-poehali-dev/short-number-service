@@ -376,7 +376,7 @@ export function HomeSection({ onNav }: { onNav: (s: string, category?: string) =
       </div>
 
       {/* Add/Edit number form */}
-      <div className="max-w-6xl mx-auto px-4 pb-12">
+      <div id="suggest-form" className="max-w-6xl mx-auto px-4 pb-12 scroll-mt-20">
         <NumberForm />
       </div>
     </div>

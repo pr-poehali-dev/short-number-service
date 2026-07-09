@@ -60,11 +60,17 @@ export default function Index() {
     faq: "section_faq",
   };
 
-  function handleNav(s: string, category?: string) {
+  function handleNav(s: string, category?: string, anchor?: string) {
     setCookie(DEFAULT_SECTION_COOKIE, s);
     setDirectoryCategory(category);
     setSection(s);
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    if (anchor) {
+      setTimeout(() => {
+        document.getElementById(anchor)?.scrollIntoView({ behavior: "smooth" });
+      }, 0);
+    } else {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
     ymGoal(SECTION_GOALS[s] ?? "section_unknown", category ? { category } : undefined);
   }
 
@@ -83,6 +89,7 @@ export default function Index() {
             favorites={favorites}
             onRemoveFavorite={removeFavorite}
             onSelectFavorite={openById}
+            onSuggestNew={() => handleNav("home", undefined, "suggest-form")}
           />
         )}
         {section === "operators" && <OperatorsSection numbers={ruNumbers} onSelect={setSelected} />}

@@ -48,7 +48,7 @@ type Tab = "all" | "operators" | "commercial";
 
 const COMMERCIAL_INDUSTRIES = ["Все", "Банк", "Транспорт", "Торговля", "Недвижимость"];
 
-export function DirectorySection({ numbers, onSelect, initialCategory, favorites = [], onRemoveFavorite, onSelectFavorite }: { numbers: PhoneNumber[]; onSelect: (n: PhoneNumber) => void; initialCategory?: string; favorites?: Favorite[]; onRemoveFavorite?: (id: number) => void; onSelectFavorite?: (id: number) => void }) {
+export function DirectorySection({ numbers, onSelect, initialCategory, favorites = [], onRemoveFavorite, onSelectFavorite, onSuggestNew }: { numbers: PhoneNumber[]; onSelect: (n: PhoneNumber) => void; initialCategory?: string; favorites?: Favorite[]; onRemoveFavorite?: (id: number) => void; onSelectFavorite?: (id: number) => void; onSuggestNew?: () => void }) {
   const [tab, setTab] = useState<Tab>(() => initialCategory === "Коммерческие" ? "commercial" : "all");
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState(initialCategory ?? "Все");
@@ -96,7 +96,17 @@ export function DirectorySection({ numbers, onSelect, initialCategory, favorites
         <PromoBanner section="directory" />
       </div>
     <div className="max-w-6xl mx-auto px-4 py-8">
-      <h2 className="font-display font-bold text-foreground mb-1 text-2xl">Справочник</h2>
+      <div className="flex items-start justify-between gap-3 mb-1">
+        <h2 className="font-display font-bold text-foreground text-2xl">Справочник</h2>
+        {onSuggestNew && (
+          <button
+            onClick={onSuggestNew}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary text-white text-sm font-body font-semibold hover:bg-primary/90 transition-colors flex-shrink-0"
+          >
+            <Icon name="Plus" size={15} /> Добавить
+          </button>
+        )}
+      </div>
       <p className="text-muted-foreground font-body mb-6 text-sm">Нажмите на карточку, чтобы узнать подробности, использовать или сохранить</p>
 
       <div className="flex gap-2 mb-6 border-b border-border overflow-x-auto scrollbar-none" style={{overflowY: 'hidden'}}>
