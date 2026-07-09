@@ -43,6 +43,14 @@ SERVICES = [
         "headers": {},
         "expected_codes": [200, 404],
     },
+    {
+        "name": "MAX",
+        "url": "https://botapi.max.ru",
+        "method": "GET",
+        "timeout": 8,
+        "headers": {},
+        "expected_codes": [200, 401, 403, 404],
+    },
 ]
 
 FUNCTION_TIMEOUTS = {
