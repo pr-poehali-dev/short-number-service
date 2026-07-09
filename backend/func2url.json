@@ -1,6 +1,5 @@
 {
   "send-suggestion-max": "https://functions.poehali.dev/65c5e9b2-3ef9-4b1d-974b-507483778196",
-  "build-info": "https://functions.poehali.dev/233bf647-2fcb-4d05-87c2-104561f450dc",
   "nearby-bookmarks": "https://functions.poehali.dev/84e08bf7-c6dd-4bb2-8f6f-594f7a88b31d",
   "analyze-bookmarks": "https://functions.poehali.dev/2b6ede6a-1ffe-4cc7-8efc-d4847cf097ca",
   "service-health": "https://functions.poehali.dev/bab250b6-9b44-4c92-b8f6-e3d80cd06c33",
