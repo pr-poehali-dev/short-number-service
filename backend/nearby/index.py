@@ -311,6 +311,7 @@ def handler(event: dict, context) -> dict:
                 return {'statusCode': 403, 'headers': {'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json'}, 'body': json.dumps({'error': 'Forbidden'})}
             nid = body.get('id')
             if nid:
+                cur.execute(f"DELETE FROM {schema}.phone_number_regions WHERE phone_number_id = %s", (nid,))
                 cur.execute(f"DELETE FROM {schema}.phone_numbers WHERE id = %s", (nid,))
                 conn.commit()
             return {'statusCode': 200, 'headers': {'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json'}, 'body': json.dumps({'ok': True})}
