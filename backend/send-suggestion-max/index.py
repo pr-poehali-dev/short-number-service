@@ -6,7 +6,7 @@ import urllib.error
 from rate_limit import check_rate_limit
 
 
-MAX_API_BASE = "https://botapi.max.ru"
+MAX_API_BASE = "https://platform-api2.max.ru"
 
 
 def _auth_headers(token: str) -> dict:
