@@ -1,12 +1,20 @@
 import json
 import os
+import ssl
 import base64
 import urllib.request
 import urllib.error
 from rate_limit import check_rate_limit
+from russian_ca import RUSSIAN_TRUSTED_CA_PEM
 
 
 MAX_API_BASE = "https://platform-api2.max.ru"
+
+# platform-api2.max.ru использует сертификат от российского УЦ Минцифры,
+# которого нет в стандартном системном хранилище доверенных сертификатов.
+# Добавляем его к системным CA, не заменяя их (upload-сервер может быть на другом домене).
+_SSL_CONTEXT = ssl.create_default_context()
+_SSL_CONTEXT.load_verify_locations(cadata=RUSSIAN_TRUSTED_CA_PEM)
 
 
 def _auth_headers(token: str) -> dict:
@@ -16,7 +24,7 @@ def _auth_headers(token: str) -> dict:
 def _max_request(url: str, payload: bytes, token: str) -> dict:
     req = urllib.request.Request(url, data=payload, headers=_auth_headers(token))
     try:
-        resp = urllib.request.urlopen(req)
+        resp = urllib.request.urlopen(req, context=_SSL_CONTEXT)
         return json.loads(resp.read().decode("utf-8"))
     except urllib.error.HTTPError as e:
         error_body = e.read().decode("utf-8")
@@ -34,7 +42,7 @@ def upload_photo_max(token: str, photo_bytes: bytes, photo_name: str) -> str:
     # 1. Получить upload URL
     url = f"{MAX_API_BASE}/uploads?type=image"
     req = urllib.request.Request(url, method="POST", headers={"Authorization": token})
-    resp = urllib.request.urlopen(req)
+    resp = urllib.request.urlopen(req, context=_SSL_CONTEXT)
     upload_data = json.loads(resp.read().decode("utf-8"))
     upload_url = upload_data["url"]
 
@@ -56,7 +64,7 @@ def upload_photo_max(token: str, photo_bytes: bytes, photo_name: str) -> str:
         data=multipart_body,
         headers={"Content-Type": f"multipart/form-data; boundary={boundary}"}
     )
-    resp2 = urllib.request.urlopen(req2)
+    resp2 = urllib.request.urlopen(req2, context=_SSL_CONTEXT)
     result = json.loads(resp2.read().decode("utf-8"))
     # MAX возвращает {"photos": {"<photo_id>": {"token": "..."}}}
     photos = result.get("photos", {})

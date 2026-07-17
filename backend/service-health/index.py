@@ -10,14 +10,22 @@
 
 import json
 import os
+import ssl
 import time
 import urllib.request
 import urllib.error
 import psycopg2
 from datetime import datetime, timezone
 from concurrent.futures import ThreadPoolExecutor
+from russian_ca import RUSSIAN_TRUSTED_CA_PEM
 
 SCHEMA = "t_p25384465_short_number_service"
+
+# platform-api2.max.ru использует сертификат от российского УЦ Минцифры,
+# которого нет в стандартном системном хранилище доверенных сертификатов.
+# Добавляем его к системным CA, не заменяя их (остальные сервисы — на обычных сертификатах).
+_SSL_CONTEXT = ssl.create_default_context()
+_SSL_CONTEXT.load_verify_locations(cadata=RUSSIAN_TRUSTED_CA_PEM)
 
 SERVICES = [
     {
@@ -38,7 +46,7 @@ SERVICES = [
     },
     {
         "name": "MAX",
-        "url": "https://botapi.max.ru",
+        "url": "https://platform-api2.max.ru",
         "method": "GET",
         "timeout": 8,
         "headers": {},
@@ -62,7 +70,7 @@ def check_service(service: dict) -> dict:
             method=service["method"],
             headers=service["headers"],
         )
-        with urllib.request.urlopen(req, timeout=service["timeout"]) as resp:
+        with urllib.request.urlopen(req, timeout=service["timeout"], context=_SSL_CONTEXT) as resp:
             http_code = resp.status
             elapsed = int((time.time() - start) * 1000)
             ok = http_code in service["expected_codes"]
