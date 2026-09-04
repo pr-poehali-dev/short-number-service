@@ -126,7 +126,7 @@ export function DirectorySection({ numbers, onSelect, initialCategory, favorites
             </button>
           ))}
         </div>
-        {tab === "all" && allRegions.length > 1 && (
+        {(tab === "all" || tab === "commercial") && allRegions.length > 1 && (
           <div className="flex items-center gap-2 flex-shrink-0 pb-2">
             <Icon name="MapPin" size={15} className="text-muted-foreground flex-shrink-0" />
             <select
@@ -221,23 +221,6 @@ export function DirectorySection({ numbers, onSelect, initialCategory, favorites
 
       {tab === "commercial" && (
         <>
-          {allRegions.length > 1 && (
-            <div className="flex items-center gap-2 mb-4">
-              <Icon name="MapPin" size={15} className="text-muted-foreground flex-shrink-0" />
-              <select
-                value={regionFilter}
-                onChange={(e) => { setRegionFilter(e.target.value); ymGoal("directory_region", { region: e.target.value }); }}
-                className="border border-border rounded-lg px-3 py-1.5 text-sm font-body bg-white focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"
-              >
-                {allRegions.map((r) => <option key={r}>{r}</option>)}
-              </select>
-              {regionFilter !== "Все регионы" && (
-                <button onClick={() => setRegionFilter("Все регионы")} className="text-xs text-muted-foreground hover:text-foreground">
-                  <Icon name="X" size={14} />
-                </button>
-              )}
-            </div>
-          )}
           <div className="flex flex-col sm:flex-row gap-3 mb-6">
             <div className="flex gap-2 flex-wrap">
               {COMMERCIAL_INDUSTRIES.map((ind) => (
