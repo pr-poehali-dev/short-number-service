@@ -171,7 +171,7 @@ export function DirectorySection({ numbers, onSelect, initialCategory, favorites
             onClick={onSuggestNew}
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary text-white text-sm font-body font-semibold hover:bg-primary/90 transition-colors flex-shrink-0"
           >
-            <Icon name="Plus" size={15} /> Добавить
+            <Icon name="Plus" size={15} /> <span className="hidden sm:inline">Добавить</span>
           </button>
         )}
       </div>
