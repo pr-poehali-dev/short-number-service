@@ -109,10 +109,10 @@ function NumberForm() {
   const isPhotoValid = photoFile && photoForm.agreed && photoForm.contactInfo.trim();
 
   return (
-    <div className="bg-white border border-border rounded-2xl p-6">
+    <div className="bg-card border border-border rounded-2xl p-6">
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 animate-fade-in" onClick={() => setShowModal(false)}>
-          <div className="bg-white rounded-2xl p-8 max-w-sm w-full mx-4 shadow-xl flex flex-col items-center gap-4" onClick={(e) => e.stopPropagation()}>
+          <div className="bg-card rounded-2xl p-8 max-w-sm w-full mx-4 shadow-xl flex flex-col items-center gap-4" onClick={(e) => e.stopPropagation()}>
             <div className="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center">
               <Icon name="CheckCircle" size={32} className="text-green-600" />
             </div>
@@ -141,7 +141,7 @@ function NumberForm() {
             key={m.id}
             onClick={() => { setMode(m.id); setSelected(null); setSearch(""); setForm({ number: "", name: "", description: "", procedure: "", category: "", contactInfo: "" }); }}
             className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-body font-semibold transition-colors border ${
-              mode === m.id ? "bg-primary text-white border-primary" : "bg-white text-foreground border-border hover:border-primary/40"
+              mode === m.id ? "bg-primary text-white border-primary" : "bg-card text-foreground border-border hover:border-primary/40"
             }`}
           >
             <Icon name={m.icon} size={14} />
@@ -161,7 +161,7 @@ function NumberForm() {
                 className="w-full pl-9 pr-4 py-3 border border-border rounded-xl font-body text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"
               />
               {suggestions.length > 0 && (
-                <div className="absolute top-full left-0 right-0 z-20 bg-white border border-border rounded-xl mt-1 shadow-lg overflow-hidden">
+                <div className="absolute top-full left-0 right-0 z-20 bg-card border border-border rounded-xl mt-1 shadow-lg overflow-hidden">
                   {suggestions.map((n) => (
                     <button
                       key={n.id}
@@ -355,7 +355,7 @@ export function HomeSection({ onNav }: { onNav: (s: string, category?: string) =
             <button
               key={item.title}
               onClick={() => onNav(item.section, item.category)}
-              className="hover-scale bg-white border border-border rounded-xl p-5 text-left flex items-start gap-4 w-full"
+              className="hover-scale bg-card border border-border rounded-xl p-5 text-left flex items-start gap-4 w-full"
             >
               <div className={`w-11 h-11 rounded-lg ${item.bg} flex items-center justify-center flex-shrink-0`}>
                 <Icon name={item.icon as IconName} size={22} className={item.color} />

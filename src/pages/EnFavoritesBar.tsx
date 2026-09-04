@@ -29,7 +29,7 @@ export function EnFavoritesBar({ favorites, onRemove, onSelect }: Props) {
           {favorites.map((fav) => (
             <div
               key={fav.id}
-              className="flex items-center gap-1.5 pl-3 pr-1 py-1.5 bg-white border border-border rounded-lg shadow-sm hover:border-primary/40 transition-colors cursor-pointer group"
+              className="flex items-center gap-1.5 pl-3 pr-1 py-1.5 bg-card border border-border rounded-lg shadow-sm hover:border-primary/40 transition-colors cursor-pointer group"
             >
               <button
                 onClick={() => onSelect(fav.id)}

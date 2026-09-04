@@ -97,7 +97,7 @@ export default function Index() {
         {section === "faq" && <FaqSection />}
       </main>
 
-      <footer className="border-t border-border bg-white py-6 px-4">
+      <footer className="border-t border-border bg-card py-6 px-4">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-3 text-sm text-muted-foreground font-body">
           <div className="flex items-center gap-2">
             <span>{section === "nearby" ? "быстрый-ответ.рф / 2407.рф" : "короткий-номер.рф / 2407.рф"}</span>

@@ -15,7 +15,7 @@ export function ProceduresSection() {
 
       <div className="space-y-5">
         {PROCEDURES.map((proc, i) => (
-          <div key={i} className="bg-white border border-border rounded-2xl p-6">
+          <div key={i} className="bg-card border border-border rounded-2xl p-6">
             <div className="flex items-start gap-4 mb-4">
               <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
                 <Icon name={proc.icon as IconName} size={22} className="text-primary" />
@@ -79,7 +79,7 @@ export function FaqSection() {
       <div className="space-y-3">
         {items.map((item, i) => (
           <div key={i}>
-            <div className="bg-white border border-border rounded-xl overflow-hidden">
+            <div className="bg-card border border-border rounded-xl overflow-hidden">
               <button
                 onClick={() => setOpen(open === i ? null : i)}
                 className="w-full flex items-center justify-between px-5 py-4 text-left hover:bg-muted/50 transition-colors"
@@ -113,7 +113,7 @@ export function ContactsSection() {
           { icon: "Users", title: "ВКонтакте",      desc: "Сообщество и поддержка",   color: "bg-[#0077FF]", link: "https://vk.com/qrnumber" },
         ].map((c) => (
           <a key={c.title} href={c.link} target="_blank" rel="noopener noreferrer"
-            className="hover-scale bg-white border border-border rounded-xl p-5 flex items-center gap-4 no-underline"
+            className="hover-scale bg-card border border-border rounded-xl p-5 flex items-center gap-4 no-underline"
           >
             <div className={`w-12 h-12 rounded-xl ${c.color} flex items-center justify-center flex-shrink-0`}>
               <Icon name={c.icon as IconName} size={22} className="text-white" />

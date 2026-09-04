@@ -104,7 +104,7 @@ export function EnDirectorySection({
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Search by number, name or purpose..."
-              className="w-full pl-10 pr-10 py-3 border border-border rounded-xl font-body text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary bg-white"
+              className="w-full pl-10 pr-10 py-3 border border-border rounded-xl font-body text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary bg-card"
             />
             {query && (
               <button onClick={() => setQuery("")} className="absolute right-3.5 top-1/2 -translate-y-1/2">
@@ -118,7 +118,7 @@ export function EnDirectorySection({
                 key={c}
                 onClick={() => setCategory(c)}
                 className={`px-3 py-1.5 rounded-full text-sm font-body font-medium transition-colors ${
-                  category === c ? "bg-primary text-white" : "bg-white border border-border text-foreground hover:border-primary/40"
+                  category === c ? "bg-primary text-white" : "bg-card border border-border text-foreground hover:border-primary/40"
                 }`}
               >
                 {c}
@@ -153,7 +153,7 @@ export function EnDirectorySection({
                   key={op.ru}
                   onClick={() => setActiveOp(op.ru)}
                   className={`px-5 py-2 rounded-xl text-sm font-body font-semibold transition-all border ${
-                    activeOp === op.ru ? `${c.bg} ${c.text} ${c.border} shadow-sm` : "bg-white border-border text-foreground hover:border-primary/30"
+                    activeOp === op.ru ? `${c.bg} ${c.text} ${c.border} shadow-sm` : "bg-card border-border text-foreground hover:border-primary/30"
                   }`}
                 >
                   {op.en}
@@ -185,7 +185,7 @@ export function EnDirectorySection({
                   key={ind}
                   onClick={() => setCommIndustry(ind)}
                   className={`px-3 py-1.5 rounded-full text-sm font-body font-medium transition-colors ${
-                    commIndustry === ind ? "bg-amber-500 text-white" : "bg-white border border-border text-foreground hover:border-amber-300"
+                    commIndustry === ind ? "bg-amber-500 text-white" : "bg-card border border-border text-foreground hover:border-amber-300"
                   }`}
                 >
                   {ind}
@@ -201,7 +201,7 @@ export function EnDirectorySection({
                   key={d.val}
                   onClick={() => setCommDevice(d.val)}
                   className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-body font-medium transition-colors border ${
-                    commDevice === d.val ? "bg-amber-50 border-amber-300 text-amber-700" : "bg-white border-border text-muted-foreground hover:border-amber-200"
+                    commDevice === d.val ? "bg-amber-50 border-amber-300 text-amber-700" : "bg-card border-border text-muted-foreground hover:border-amber-200"
                   }`}
                 >
                   <Icon name={d.icon as Parameters<typeof Icon>[0]["name"]} size={13} />
@@ -219,7 +219,7 @@ export function EnDirectorySection({
                   <button
                     key={n.id}
                     onClick={() => onSelect(n, en)}
-                    className="number-card w-full text-left bg-white border border-border rounded-xl p-4 flex items-start gap-3 cursor-pointer"
+                    className="number-card w-full text-left bg-card border border-border rounded-xl p-4 flex items-start gap-3 cursor-pointer"
                   >
                     <div className="w-14 h-14 rounded-xl bg-amber-50 flex items-center justify-center flex-shrink-0">
                       <span className="font-display font-bold text-amber-700 text-sm leading-tight text-center px-1">{n.number}</span>

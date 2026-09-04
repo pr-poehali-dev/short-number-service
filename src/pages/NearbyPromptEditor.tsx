@@ -25,7 +25,7 @@ export function NearbyPromptEditor({ prompt, city, promptLoading, promptSaved, o
         type="text"
         value={city}
         onChange={(e) => onCityChange(e.target.value)}
-        className="w-full px-3 py-2 border border-amber-300 rounded-xl font-body text-sm focus:outline-none focus:ring-2 focus:ring-amber-400/30 bg-white mb-4"
+        className="w-full px-3 py-2 border border-amber-300 rounded-xl font-body text-sm focus:outline-none focus:ring-2 focus:ring-amber-400/30 bg-card mb-4"
         placeholder="Например: Санкт-Петербург"
       />
       <p className="text-sm font-body font-semibold text-amber-800 mb-2 flex items-center gap-1.5">
@@ -35,7 +35,7 @@ export function NearbyPromptEditor({ prompt, city, promptLoading, promptSaved, o
         rows={3}
         value={prompt}
         onChange={(e) => onPromptChange(e.target.value)}
-        className="w-full px-3 py-2 border border-amber-300 rounded-xl font-body text-sm focus:outline-none focus:ring-2 focus:ring-amber-400/30 bg-white resize-none"
+        className="w-full px-3 py-2 border border-amber-300 rounded-xl font-body text-sm focus:outline-none focus:ring-2 focus:ring-amber-400/30 bg-card resize-none"
         placeholder="кафе,ресторан,магазин,аптека,банк,супермаркет"
       />
       <div className="flex items-center gap-2 mt-2">

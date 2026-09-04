@@ -22,7 +22,7 @@ export default function NearbyVoteModal({ onClose }: Props) {
 
   return (
     <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm animate-fade-in">
-      <div className="bg-white rounded-2xl shadow-xl w-full max-w-md relative">
+      <div className="bg-card rounded-2xl shadow-xl w-full max-w-md relative">
         <button
           onClick={onClose}
           className="absolute top-4 right-4 w-7 h-7 flex items-center justify-center rounded-full hover:bg-muted text-muted-foreground transition-colors"

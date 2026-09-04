@@ -52,7 +52,7 @@ export function NearbyResults({
   return (
     <>
       {status === "idle" && (
-        <div className="relative bg-white border border-border rounded-2xl p-8 text-center">
+        <div className="relative bg-card border border-border rounded-2xl p-8 text-center">
           <button
             onClick={onOpenSettings}
             className="absolute top-3 left-3 flex items-center gap-1 px-2 py-1.5 rounded-lg hover:bg-muted border border-border transition-colors text-xs font-body text-muted-foreground hover:text-foreground"
@@ -97,7 +97,7 @@ export function NearbyResults({
                 value={manualAddress}
                 onChange={e => onManualAddressChange(e.target.value)}
                 placeholder="Улица и дом, например: ул. Ленина, 5"
-                className="flex-1 text-base border border-border rounded-xl px-3 py-2.5 font-body bg-white focus:outline-none focus:border-primary"
+                className="flex-1 text-base border border-border rounded-xl px-3 py-2.5 font-body bg-card focus:outline-none focus:border-primary"
                 onKeyDown={e => e.key === 'Enter' && manualAddress.trim() && (!city ? onOpenSettings() : onFindByAddress())}
               />
               <button
@@ -125,7 +125,7 @@ export function NearbyResults({
       )}
 
       {(status === "locating" || status === "loading") && (
-        <div className="bg-white border border-border rounded-2xl p-8 text-center">
+        <div className="bg-card border border-border rounded-2xl p-8 text-center">
           <div className="w-12 h-12 rounded-full border-4 border-primary border-t-transparent animate-spin mx-auto mb-4" />
           <p className="font-body text-foreground font-semibold">
             {status === "locating" ? "Определяем местоположение…" : "Ищем объекты рядом…"}
@@ -180,7 +180,7 @@ export function NearbyResults({
                   value={manualCoords}
                   onChange={e => onManualCoordsChange(e.target.value)}
                   placeholder="59.9311, 30.3609"
-                  className="flex-1 text-sm border border-red-200 rounded-lg px-3 py-2 font-body bg-white focus:outline-none focus:border-primary"
+                  className="flex-1 text-sm border border-red-200 rounded-lg px-3 py-2 font-body bg-card focus:outline-none focus:border-primary"
                   onKeyDown={e => e.key === 'Enter' && onFindByManualCoords()}
                 />
                 <button
@@ -224,7 +224,7 @@ export function NearbyResults({
               const alreadySaved = isBookmarked(p);
               const justSaved = savedId !== null && bookmarks.find(b => b.id === savedId)?.name === p.name;
               return (
-                <div key={i} className="number-card bg-white border border-border rounded-xl p-4 flex items-start gap-3">
+                <div key={i} className="number-card bg-card border border-border rounded-xl p-4 flex items-start gap-3">
                   <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
                     <Icon name={getIcon(p.type)} size={20} className="text-primary" fallback="Store" />
                   </div>

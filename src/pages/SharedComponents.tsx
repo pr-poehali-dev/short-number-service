@@ -4,6 +4,7 @@ import Icon from "@/components/ui/icon";
 import { PhoneNumber, Operator, OPERATOR_COLORS } from "./data";
 import { ymGoal } from "@/lib/analytics";
 import { ServiceStatusBanner } from "@/components/ServiceStatusBanner";
+import ThemeToggle from "@/components/ThemeToggle";
 
 
 interface BeforeInstallPromptEvent extends Event {
@@ -28,7 +29,7 @@ export function NumberCard({ num, onClick }: { num: PhoneNumber; onClick: (n: Ph
   return (
     <button
       onClick={() => { onClick(num); ymGoal("card_open", { number: num.number, name: num.name, category: num.category, operator: num.operator }); }}
-      className="number-card w-full text-left bg-white border border-border rounded-xl p-4 flex items-start gap-3 cursor-pointer"
+      className="number-card w-full text-left bg-card border border-border rounded-xl p-4 flex items-start gap-3 cursor-pointer"
     >
       {short ? (
         <div className="w-14 h-14 rounded-xl bg-primary flex items-center justify-center flex-shrink-0">
@@ -161,7 +162,7 @@ export function NumberModal({ num, onClose, onAddFavorite, isFavorite, maxReache
       onClick={onClose}
     >
       <div
-        className="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl animate-fade-in"
+        className="bg-card rounded-2xl max-w-lg w-full p-6 shadow-2xl animate-fade-in"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-start justify-between mb-5">
@@ -243,14 +244,14 @@ export function NumberModal({ num, onClose, onAddFavorite, isFavorite, maxReache
           </a>
           <button
             onClick={() => { saveVCard(num); ymGoal("vcard_save", { number: num.number, name: num.name }); }}
-            className="flex items-center justify-center gap-2 flex-1 py-3 bg-white border-2 border-primary text-primary rounded-xl font-body font-semibold hover:bg-primary/5 transition-colors"
+            className="flex items-center justify-center gap-2 flex-1 py-3 bg-card border-2 border-primary text-primary rounded-xl font-body font-semibold hover:bg-primary/5 transition-colors"
           >
             <Icon name="UserPlus" size={18} />
             <span className="hidden sm:inline">Сохранить</span>
           </button>
           <button
             onClick={handleShare}
-            className="flex items-center justify-center w-12 h-12 my-auto bg-white text-muted-foreground rounded-xl hover:text-primary transition-colors flex-shrink-0"
+            className="flex items-center justify-center w-12 h-12 my-auto bg-card text-muted-foreground rounded-xl hover:text-primary transition-colors flex-shrink-0"
             title={copied ? "Скопировано!" : "Поделиться"}
           >
             <Icon name={copied ? "Check" : "Share2"} size={18} className={copied ? "text-green-500" : ""} />
@@ -271,10 +272,10 @@ export function InstallModal({ onClose, pwaPrompt }: { onClose: () => void; pwaP
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50" onClick={onClose}>
-      <div className="bg-white rounded-2xl max-w-sm w-full p-6 shadow-2xl animate-fade-in" onClick={(e) => e.stopPropagation()}>
+      <div className="bg-card rounded-2xl max-w-sm w-full p-6 shadow-2xl animate-fade-in" onClick={(e) => e.stopPropagation()}>
         <div className="flex items-start justify-between mb-4">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-xl border-2 border-primary/20 shadow-sm flex items-center justify-center flex-shrink-0 overflow-hidden bg-white">
+            <div className="w-12 h-12 rounded-xl border-2 border-primary/20 shadow-sm flex items-center justify-center flex-shrink-0 overflow-hidden bg-card">
               <img src="https://cdn.poehali.dev/files/7bcf9c89-8cb9-48db-a7ac-f8b6902960bd.png" alt="2407" className="w-full h-full object-contain" />
             </div>
             <div>
@@ -395,12 +396,12 @@ export function Header({
   ];
 
   return (
-    <header className="sticky top-0 z-50 bg-white border-b border-border shadow-sm">
+    <header className="sticky top-0 z-50 bg-card border-b border-border shadow-sm">
       <ServiceStatusBanner />
       <div className="max-w-6xl mx-auto px-4">
         <div className="relative flex items-center justify-between h-16 md:grid md:grid-cols-[1fr_auto_1fr] md:items-center">
           <button onClick={handleLogoTap} className="flex items-center gap-2 justify-self-start relative">
-            <div className="font-display text-base font-bold text-black leading-tight tracking-wide">
+            <div className="font-display text-base font-bold text-foreground leading-tight tracking-wide">
               <span className="md:hidden">2407.рф</span>
               <span className="hidden md:inline">Короткие номера России "2407"</span>
             </div>
@@ -449,6 +450,7 @@ export function Header({
               <Icon name="Plus" size={15} />
               <span className="hidden sm:inline">2407.РФ</span>
             </button>
+            <ThemeToggle />
             <button className="md:hidden p-2 rounded-md hover:bg-muted" onClick={() => setMenuOpen(!menuOpen)}>
               <Icon name={menuOpen ? "X" : "Menu"} size={22} />
             </button>
@@ -459,7 +461,7 @@ export function Header({
       {installOpen && <InstallModal onClose={() => setInstallOpen(false)} pwaPrompt={pwaPrompt} />}
 
       {menuOpen && (
-        <div className="md:hidden border-t border-border bg-white">
+        <div className="md:hidden border-t border-border bg-card">
           {navItems.map((item) => (
             <button
               key={item.id}

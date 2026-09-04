@@ -156,7 +156,7 @@ function VoteBanner({ settings, onClose }: { settings: BannerSettings; onClose: 
             onChange={(e) => setComment(e.target.value)}
             placeholder="Напишите, что было бы полезно..."
             rows={3}
-            className="w-full px-3 py-2.5 border border-amber-200 rounded-xl font-body text-sm focus:outline-none focus:ring-2 focus:ring-amber-300 focus:border-amber-400 resize-none bg-white mb-3"
+            className="w-full px-3 py-2.5 border border-amber-200 rounded-xl font-body text-sm focus:outline-none focus:ring-2 focus:ring-amber-300 focus:border-amber-400 resize-none bg-card mb-3"
           />
           <div className="flex gap-2 flex-nowrap overflow-x-auto scrollbar-none pb-1">
             <button
@@ -170,7 +170,7 @@ function VoteBanner({ settings, onClose }: { settings: BannerSettings; onClose: 
             <button
               onClick={handleSkipComment}
               disabled={sending}
-              className="px-4 py-2 border border-border bg-white hover:bg-muted/50 text-muted-foreground rounded-xl font-body text-sm transition-colors whitespace-nowrap flex-shrink-0"
+              className="px-4 py-2 border border-border bg-card hover:bg-muted/50 text-muted-foreground rounded-xl font-body text-sm transition-colors whitespace-nowrap flex-shrink-0"
             >
               Пропустить
             </button>

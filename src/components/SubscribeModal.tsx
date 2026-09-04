@@ -37,7 +37,7 @@ export default function SubscribeModal({ mode, cooldownHours = 24, onConfirmSubs
   if (mode === "plans") {
     return (
       <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-        <div className="bg-white rounded-2xl w-full max-w-sm shadow-2xl overflow-hidden animate-fade-in">
+        <div className="bg-card rounded-2xl w-full max-w-sm shadow-2xl overflow-hidden animate-fade-in">
           <div className="bg-gradient-to-br from-primary/10 to-primary/5 px-5 pt-6 pb-4 text-center">
             <div className="w-12 h-12 rounded-full bg-primary/15 flex items-center justify-center mx-auto mb-3">
               <Icon name="Sparkles" size={22} className="text-primary" />
@@ -85,7 +85,7 @@ export default function SubscribeModal({ mode, cooldownHours = 24, onConfirmSubs
 
   return (
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-      <div className="bg-white rounded-2xl w-full max-w-sm shadow-2xl overflow-hidden animate-fade-in">
+      <div className="bg-card rounded-2xl w-full max-w-sm shadow-2xl overflow-hidden animate-fade-in">
         <div className="bg-gradient-to-br from-primary/10 to-primary/5 px-5 pt-6 pb-4 text-center">
           <div className="w-12 h-12 rounded-full bg-primary/15 flex items-center justify-center mx-auto mb-3">
             <Icon name="Star" size={22} className="text-primary" />

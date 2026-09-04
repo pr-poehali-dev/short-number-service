@@ -84,7 +84,7 @@ export function NumberCardEn({ num, enNum, onClick }: {
   return (
     <button
       onClick={() => onClick(num, enNum)}
-      className="number-card w-full text-left bg-white border border-border rounded-xl p-4 flex items-start gap-3 cursor-pointer"
+      className="number-card w-full text-left bg-card border border-border rounded-xl p-4 flex items-start gap-3 cursor-pointer"
     >
       {short ? (
         <div className="w-14 h-14 rounded-xl bg-primary flex items-center justify-center flex-shrink-0">
@@ -164,7 +164,7 @@ export function NumberModalEn({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50" onClick={onClose}>
-      <div className="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl animate-fade-in" onClick={(e) => e.stopPropagation()}>
+      <div className="bg-card rounded-2xl max-w-lg w-full p-6 shadow-2xl animate-fade-in" onClick={(e) => e.stopPropagation()}>
         <div className="flex items-start justify-between mb-5">
           <div className="flex items-center gap-3">
             {short ? (
@@ -238,14 +238,14 @@ export function NumberModalEn({
           </a>
           <button
             onClick={() => saveVCard(num, name, desc)}
-            className="flex items-center justify-center gap-2 flex-1 py-3 bg-white border-2 border-primary text-primary rounded-xl font-body font-semibold hover:bg-primary/5 transition-colors"
+            className="flex items-center justify-center gap-2 flex-1 py-3 bg-card border-2 border-primary text-primary rounded-xl font-body font-semibold hover:bg-primary/5 transition-colors"
           >
             <Icon name="UserPlus" size={18} />
             <span className="hidden sm:inline">Save contact</span>
           </button>
           <button
             onClick={handleShare}
-            className="flex items-center justify-center w-12 h-12 my-auto bg-white text-muted-foreground rounded-xl hover:text-primary transition-colors flex-shrink-0"
+            className="flex items-center justify-center w-12 h-12 my-auto bg-card text-muted-foreground rounded-xl hover:text-primary transition-colors flex-shrink-0"
             title={copied ? "Copied!" : "Share"}
           >
             <Icon name={copied ? "Check" : "Share2"} size={18} className={copied ? "text-green-500" : ""} />

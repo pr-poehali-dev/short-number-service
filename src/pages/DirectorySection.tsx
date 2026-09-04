@@ -11,7 +11,7 @@ function CommercialCard({ num, onClick }: { num: PhoneNumber; onClick: (n: Phone
   return (
     <button
       onClick={() => onClick(num)}
-      className="number-card w-full text-left bg-white border border-border rounded-xl p-4 flex items-start gap-3 cursor-pointer"
+      className="number-card w-full text-left bg-card border border-border rounded-xl p-4 flex items-start gap-3 cursor-pointer"
     >
       <div className="w-14 h-14 rounded-xl bg-amber-50 flex items-center justify-center flex-shrink-0 flex-col gap-0.5">
         <span className="font-display font-bold text-amber-700 text-sm leading-tight text-center px-1">{num.number}</span>
@@ -200,7 +200,7 @@ export function DirectorySection({ numbers, onSelect, initialCategory, favorites
             <select
               value={regionFilter}
               onChange={(e) => { setRegionFilter(e.target.value); ymGoal("directory_region", { region: e.target.value }); }}
-              className="border border-border rounded-lg w-9 px-1 text-transparent sm:w-auto sm:px-3 sm:text-foreground py-1.5 text-sm font-body bg-white focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"
+              className="border border-border rounded-lg w-9 px-1 text-transparent sm:w-auto sm:px-3 sm:text-foreground py-1.5 text-sm font-body bg-card focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"
             >
               {allRegions.map((r) => <option key={r} className="text-foreground">{r}</option>)}
             </select>
@@ -220,7 +220,7 @@ export function DirectorySection({ numbers, onSelect, initialCategory, favorites
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Поиск по номеру, названию или назначению..."
-            className="w-full pl-10 pr-10 py-3 border border-border rounded-xl font-body text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary bg-white"
+            className="w-full pl-10 pr-10 py-3 border border-border rounded-xl font-body text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary bg-card"
           />
           {query && (
             <button onClick={() => setQuery("")} className="absolute right-3.5 top-1/2 -translate-y-1/2">
@@ -232,7 +232,7 @@ export function DirectorySection({ numbers, onSelect, initialCategory, favorites
           onClick={toggleFilters}
           title={filtersVisible ? "Скрыть фильтры" : "Показать фильтры"}
           className={`flex items-center justify-center flex-shrink-0 w-11 h-11 rounded-xl border transition-colors ${
-            filtersVisible ? "bg-primary/10 border-primary/30 text-primary" : "bg-white border-border text-muted-foreground hover:border-primary/40"
+            filtersVisible ? "bg-primary/10 border-primary/30 text-primary" : "bg-card border-border text-muted-foreground hover:border-primary/40"
           }`}
         >
           <Icon name={filtersVisible ? "SlidersHorizontal" : "ListFilter"} size={18} />
@@ -248,7 +248,7 @@ export function DirectorySection({ numbers, onSelect, initialCategory, favorites
                   key={`fav-${c}`}
                   onClick={() => { setCategory(c); ymGoal("directory_category", { category: c }); }}
                   className={`px-3 py-1.5 rounded-full text-sm font-body font-medium transition-colors whitespace-nowrap flex-shrink-0 ${
-                    category === c ? "bg-primary text-white" : "bg-white border border-border text-foreground hover:border-primary/40"
+                    category === c ? "bg-primary text-white" : "bg-card border border-border text-foreground hover:border-primary/40"
                   }`}
                 >
                   {c}
@@ -292,7 +292,7 @@ export function DirectorySection({ numbers, onSelect, initialCategory, favorites
                   key={c}
                   onClick={() => { setCategory(c); ymGoal("directory_category", { category: c }); }}
                   className={`px-3 py-1.5 rounded-full text-sm font-body font-medium transition-colors whitespace-nowrap flex-shrink-0 ${
-                    category === c ? "bg-primary text-white" : "bg-white border border-border text-foreground hover:border-primary/40"
+                    category === c ? "bg-primary text-white" : "bg-card border border-border text-foreground hover:border-primary/40"
                   }`}
                 >
                   {c}
@@ -332,7 +332,7 @@ export function DirectorySection({ numbers, onSelect, initialCategory, favorites
                     key={op}
                     onClick={() => { setActiveOp(op); ymGoal("directory_operator", { operator: op }); }}
                     className={`px-3 py-1.5 rounded-full text-sm font-body font-medium transition-colors border whitespace-nowrap flex-shrink-0 ${
-                      activeOp === op ? `${c.bg} ${c.text} ${c.border}` : "bg-white border-border text-foreground hover:border-primary/30"
+                      activeOp === op ? `${c.bg} ${c.text} ${c.border}` : "bg-card border-border text-foreground hover:border-primary/30"
                     }`}
                   >
                     {op}
@@ -371,7 +371,7 @@ export function DirectorySection({ numbers, onSelect, initialCategory, favorites
                   key={ind}
                   onClick={() => { setCommIndustry(ind); ymGoal("directory_industry", { industry: ind }); }}
                   className={`px-3 py-1.5 rounded-full text-sm font-body font-medium transition-colors whitespace-nowrap flex-shrink-0 ${
-                    commIndustry === ind ? "bg-amber-500 text-white" : "bg-white border border-border text-foreground hover:border-amber-300"
+                    commIndustry === ind ? "bg-amber-500 text-white" : "bg-card border border-border text-foreground hover:border-amber-300"
                   }`}
                 >
                   {ind}
@@ -386,7 +386,7 @@ export function DirectorySection({ numbers, onSelect, initialCategory, favorites
                   key={d.val}
                   onClick={() => setCommDevice(d.val)}
                   className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-body font-medium transition-colors border whitespace-nowrap flex-shrink-0 ${
-                    commDevice === d.val ? "bg-amber-50 border-amber-300 text-amber-700" : "bg-white border-border text-muted-foreground hover:border-amber-200"
+                    commDevice === d.val ? "bg-amber-50 border-amber-300 text-amber-700" : "bg-card border-border text-muted-foreground hover:border-amber-200"
                   }`}
                 >
                   <Icon name={d.icon as Parameters<typeof Icon>[0]["name"]} size={13} />
@@ -436,7 +436,7 @@ export function OperatorsSection({ numbers, onSelect }: { numbers: PhoneNumber[]
               key={op}
               onClick={() => setActiveOp(op)}
               className={`px-5 py-2 rounded-xl text-sm font-body font-semibold transition-all border ${
-                activeOp === op ? `${c.bg} ${c.text} ${c.border} shadow-sm` : "bg-white border-border text-foreground hover:border-primary/30"
+                activeOp === op ? `${c.bg} ${c.text} ${c.border} shadow-sm` : "bg-card border-border text-foreground hover:border-primary/30"
               }`}
             >
               {op}

@@ -11,6 +11,7 @@ import { EnDirectorySection } from "./EnDirectorySection";
 import { EnInfoSection } from "./EnInfoSection";
 import { EnFavoritesBar } from "./EnFavoritesBar";
 import { useFavoritesEn } from "./useFavoritesEn";
+import ThemeToggle from "@/components/ThemeToggle";
 
 export default function IndexEn() {
   const [selected, setSelected] = useState<{ ru: PhoneNumber; en: PhoneNumberEn | undefined } | null>(null);
@@ -51,11 +52,11 @@ export default function IndexEn() {
 
   return (
     <div className="min-h-screen bg-background">
-      <header className="sticky top-0 z-50 bg-white border-b border-border shadow-sm">
+      <header className="sticky top-0 z-50 bg-card border-b border-border shadow-sm">
         <div className="max-w-6xl mx-auto px-4">
           <div className="flex items-center justify-between h-16">
             <Link to="/" className="flex items-center gap-2">
-              <div className="font-display text-base font-bold text-black leading-tight tracking-wide">
+              <div className="font-display text-base font-bold text-foreground leading-tight tracking-wide">
                 <span className="md:hidden">2407.rf</span>
                 <span className="hidden md:inline">Short Numbers of Russia "2407"</span>
               </div>
@@ -74,6 +75,7 @@ export default function IndexEn() {
               <span className="flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-body font-semibold text-primary bg-primary/10">
                 EN
               </span>
+              <ThemeToggle />
             </div>
           </div>
         </div>
@@ -96,7 +98,7 @@ export default function IndexEn() {
 
       </main>
 
-      <footer className="border-t border-border bg-white py-6 px-4">
+      <footer className="border-t border-border bg-card py-6 px-4">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-3 text-sm text-muted-foreground font-body">
           <div className="flex items-center gap-2">
             <span>short-number.rf / 2407.rf</span>

@@ -30,7 +30,7 @@ function BookmarkCard({
   const spec = bm.profile && bm.profile.toLowerCase() !== bm.type.toLowerCase() ? bm.profile : "";
   return (
     <div
-      className={`bg-white border border-border rounded-xl p-4 flex items-start gap-3 ${draggable ? "cursor-grab active:cursor-grabbing" : ""}`}
+      className={`bg-card border border-border rounded-xl p-4 flex items-start gap-3 ${draggable ? "cursor-grab active:cursor-grabbing" : ""}`}
       draggable={draggable}
       onDragStart={() => onDragStart?.(bm.id)}
     >
@@ -208,7 +208,7 @@ function CollectionsView({ bookmarks, onRemove }: { bookmarks: Bookmark[]; onRem
           <Icon name="FolderPlus" size={15} /> Создать коллекцию
         </button>
       ) : (
-        <div className="bg-white border border-border rounded-xl p-4 space-y-3">
+        <div className="bg-card border border-border rounded-xl p-4 space-y-3">
           <p className="text-sm font-display font-semibold text-foreground">Новая коллекция</p>
           <input
             autoFocus
@@ -370,7 +370,7 @@ export function NearbyBookmarks({
                 <Icon name="ChevronDown" size={11} className={`transition-transform ${showViewPicker ? "rotate-180" : ""}`} />
               </button>
               {showViewPicker && (
-                <div className="absolute right-0 top-full mt-1 z-20 bg-white border border-border rounded-xl shadow-lg overflow-hidden min-w-[170px]">
+                <div className="absolute right-0 top-full mt-1 z-20 bg-card border border-border rounded-xl shadow-lg overflow-hidden min-w-[170px]">
                   {VIEW_OPTIONS.map(opt => (
                     <button
                       key={opt.id}
