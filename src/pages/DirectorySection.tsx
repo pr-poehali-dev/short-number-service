@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Icon from "@/components/ui/icon";
 import { OPERATOR_COLORS, PhoneNumber, Operator } from "./data";
 import { NumberCard } from "./SharedComponents";
@@ -48,6 +48,19 @@ type Tab = "all" | "operators" | "commercial";
 
 const COMMERCIAL_INDUSTRIES = ["Все", "Банк", "Транспорт", "Торговля", "Недвижимость"];
 
+const GEO_REGION_URL = "https://functions.poehali.dev/efccc458-5f64-4643-b99d-8e2d716a1bab";
+const GEO_REGION_COOKIE = "geo_region_applied";
+
+function getCookie(name: string): string | null {
+  const match = document.cookie.match(new RegExp("(?:^|; )" + name + "=([^;]*)"));
+  return match ? decodeURIComponent(match[1]) : null;
+}
+
+function setCookie(name: string, value: string, days = 365) {
+  const expires = new Date(Date.now() + days * 864e5).toUTCString();
+  document.cookie = `${name}=${encodeURIComponent(value)}; expires=${expires}; path=/`;
+}
+
 export function DirectorySection({ numbers, onSelect, initialCategory, favorites = [], onRemoveFavorite, onSelectFavorite, onSuggestNew }: { numbers: PhoneNumber[]; onSelect: (n: PhoneNumber) => void; initialCategory?: string; favorites?: Favorite[]; onRemoveFavorite?: (id: number) => void; onSelectFavorite?: (id: number) => void; onSuggestNew?: () => void }) {
   const [tab, setTab] = useState<Tab>(() => initialCategory === "Коммерческие" ? "commercial" : "all");
   const [query, setQuery] = useState("");
@@ -58,6 +71,21 @@ export function DirectorySection({ numbers, onSelect, initialCategory, favorites
   const [regionFilter, setRegionFilter] = useState("Все регионы");
 
   const allRegions = ["Все регионы", ...Array.from(new Set(numbers.flatMap((n) => n.regions ?? []))).sort()];
+
+  useEffect(() => {
+    if (getCookie(GEO_REGION_COOKIE)) return;
+    setCookie(GEO_REGION_COOKIE, "1");
+    fetch(GEO_REGION_URL)
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.region && allRegions.includes(data.region)) {
+          setRegionFilter(data.region);
+          ymGoal("directory_region_auto", { region: data.region });
+        }
+      })
+      .catch(() => {});
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const tabs: { id: Tab; label: string; icon: string }[] = [
     { id: "all",        label: "Все номера",    icon: "List" },
