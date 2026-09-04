@@ -351,6 +351,19 @@ export function Header({
   const tapTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const navigate = useNavigate();
 
+  const A2HS_BANNER_KEY = "a2hs_banner_shown";
+
+  useEffect(() => {
+    if (window.innerWidth >= 640) return;
+    if (localStorage.getItem(A2HS_BANNER_KEY)) return;
+    const handleFirstTouch = () => {
+      localStorage.setItem(A2HS_BANNER_KEY, "1");
+      setInstallOpen(true);
+    };
+    document.addEventListener("touchstart", handleFirstTouch, { once: true, passive: true });
+    return () => document.removeEventListener("touchstart", handleFirstTouch);
+  }, []);
+
   function handleNav(section: string) {
     onNav(section);
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -445,10 +458,10 @@ export function Header({
             <button
               onClick={() => setInstallOpen(true)}
               title="Добавить на домашний экран"
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-primary/30 text-primary hover:bg-primary/5 transition-colors text-sm font-body font-medium"
+              className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-primary/30 text-primary hover:bg-primary/5 transition-colors text-sm font-body font-medium"
             >
               <Icon name="Plus" size={15} />
-              <span className="hidden sm:inline">2407.РФ</span>
+              <span>2407.РФ</span>
             </button>
             <ThemeToggle />
             <button className="md:hidden p-2 rounded-md hover:bg-muted" onClick={() => setMenuOpen(!menuOpen)}>
