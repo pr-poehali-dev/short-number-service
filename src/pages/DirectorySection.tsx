@@ -314,7 +314,14 @@ export function DirectorySection({ numbers, onSelect, initialCategory, favorites
               </div>
             </div>
           )}
-          <p className="text-sm text-muted-foreground font-body mb-4">Найдено: <strong>{commercial.length}</strong> номеров</p>
+          <div className="flex items-center justify-between gap-3 mb-4">
+            <p className="text-sm text-muted-foreground font-body">Найдено: <strong>{commercial.length}</strong> номеров</p>
+            {hasActiveFilters && (
+              <button onClick={resetFilters} className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground font-body flex-shrink-0">
+                <Icon name="RotateCcw" size={13} /> Сбросить фильтры
+              </button>
+            )}
+          </div>
           {commercial.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {commercial.map((n) => <CommercialCard key={n.id} num={n} onClick={onSelect} />)}
