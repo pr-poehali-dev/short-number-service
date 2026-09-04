@@ -103,16 +103,22 @@ export function DirectorySection({ numbers, onSelect, initialCategory, favorites
     return matchQ && matchC && matchR;
   });
 
-  const filteredOp = activeOp === "Все"
+  const filteredOp = (activeOp === "Все"
     ? numbers.filter((n) => n.operator !== "Универсальный" && ["МТС", "Билайн", "МегаФон", "Т2"].includes(n.operator))
-    : numbers.filter((n) => n.operator === activeOp);
+    : numbers.filter((n) => n.operator === activeOp)
+  ).filter((n) => {
+    const q = query.toLowerCase();
+    return !q || n.number.includes(q) || n.name.toLowerCase().includes(q) || n.description.toLowerCase().includes(q) || n.operator.toLowerCase().includes(q);
+  });
 
   const commercial = numbers.filter((n) => {
     if (n.category !== "Коммерческие") return false;
+    const q = query.toLowerCase();
+    const matchQ = !q || n.number.includes(q) || n.name.toLowerCase().includes(q) || n.description.toLowerCase().includes(q) || n.operator.toLowerCase().includes(q);
     const matchI = commIndustry === "Все" || n.industry === commIndustry;
     const matchD = commDevice === "all" || n.deviceAccess === commDevice;
     const matchR = regionFilter === "Все регионы" || (n.regions && n.regions.includes(regionFilter));
-    return matchI && matchD && matchR;
+    return matchQ && matchI && matchD && matchR;
   });
 
   return (
@@ -173,22 +179,23 @@ export function DirectorySection({ numbers, onSelect, initialCategory, favorites
         )}
       </div>
 
+      <div className="relative mb-4">
+        <Icon name="Search" size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground" />
+        <input
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder="Поиск по номеру, названию или назначению..."
+          className="w-full pl-10 pr-10 py-3 border border-border rounded-xl font-body text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary bg-white"
+        />
+        {query && (
+          <button onClick={() => setQuery("")} className="absolute right-3.5 top-1/2 -translate-y-1/2">
+            <Icon name="X" size={16} className="text-muted-foreground" />
+          </button>
+        )}
+      </div>
+
       {tab === "all" && (
         <>
-          <div className="relative mb-4">
-            <Icon name="Search" size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground" />
-            <input
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Поиск по номеру, названию или назначению..."
-              className="w-full pl-10 pr-10 py-3 border border-border rounded-xl font-body text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary bg-white"
-            />
-            {query && (
-              <button onClick={() => setQuery("")} className="absolute right-3.5 top-1/2 -translate-y-1/2">
-                <Icon name="X" size={16} className="text-muted-foreground" />
-              </button>
-            )}
-          </div>
           <div className="flex flex-wrap gap-2 mb-4">
             {categories.map((c) => (
               <button
