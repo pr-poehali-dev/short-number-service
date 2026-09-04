@@ -44,7 +44,7 @@ function CommercialCard({ num, onClick }: { num: PhoneNumber; onClick: (n: Phone
   );
 }
 
-type Tab = "all" | "operators" | "commercial";
+type Tab = "favorites" | "all" | "operators" | "commercial";
 
 const COMMERCIAL_INDUSTRIES = ["Все", "Банк", "Транспорт", "Торговля", "Недвижимость"];
 
@@ -109,12 +109,23 @@ export function DirectorySection({ numbers, onSelect, initialCategory, favorites
   }, []);
 
   const tabs: { id: Tab; label: string; icon: string }[] = [
+    { id: "favorites",  label: "Избранное",     icon: "Star" },
     { id: "all",        label: "Все номера",    icon: "List" },
     { id: "operators",  label: "По операторам", icon: "Wifi" },
     { id: "commercial", label: "Коммерческие",  icon: "Building2" },
   ];
 
   const categories = ["Все", "Экстренные", "Поддержка", "Автоинформатор", "Безопасность", "Социальные", "Здоровье", "Коммерческие"];
+
+  const favoriteIds = new Set(favorites.map((f) => f.id));
+  const filteredFavorites = numbers.filter((n) => {
+    if (!favoriteIds.has(n.id)) return false;
+    const q = query.toLowerCase();
+    const matchQ = !q || n.number.includes(q) || n.name.toLowerCase().includes(q) || n.description.toLowerCase().includes(q) || n.operator.toLowerCase().includes(q);
+    const matchC = category === "Все" || n.category === category;
+    const matchR = regionFilter === "Все регионы" || (n.regions && n.regions.includes(regionFilter));
+    return matchQ && matchC && matchR;
+  });
 
   const filteredAll = numbers.filter((n) => {
     const q = query.toLowerCase();
@@ -181,7 +192,7 @@ export function DirectorySection({ numbers, onSelect, initialCategory, favorites
             </button>
           ))}
         </div>
-        {(tab === "all" || tab === "commercial") && allRegions.length > 1 && (
+        {(tab === "favorites" || tab === "all" || tab === "commercial") && allRegions.length > 1 && (
           <div className="flex items-center gap-2 flex-shrink-0 pb-2">
             <Icon name="MapPin" size={15} className="text-muted-foreground flex-shrink-0" />
             <select
@@ -225,6 +236,50 @@ export function DirectorySection({ numbers, onSelect, initialCategory, favorites
           <Icon name={filtersVisible ? "SlidersHorizontal" : "ListFilter"} size={18} />
         </button>
       </div>
+
+      {tab === "favorites" && (
+        <>
+          {filtersVisible && (
+            <div className="flex flex-wrap gap-2 mb-4">
+              {categories.map((c) => (
+                <button
+                  key={`fav-${c}`}
+                  onClick={() => { setCategory(c); ymGoal("directory_category", { category: c }); }}
+                  className={`px-3 py-1.5 rounded-full text-sm font-body font-medium transition-colors ${
+                    category === c ? "bg-primary text-white" : "bg-white border border-border text-foreground hover:border-primary/40"
+                  }`}
+                >
+                  {c}
+                </button>
+              ))}
+            </div>
+          )}
+          <div className="flex items-center justify-between gap-3 mb-4">
+            <p className="text-sm text-muted-foreground font-body">Найдено: <strong>{filteredFavorites.length}</strong> номеров</p>
+            {hasActiveFilters && (
+              <button onClick={resetFilters} className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground font-body flex-shrink-0">
+                <Icon name="RotateCcw" size={13} /> Сбросить фильтры
+              </button>
+            )}
+          </div>
+          {filteredFavorites.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              {filteredFavorites.map((n) => <NumberCard key={n.id} num={n} onClick={onSelect} />)}
+            </div>
+          ) : favorites.length === 0 ? (
+            <div className="text-center py-16 text-muted-foreground font-body">
+              <Icon name="Star" size={40} className="mx-auto mb-3 opacity-40" />
+              <p>Избранных номеров пока нет</p>
+              <p className="text-xs mt-1 opacity-70">Откройте карточку номера и нажмите на звезду, чтобы сохранить здесь. До 6 номеров.</p>
+            </div>
+          ) : (
+            <div className="text-center py-16 text-muted-foreground font-body">
+              <Icon name="SearchX" size={40} className="mx-auto mb-3 opacity-40" />
+              <p>По заданным фильтрам ничего не найдено</p>
+            </div>
+          )}
+        </>
+      )}
 
       {tab === "all" && (
         <>

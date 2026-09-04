@@ -26,9 +26,11 @@ export function useFavorites() {
   }, [favorites]);
 
   function addFavorite(num: PhoneNumber) {
-    if (favorites.length >= MAX_FAVORITES) return;
     if (favorites.find((f) => f.id === num.id)) return;
-    setFavorites((prev) => [...prev, { id: num.id, number: num.number, name: num.name }]);
+    setFavorites((prev) => {
+      const next = [...prev, { id: num.id, number: num.number, name: num.name }];
+      return next.length > MAX_FAVORITES ? next.slice(next.length - MAX_FAVORITES) : next;
+    });
   }
 
   function removeFavorite(id: number) {

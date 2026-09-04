@@ -187,9 +187,9 @@ export function NumberModal({ num, onClose, onAddFavorite, isFavorite, maxReache
             {onAddFavorite && (
               <button
                 onClick={onAddFavorite}
-                disabled={isFavorite || maxReached}
+                disabled={isFavorite}
                 className="p-2 rounded-lg hover:bg-yellow-50 disabled:opacity-40 disabled:cursor-default transition-colors"
-                title={isFavorite ? "Уже в избранном" : maxReached ? "Избранное заполнено (макс. 6)" : "Добавить в избранное"}
+                title={isFavorite ? "Уже в избранном" : maxReached ? "Добавить в избранное (заменит самое старое, макс. 6)" : "Добавить в избранное"}
               >
                 <Icon name="Star" size={18} className={isFavorite ? "text-yellow-400 fill-yellow-400" : "text-muted-foreground"} />
               </button>
