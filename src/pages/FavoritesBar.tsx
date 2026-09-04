@@ -9,7 +9,7 @@ interface Props {
 
 export function FavoritesBar({ favorites, onRemove, onSelect }: Props) {
   return (
-    <div className="max-w-6xl mx-auto px-4 pt-5 pb-2">
+    <div className="max-w-6xl mx-auto px-4 pt-8 pb-2">
       <div className="flex items-center gap-2 mb-3">
         <Icon name="Star" size={15} className="text-primary" />
         <span className="font-display font-semibold text-foreground text-sm">Избранное</span>
@@ -17,10 +17,10 @@ export function FavoritesBar({ favorites, onRemove, onSelect }: Props) {
       </div>
 
       {favorites.length === 0 ? (
-        <div className="border-2 border-dashed border-border rounded-xl p-4 text-center">
-          <Icon name="Star" size={24} className="text-muted-foreground/30 mx-auto mb-1.5" />
+        <div className="border-2 border-dashed border-border rounded-xl p-5 text-center">
+          <Icon name="Star" size={28} className="text-muted-foreground/40 mx-auto mb-2" />
           <p className="text-sm font-body text-muted-foreground">Избранных номеров пока нет</p>
-          <p className="text-xs font-body text-muted-foreground/60 mt-0.5">
+          <p className="text-xs font-body text-muted-foreground/70 mt-1 max-w-xs mx-auto">
             Откройте карточку номера и нажмите <Icon name="Star" size={11} className="inline mx-0.5 relative -top-px" />, чтобы сохранить здесь. Здесь будут отображаться 6 последних номеров.
           </p>
         </div>
