@@ -109,21 +109,40 @@ export function DirectorySection({ numbers, onSelect, initialCategory, favorites
       </div>
       <p className="text-muted-foreground font-body mb-6 text-sm">Нажмите на карточку, чтобы узнать подробности, использовать или сохранить</p>
 
-      <div className="flex gap-2 mb-6 border-b border-border overflow-x-auto scrollbar-none" style={{overflowY: 'hidden'}}>
-        {tabs.map((t) => (
-          <button
-            key={t.id}
-            onClick={() => { setTab(t.id); ymGoal("directory_tab", { tab: t.id }); }}
-            className={`flex items-center gap-1.5 px-4 py-2.5 text-sm font-body font-medium border-b-2 transition-colors -mb-px whitespace-nowrap ${
-              tab === t.id
-                ? "border-primary text-primary"
-                : "border-transparent text-muted-foreground hover:text-foreground"
-            }`}
-          >
-            <Icon name={t.icon as Parameters<typeof Icon>[0]["name"]} size={15} />
-            {t.label}
-          </button>
-        ))}
+      <div className="flex items-center justify-between gap-3 mb-6 border-b border-border">
+        <div className="flex gap-2 overflow-x-auto scrollbar-none" style={{overflowY: 'hidden'}}>
+          {tabs.map((t) => (
+            <button
+              key={t.id}
+              onClick={() => { setTab(t.id); ymGoal("directory_tab", { tab: t.id }); }}
+              className={`flex items-center gap-1.5 px-4 py-2.5 text-sm font-body font-medium border-b-2 transition-colors -mb-px whitespace-nowrap ${
+                tab === t.id
+                  ? "border-primary text-primary"
+                  : "border-transparent text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              <Icon name={t.icon as Parameters<typeof Icon>[0]["name"]} size={15} />
+              {t.label}
+            </button>
+          ))}
+        </div>
+        {tab === "all" && allRegions.length > 1 && (
+          <div className="flex items-center gap-2 flex-shrink-0 pb-2">
+            <Icon name="MapPin" size={15} className="text-muted-foreground flex-shrink-0" />
+            <select
+              value={regionFilter}
+              onChange={(e) => { setRegionFilter(e.target.value); ymGoal("directory_region", { region: e.target.value }); }}
+              className="border border-border rounded-lg px-3 py-1.5 text-sm font-body bg-white focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"
+            >
+              {allRegions.map((r) => <option key={r}>{r}</option>)}
+            </select>
+            {regionFilter !== "Все регионы" && (
+              <button onClick={() => setRegionFilter("Все регионы")} className="text-xs text-muted-foreground hover:text-foreground">
+                <Icon name="X" size={14} />
+              </button>
+            )}
+          </div>
+        )}
       </div>
 
       {tab === "all" && (
@@ -155,23 +174,6 @@ export function DirectorySection({ numbers, onSelect, initialCategory, favorites
               </button>
             ))}
           </div>
-          {allRegions.length > 1 && (
-            <div className="flex items-center gap-2 mb-6">
-              <Icon name="MapPin" size={15} className="text-muted-foreground flex-shrink-0" />
-              <select
-                value={regionFilter}
-                onChange={(e) => { setRegionFilter(e.target.value); ymGoal("directory_region", { region: e.target.value }); }}
-                className="border border-border rounded-lg px-3 py-1.5 text-sm font-body bg-white focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"
-              >
-                {allRegions.map((r) => <option key={r}>{r}</option>)}
-              </select>
-              {regionFilter !== "Все регионы" && (
-                <button onClick={() => setRegionFilter("Все регионы")} className="text-xs text-muted-foreground hover:text-foreground">
-                  <Icon name="X" size={14} />
-                </button>
-              )}
-            </div>
-          )}
           <p className="text-sm text-muted-foreground font-body mb-4">Найдено: <strong>{filteredAll.length}</strong> номеров</p>
           {filteredAll.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
