@@ -178,7 +178,7 @@ export function DirectorySection({ numbers, onSelect, initialCategory, favorites
       <p className="text-muted-foreground font-body mb-6 text-sm">Нажмите на карточку, чтобы узнать подробности, использовать или сохранить</p>
 
       <div className="flex items-center justify-between gap-3 mb-6 border-b border-border">
-        <div className="flex gap-2 overflow-x-auto scrollbar-none" style={{overflowY: 'hidden'}}>
+        <div className="flex items-stretch h-11 gap-2 overflow-x-auto scrollbar-none" style={{overflowY: 'hidden'}}>
           {tabs.map((t) => (
             <button
               key={t.id}
@@ -195,7 +195,7 @@ export function DirectorySection({ numbers, onSelect, initialCategory, favorites
           ))}
         </div>
         {(tab === "favorites" || tab === "all" || tab === "operators" || tab === "commercial") && allRegions.length > 1 && (
-          <div className="flex items-center gap-2 flex-shrink-0 pb-2">
+          <div className="flex items-center h-11 gap-2 flex-shrink-0">
             <Icon name="MapPin" size={15} className="text-muted-foreground flex-shrink-0" />
             <select
               value={regionFilter}
