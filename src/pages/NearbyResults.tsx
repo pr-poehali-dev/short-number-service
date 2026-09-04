@@ -224,7 +224,7 @@ export function NearbyResults({
               const alreadySaved = isBookmarked(p);
               const justSaved = savedId !== null && bookmarks.find(b => b.id === savedId)?.name === p.name;
               return (
-                <div key={i} className="bg-white border border-border rounded-xl p-4 flex items-start gap-3">
+                <div key={i} className="number-card bg-white border border-border rounded-xl p-4 flex items-start gap-3">
                   <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
                     <Icon name={getIcon(p.type)} size={20} className="text-primary" fallback="Store" />
                   </div>
