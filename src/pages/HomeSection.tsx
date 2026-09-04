@@ -146,7 +146,6 @@ function NumberForm() {
           >
             <Icon name={m.icon} size={14} />
             <span className="hidden sm:inline">{m.label}</span>
-            <span className="sm:hidden">{m.short}</span>
           </button>
         ))}
       </div>
