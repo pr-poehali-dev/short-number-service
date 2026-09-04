@@ -50,6 +50,7 @@ const COMMERCIAL_INDUSTRIES = ["Все", "Банк", "Транспорт", "То
 
 const GEO_REGION_URL = "https://functions.poehali.dev/efccc458-5f64-4643-b99d-8e2d716a1bab";
 const GEO_REGION_COOKIE = "geo_region_applied";
+const FILTERS_VISIBLE_COOKIE = "directory_filters_visible";
 
 function getCookie(name: string): string | null {
   const match = document.cookie.match(new RegExp("(?:^|; )" + name + "=([^;]*)"));
@@ -69,6 +70,14 @@ export function DirectorySection({ numbers, onSelect, initialCategory, favorites
   const [commIndustry, setCommIndustry] = useState("Все");
   const [commDevice, setCommDevice] = useState<"all" | "mobile">("all");
   const [regionFilter, setRegionFilter] = useState("Все регионы");
+  const [filtersVisible, setFiltersVisible] = useState(() => getCookie(FILTERS_VISIBLE_COOKIE) !== "0");
+
+  function toggleFilters() {
+    const next = !filtersVisible;
+    setFiltersVisible(next);
+    setCookie(FILTERS_VISIBLE_COOKIE, next ? "1" : "0");
+    ymGoal("directory_filters_toggle", { visible: next });
+  }
 
   const allRegions = ["Все регионы", ...Array.from(new Set(numbers.flatMap((n) => n.regions ?? []))).sort()];
 
@@ -179,36 +188,49 @@ export function DirectorySection({ numbers, onSelect, initialCategory, favorites
         )}
       </div>
 
-      <div className="relative mb-4">
-        <Icon name="Search" size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground" />
-        <input
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          placeholder="Поиск по номеру, названию или назначению..."
-          className="w-full pl-10 pr-10 py-3 border border-border rounded-xl font-body text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary bg-white"
-        />
-        {query && (
-          <button onClick={() => setQuery("")} className="absolute right-3.5 top-1/2 -translate-y-1/2">
-            <Icon name="X" size={16} className="text-muted-foreground" />
-          </button>
-        )}
+      <div className="flex items-center gap-2 mb-4">
+        <div className="relative flex-1">
+          <Icon name="Search" size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground" />
+          <input
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Поиск по номеру, названию или назначению..."
+            className="w-full pl-10 pr-10 py-3 border border-border rounded-xl font-body text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary bg-white"
+          />
+          {query && (
+            <button onClick={() => setQuery("")} className="absolute right-3.5 top-1/2 -translate-y-1/2">
+              <Icon name="X" size={16} className="text-muted-foreground" />
+            </button>
+          )}
+        </div>
+        <button
+          onClick={toggleFilters}
+          title={filtersVisible ? "Скрыть фильтры" : "Показать фильтры"}
+          className={`flex items-center justify-center flex-shrink-0 w-11 h-11 rounded-xl border transition-colors ${
+            filtersVisible ? "bg-primary/10 border-primary/30 text-primary" : "bg-white border-border text-muted-foreground hover:border-primary/40"
+          }`}
+        >
+          <Icon name={filtersVisible ? "SlidersHorizontal" : "ListFilter"} size={18} />
+        </button>
       </div>
 
       {tab === "all" && (
         <>
-          <div className="flex flex-wrap gap-2 mb-4">
-            {categories.map((c) => (
-              <button
-                key={c}
-                onClick={() => { setCategory(c); ymGoal("directory_category", { category: c }); }}
-                className={`px-3 py-1.5 rounded-full text-sm font-body font-medium transition-colors ${
-                  category === c ? "bg-primary text-white" : "bg-white border border-border text-foreground hover:border-primary/40"
-                }`}
-              >
-                {c}
-              </button>
-            ))}
-          </div>
+          {filtersVisible && (
+            <div className="flex flex-wrap gap-2 mb-4">
+              {categories.map((c) => (
+                <button
+                  key={c}
+                  onClick={() => { setCategory(c); ymGoal("directory_category", { category: c }); }}
+                  className={`px-3 py-1.5 rounded-full text-sm font-body font-medium transition-colors ${
+                    category === c ? "bg-primary text-white" : "bg-white border border-border text-foreground hover:border-primary/40"
+                  }`}
+                >
+                  {c}
+                </button>
+              ))}
+            </div>
+          )}
           <p className="text-sm text-muted-foreground font-body mb-4">Найдено: <strong>{filteredAll.length}</strong> номеров</p>
           {filteredAll.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -225,22 +247,24 @@ export function DirectorySection({ numbers, onSelect, initialCategory, favorites
 
       {tab === "operators" && (
         <>
-          <div className="flex gap-2 flex-wrap mb-6">
-            {(["Все", "МТС", "Билайн", "МегаФон", "Т2"] as (Operator | "Все")[]).map((op) => {
-              const c = op === "Все" ? { bg: "bg-primary", text: "text-white", border: "border-primary" } : OPERATOR_COLORS[op as Operator];
-              return (
-                <button
-                  key={op}
-                  onClick={() => { setActiveOp(op); ymGoal("directory_operator", { operator: op }); }}
-                  className={`px-5 py-2 rounded-xl text-sm font-body font-semibold transition-all border ${
-                    activeOp === op ? `${c.bg} ${c.text} ${c.border} shadow-sm` : "bg-white border-border text-foreground hover:border-primary/30"
-                  }`}
-                >
-                  {op}
-                </button>
-              );
-            })}
-          </div>
+          {filtersVisible && (
+            <div className="flex gap-2 flex-wrap mb-6">
+              {(["Все", "МТС", "Билайн", "МегаФон", "Т2"] as (Operator | "Все")[]).map((op) => {
+                const c = op === "Все" ? { bg: "bg-primary", text: "text-white", border: "border-primary" } : OPERATOR_COLORS[op as Operator];
+                return (
+                  <button
+                    key={op}
+                    onClick={() => { setActiveOp(op); ymGoal("directory_operator", { operator: op }); }}
+                    className={`px-5 py-2 rounded-xl text-sm font-body font-semibold transition-all border ${
+                      activeOp === op ? `${c.bg} ${c.text} ${c.border} shadow-sm` : "bg-white border-border text-foreground hover:border-primary/30"
+                    }`}
+                  >
+                    {op}
+                  </button>
+                );
+              })}
+            </div>
+          )}
           {filteredOp.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {filteredOp.map((n) => <NumberCard key={n.id} num={n} onClick={onSelect} />)}
@@ -256,38 +280,40 @@ export function DirectorySection({ numbers, onSelect, initialCategory, favorites
 
       {tab === "commercial" && (
         <>
-          <div className="flex flex-col sm:flex-row gap-3 mb-6">
-            <div className="flex gap-2 flex-wrap">
-              {COMMERCIAL_INDUSTRIES.map((ind) => (
-                <button
-                  key={ind}
-                  onClick={() => { setCommIndustry(ind); ymGoal("directory_industry", { industry: ind }); }}
-                  className={`px-3 py-1.5 rounded-full text-sm font-body font-medium transition-colors ${
-                    commIndustry === ind ? "bg-amber-500 text-white" : "bg-white border border-border text-foreground hover:border-amber-300"
-                  }`}
-                >
-                  {ind}
-                </button>
-              ))}
+          {filtersVisible && (
+            <div className="flex flex-col sm:flex-row gap-3 mb-6">
+              <div className="flex gap-2 flex-wrap">
+                {COMMERCIAL_INDUSTRIES.map((ind) => (
+                  <button
+                    key={ind}
+                    onClick={() => { setCommIndustry(ind); ymGoal("directory_industry", { industry: ind }); }}
+                    className={`px-3 py-1.5 rounded-full text-sm font-body font-medium transition-colors ${
+                      commIndustry === ind ? "bg-amber-500 text-white" : "bg-white border border-border text-foreground hover:border-amber-300"
+                    }`}
+                  >
+                    {ind}
+                  </button>
+                ))}
+              </div>
+              <div className="flex gap-2 sm:ml-auto flex-wrap">
+                {([
+                  { val: "all",    label: "Все устройства", icon: "Smartphone" },
+                  { val: "mobile", label: "Смартфон",       icon: "Smartphone" },
+                ] as const).map((d) => (
+                  <button
+                    key={d.val}
+                    onClick={() => setCommDevice(d.val)}
+                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-body font-medium transition-colors border ${
+                      commDevice === d.val ? "bg-amber-50 border-amber-300 text-amber-700" : "bg-white border-border text-muted-foreground hover:border-amber-200"
+                    }`}
+                  >
+                    <Icon name={d.icon as Parameters<typeof Icon>[0]["name"]} size={13} />
+                    {d.label}
+                  </button>
+                ))}
+              </div>
             </div>
-            <div className="flex gap-2 sm:ml-auto flex-wrap">
-              {([
-                { val: "all",    label: "Все устройства", icon: "Smartphone" },
-                { val: "mobile", label: "Смартфон",       icon: "Smartphone" },
-              ] as const).map((d) => (
-                <button
-                  key={d.val}
-                  onClick={() => setCommDevice(d.val)}
-                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-body font-medium transition-colors border ${
-                    commDevice === d.val ? "bg-amber-50 border-amber-300 text-amber-700" : "bg-white border-border text-muted-foreground hover:border-amber-200"
-                  }`}
-                >
-                  <Icon name={d.icon as Parameters<typeof Icon>[0]["name"]} size={13} />
-                  {d.label}
-                </button>
-              ))}
-            </div>
-          </div>
+          )}
           <p className="text-sm text-muted-foreground font-body mb-4">Найдено: <strong>{commercial.length}</strong> номеров</p>
           {commercial.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
