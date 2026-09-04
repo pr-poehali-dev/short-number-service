@@ -198,9 +198,9 @@ export function DirectorySection({ numbers, onSelect, initialCategory, favorites
             <select
               value={regionFilter}
               onChange={(e) => { setRegionFilter(e.target.value); ymGoal("directory_region", { region: e.target.value }); }}
-              className="border border-border rounded-lg px-3 py-1.5 text-sm font-body bg-white focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"
+              className="border border-border rounded-lg w-9 px-1 text-transparent sm:w-auto sm:px-3 sm:text-foreground py-1.5 text-sm font-body bg-white focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"
             >
-              {allRegions.map((r) => <option key={r}>{r}</option>)}
+              {allRegions.map((r) => <option key={r} className="text-foreground">{r}</option>)}
             </select>
             {regionFilter !== "Все регионы" && (
               <button onClick={() => setRegionFilter("Все регионы")} className="text-xs text-muted-foreground hover:text-foreground">
