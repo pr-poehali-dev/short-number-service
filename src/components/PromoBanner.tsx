@@ -122,10 +122,10 @@ function VoteBanner({ settings, onClose }: { settings: BannerSettings; onClose: 
               </p>
             </div>
           </div>
-          <div className="flex items-center gap-3 flex-wrap">
+          <div className="flex items-center gap-3 flex-nowrap overflow-x-auto scrollbar-none pb-1">
             <button
               onClick={handleVote}
-              className="flex items-center gap-2 px-5 py-2.5 bg-amber-500 hover:bg-amber-600 text-white rounded-xl font-body font-semibold text-sm transition-colors"
+              className="flex items-center gap-2 px-5 py-2.5 bg-amber-500 hover:bg-amber-600 text-white rounded-xl font-body font-semibold text-sm transition-colors whitespace-nowrap flex-shrink-0"
             >
               <Icon name="ThumbsUp" size={15} />
               Голосую «За»
@@ -134,7 +134,7 @@ function VoteBanner({ settings, onClose }: { settings: BannerSettings; onClose: 
               href="https://max.ru/id7814535230_biz2"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-[#7B2FF7] to-[#2AABEE] text-white rounded-xl font-body font-semibold text-sm hover:opacity-90 transition-opacity no-underline"
+              className="flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-[#7B2FF7] to-[#2AABEE] text-white rounded-xl font-body font-semibold text-sm hover:opacity-90 transition-opacity no-underline whitespace-nowrap flex-shrink-0"
             >
               <Icon name="Zap" size={15} /> MAX
             </a>
@@ -158,11 +158,11 @@ function VoteBanner({ settings, onClose }: { settings: BannerSettings; onClose: 
             rows={3}
             className="w-full px-3 py-2.5 border border-amber-200 rounded-xl font-body text-sm focus:outline-none focus:ring-2 focus:ring-amber-300 focus:border-amber-400 resize-none bg-white mb-3"
           />
-          <div className="flex gap-2">
+          <div className="flex gap-2 flex-nowrap overflow-x-auto scrollbar-none pb-1">
             <button
               onClick={handleSubmit}
               disabled={sending}
-              className="flex items-center gap-2 px-4 py-2 bg-amber-500 hover:bg-amber-600 disabled:opacity-60 text-white rounded-xl font-body font-semibold text-sm transition-colors"
+              className="flex items-center gap-2 px-4 py-2 bg-amber-500 hover:bg-amber-600 disabled:opacity-60 text-white rounded-xl font-body font-semibold text-sm transition-colors whitespace-nowrap flex-shrink-0"
             >
               {sending ? <Icon name="Loader" size={14} className="animate-spin" /> : <Icon name="Send" size={14} />}
               Отправить
@@ -170,7 +170,7 @@ function VoteBanner({ settings, onClose }: { settings: BannerSettings; onClose: 
             <button
               onClick={handleSkipComment}
               disabled={sending}
-              className="px-4 py-2 border border-border bg-white hover:bg-muted/50 text-muted-foreground rounded-xl font-body text-sm transition-colors"
+              className="px-4 py-2 border border-border bg-white hover:bg-muted/50 text-muted-foreground rounded-xl font-body text-sm transition-colors whitespace-nowrap flex-shrink-0"
             >
               Пропустить
             </button>
@@ -257,13 +257,13 @@ export default function PromoBanner({ section }: Props) {
             <h3 className="font-display text-lg font-bold text-foreground mb-1">{settings.title}</h3>
             <p className="text-sm text-muted-foreground font-body">{settings.text}</p>
           </div>
-          <div className="flex gap-3 flex-shrink-0 flex-wrap">
+          <div className="flex gap-3 flex-shrink-0 flex-nowrap overflow-x-auto scrollbar-none w-full sm:w-auto pb-1">
             <a
               href="https://max.ru/id7814535230_biz2"
               target="_blank"
               rel="noopener noreferrer"
               onClick={handleClose}
-              className="flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-[#7B2FF7] to-[#2AABEE] text-white rounded-xl font-body font-semibold text-sm hover:opacity-90 transition-opacity no-underline"
+              className="flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-[#7B2FF7] to-[#2AABEE] text-white rounded-xl font-body font-semibold text-sm hover:opacity-90 transition-opacity no-underline whitespace-nowrap flex-shrink-0"
             >
               <Icon name="Zap" size={16} /> MAX
             </a>
@@ -272,7 +272,7 @@ export default function PromoBanner({ section }: Props) {
               target="_blank"
               rel="noopener noreferrer"
               onClick={handleClose}
-              className="flex items-center gap-2 px-4 py-2.5 bg-[#2AABEE] text-white rounded-xl font-body font-semibold text-sm hover:bg-[#239cd8] transition-colors no-underline"
+              className="flex items-center gap-2 px-4 py-2.5 bg-[#2AABEE] text-white rounded-xl font-body font-semibold text-sm hover:bg-[#239cd8] transition-colors no-underline whitespace-nowrap flex-shrink-0"
             >
               <Icon name="Send" size={16} /> Telegram
             </a>
@@ -281,7 +281,7 @@ export default function PromoBanner({ section }: Props) {
               target="_blank"
               rel="noopener noreferrer"
               onClick={handleClose}
-              className="flex items-center gap-2 px-4 py-2.5 bg-[#0077FF] text-white rounded-xl font-body font-semibold text-sm hover:bg-[#0066dd] transition-colors no-underline"
+              className="flex items-center gap-2 px-4 py-2.5 bg-[#0077FF] text-white rounded-xl font-body font-semibold text-sm hover:bg-[#0066dd] transition-colors no-underline whitespace-nowrap flex-shrink-0"
             >
               <Icon name="Users" size={16} /> ВКонтакте
             </a>
@@ -312,13 +312,13 @@ export default function PromoBanner({ section }: Props) {
           <p className="text-xs font-body text-muted-foreground leading-relaxed mb-3">
             {settings.text}
           </p>
-          <div className="flex items-center gap-2 flex-wrap">
+          <div className="flex items-center gap-2 flex-nowrap overflow-x-auto scrollbar-none pb-1">
             <a
               href={settings.button_url}
               target="_blank"
               rel="noopener noreferrer"
               onClick={handleClose}
-              className="inline-flex items-center gap-1.5 px-4 py-2 bg-primary text-primary-foreground rounded-xl text-xs font-body font-semibold hover:bg-primary/90 transition-colors"
+              className="inline-flex items-center gap-1.5 px-4 py-2 bg-primary text-primary-foreground rounded-xl text-xs font-body font-semibold hover:bg-primary/90 transition-colors whitespace-nowrap flex-shrink-0"
             >
               <Icon name="ArrowRight" size={13} />
               {settings.button_label}
@@ -327,7 +327,7 @@ export default function PromoBanner({ section }: Props) {
               href="https://max.ru/id7814535230_biz2"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 px-4 py-2 bg-gradient-to-r from-[#7B2FF7] to-[#2AABEE] text-white rounded-xl text-xs font-body font-semibold hover:opacity-90 transition-opacity no-underline"
+              className="inline-flex items-center gap-1.5 px-4 py-2 bg-gradient-to-r from-[#7B2FF7] to-[#2AABEE] text-white rounded-xl text-xs font-body font-semibold hover:opacity-90 transition-opacity no-underline whitespace-nowrap flex-shrink-0"
             >
               <Icon name="Zap" size={13} /> MAX
             </a>
