@@ -242,12 +242,12 @@ export function DirectorySection({ numbers, onSelect, initialCategory, favorites
       {tab === "favorites" && (
         <>
           {filtersVisible && (
-            <div className="flex flex-wrap gap-2 mb-4">
+            <div className="flex flex-nowrap gap-2 mb-4 overflow-x-auto scrollbar-none pb-1">
               {categories.map((c) => (
                 <button
                   key={`fav-${c}`}
                   onClick={() => { setCategory(c); ymGoal("directory_category", { category: c }); }}
-                  className={`px-3 py-1.5 rounded-full text-sm font-body font-medium transition-colors ${
+                  className={`px-3 py-1.5 rounded-full text-sm font-body font-medium transition-colors whitespace-nowrap flex-shrink-0 ${
                     category === c ? "bg-primary text-white" : "bg-white border border-border text-foreground hover:border-primary/40"
                   }`}
                 >
@@ -286,12 +286,12 @@ export function DirectorySection({ numbers, onSelect, initialCategory, favorites
       {tab === "all" && (
         <>
           {filtersVisible && (
-            <div className="flex flex-wrap gap-2 mb-4">
+            <div className="flex flex-nowrap gap-2 mb-4 overflow-x-auto scrollbar-none pb-1">
               {categories.map((c) => (
                 <button
                   key={c}
                   onClick={() => { setCategory(c); ymGoal("directory_category", { category: c }); }}
-                  className={`px-3 py-1.5 rounded-full text-sm font-body font-medium transition-colors ${
+                  className={`px-3 py-1.5 rounded-full text-sm font-body font-medium transition-colors whitespace-nowrap flex-shrink-0 ${
                     category === c ? "bg-primary text-white" : "bg-white border border-border text-foreground hover:border-primary/40"
                   }`}
                 >
@@ -324,14 +324,14 @@ export function DirectorySection({ numbers, onSelect, initialCategory, favorites
       {tab === "operators" && (
         <>
           {filtersVisible && (
-            <div className="flex gap-2 flex-wrap mb-6">
+            <div className="flex flex-nowrap gap-2 mb-6 overflow-x-auto scrollbar-none pb-1">
               {(["Все", "МТС", "Билайн", "МегаФон", "Т2"] as (Operator | "Все")[]).map((op) => {
                 const c = op === "Все" ? { bg: "bg-primary", text: "text-white", border: "border-primary" } : OPERATOR_COLORS[op as Operator];
                 return (
                   <button
                     key={op}
                     onClick={() => { setActiveOp(op); ymGoal("directory_operator", { operator: op }); }}
-                    className={`px-3 py-1.5 rounded-full text-sm font-body font-medium transition-colors border ${
+                    className={`px-3 py-1.5 rounded-full text-sm font-body font-medium transition-colors border whitespace-nowrap flex-shrink-0 ${
                       activeOp === op ? `${c.bg} ${c.text} ${c.border}` : "bg-white border-border text-foreground hover:border-primary/30"
                     }`}
                   >
@@ -365,37 +365,34 @@ export function DirectorySection({ numbers, onSelect, initialCategory, favorites
       {tab === "commercial" && (
         <>
           {filtersVisible && (
-            <div className="flex flex-col sm:flex-row gap-3 mb-6">
-              <div className="flex gap-2 flex-wrap">
-                {COMMERCIAL_INDUSTRIES.map((ind) => (
-                  <button
-                    key={ind}
-                    onClick={() => { setCommIndustry(ind); ymGoal("directory_industry", { industry: ind }); }}
-                    className={`px-3 py-1.5 rounded-full text-sm font-body font-medium transition-colors ${
-                      commIndustry === ind ? "bg-amber-500 text-white" : "bg-white border border-border text-foreground hover:border-amber-300"
-                    }`}
-                  >
-                    {ind}
-                  </button>
-                ))}
-              </div>
-              <div className="flex gap-2 sm:ml-auto flex-wrap">
-                {([
-                  { val: "all",    label: "Все устройства", icon: "Smartphone" },
-                  { val: "mobile", label: "Смартфон",       icon: "Smartphone" },
-                ] as const).map((d) => (
-                  <button
-                    key={d.val}
-                    onClick={() => setCommDevice(d.val)}
-                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-body font-medium transition-colors border ${
-                      commDevice === d.val ? "bg-amber-50 border-amber-300 text-amber-700" : "bg-white border-border text-muted-foreground hover:border-amber-200"
-                    }`}
-                  >
-                    <Icon name={d.icon as Parameters<typeof Icon>[0]["name"]} size={13} />
-                    {d.label}
-                  </button>
-                ))}
-              </div>
+            <div className="flex flex-nowrap items-center gap-2 mb-6 overflow-x-auto scrollbar-none pb-1">
+              {COMMERCIAL_INDUSTRIES.map((ind) => (
+                <button
+                  key={ind}
+                  onClick={() => { setCommIndustry(ind); ymGoal("directory_industry", { industry: ind }); }}
+                  className={`px-3 py-1.5 rounded-full text-sm font-body font-medium transition-colors whitespace-nowrap flex-shrink-0 ${
+                    commIndustry === ind ? "bg-amber-500 text-white" : "bg-white border border-border text-foreground hover:border-amber-300"
+                  }`}
+                >
+                  {ind}
+                </button>
+              ))}
+              <div className="w-px self-stretch bg-border flex-shrink-0 mx-1" />
+              {([
+                { val: "all",    label: "Все устройства", icon: "Smartphone" },
+                { val: "mobile", label: "Смартфон",       icon: "Smartphone" },
+              ] as const).map((d) => (
+                <button
+                  key={d.val}
+                  onClick={() => setCommDevice(d.val)}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-body font-medium transition-colors border whitespace-nowrap flex-shrink-0 ${
+                    commDevice === d.val ? "bg-amber-50 border-amber-300 text-amber-700" : "bg-white border-border text-muted-foreground hover:border-amber-200"
+                  }`}
+                >
+                  <Icon name={d.icon as Parameters<typeof Icon>[0]["name"]} size={13} />
+                  {d.label}
+                </button>
+              ))}
             </div>
           )}
           <div className="flex items-center justify-between gap-3 mb-4">
