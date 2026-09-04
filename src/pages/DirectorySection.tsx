@@ -140,7 +140,9 @@ export function DirectorySection({ numbers, onSelect, initialCategory, favorites
     : numbers.filter((n) => n.operator === activeOp)
   ).filter((n) => {
     const q = query.toLowerCase();
-    return !q || n.number.includes(q) || n.name.toLowerCase().includes(q) || n.description.toLowerCase().includes(q) || n.operator.toLowerCase().includes(q);
+    const matchQ = !q || n.number.includes(q) || n.name.toLowerCase().includes(q) || n.description.toLowerCase().includes(q) || n.operator.toLowerCase().includes(q);
+    const matchR = regionFilter === "Все регионы" || (n.regions && n.regions.includes(regionFilter));
+    return matchQ && matchR;
   });
 
   const commercial = numbers.filter((n) => {
@@ -192,7 +194,7 @@ export function DirectorySection({ numbers, onSelect, initialCategory, favorites
             </button>
           ))}
         </div>
-        {(tab === "favorites" || tab === "all" || tab === "commercial") && allRegions.length > 1 && (
+        {(tab === "favorites" || tab === "all" || tab === "operators" || tab === "commercial") && allRegions.length > 1 && (
           <div className="flex items-center gap-2 flex-shrink-0 pb-2">
             <Icon name="MapPin" size={15} className="text-muted-foreground flex-shrink-0" />
             <select
