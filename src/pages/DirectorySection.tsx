@@ -329,8 +329,8 @@ export function DirectorySection({ numbers, onSelect, initialCategory, favorites
                   <button
                     key={op}
                     onClick={() => { setActiveOp(op); ymGoal("directory_operator", { operator: op }); }}
-                    className={`px-5 py-2 rounded-xl text-sm font-body font-semibold transition-all border ${
-                      activeOp === op ? `${c.bg} ${c.text} ${c.border} shadow-sm` : "bg-white border-border text-foreground hover:border-primary/30"
+                    className={`px-3 py-1.5 rounded-full text-sm font-body font-medium transition-colors border ${
+                      activeOp === op ? `${c.bg} ${c.text} ${c.border}` : "bg-white border-border text-foreground hover:border-primary/30"
                     }`}
                   >
                     {op}
