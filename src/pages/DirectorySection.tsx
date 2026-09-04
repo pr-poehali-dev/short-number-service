@@ -79,6 +79,18 @@ export function DirectorySection({ numbers, onSelect, initialCategory, favorites
     ymGoal("directory_filters_toggle", { visible: next });
   }
 
+  const hasActiveFilters = query !== "" || category !== "Все" || activeOp !== "Все" || commIndustry !== "Все" || commDevice !== "all" || regionFilter !== "Все регионы";
+
+  function resetFilters() {
+    setQuery("");
+    setCategory("Все");
+    setActiveOp("Все");
+    setCommIndustry("Все");
+    setCommDevice("all");
+    setRegionFilter("Все регионы");
+    ymGoal("directory_filters_reset");
+  }
+
   const allRegions = ["Все регионы", ...Array.from(new Set(numbers.flatMap((n) => n.regions ?? []))).sort()];
 
   useEffect(() => {
@@ -231,7 +243,14 @@ export function DirectorySection({ numbers, onSelect, initialCategory, favorites
               ))}
             </div>
           )}
-          <p className="text-sm text-muted-foreground font-body mb-4">Найдено: <strong>{filteredAll.length}</strong> номеров</p>
+          <div className="flex items-center justify-between gap-3 mb-4">
+            <p className="text-sm text-muted-foreground font-body">Найдено: <strong>{filteredAll.length}</strong> номеров</p>
+            {hasActiveFilters && (
+              <button onClick={resetFilters} className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground font-body flex-shrink-0">
+                <Icon name="RotateCcw" size={13} /> Сбросить фильтры
+              </button>
+            )}
+          </div>
           {filteredAll.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {filteredAll.map((n) => <NumberCard key={n.id} num={n} onClick={onSelect} />)}
@@ -265,6 +284,14 @@ export function DirectorySection({ numbers, onSelect, initialCategory, favorites
               })}
             </div>
           )}
+          <div className="flex items-center justify-between gap-3 mb-4">
+            <p className="text-sm text-muted-foreground font-body">Найдено: <strong>{filteredOp.length}</strong> номеров</p>
+            {hasActiveFilters && (
+              <button onClick={resetFilters} className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground font-body flex-shrink-0">
+                <Icon name="RotateCcw" size={13} /> Сбросить фильтры
+              </button>
+            )}
+          </div>
           {filteredOp.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {filteredOp.map((n) => <NumberCard key={n.id} num={n} onClick={onSelect} />)}
