@@ -188,7 +188,7 @@ export function DirectorySection({ numbers, onSelect, initialCategory, favorites
               }`}
             >
               <Icon name={t.icon as Parameters<typeof Icon>[0]["name"]} size={15} />
-              {t.label}
+              <span className="hidden sm:inline">{t.label}</span>
             </button>
           ))}
         </div>
