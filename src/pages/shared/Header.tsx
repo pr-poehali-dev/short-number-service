@@ -23,14 +23,17 @@ export function Header({
   const A2HS_BANNER_KEY = "a2hs_banner_shown";
 
   useEffect(() => {
-    if (window.innerWidth >= 640) return;
     if (localStorage.getItem(A2HS_BANNER_KEY)) return;
     const handleFirstTouch = () => {
       localStorage.setItem(A2HS_BANNER_KEY, "1");
       setInstallOpen(true);
     };
     document.addEventListener("touchstart", handleFirstTouch, { once: true, passive: true });
-    return () => document.removeEventListener("touchstart", handleFirstTouch);
+    document.addEventListener("click", handleFirstTouch, { once: true });
+    return () => {
+      document.removeEventListener("touchstart", handleFirstTouch);
+      document.removeEventListener("click", handleFirstTouch);
+    };
   }, []);
 
   function handleNav(section: string) {
@@ -124,14 +127,6 @@ export function Header({
                 EN
               </Link>
             )}
-            <button
-              onClick={() => setInstallOpen(true)}
-              title="Добавить на домашний экран"
-              className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-primary/30 text-primary hover:bg-primary/5 transition-colors text-sm font-body font-medium"
-            >
-              <Icon name="Plus" size={15} />
-              <span>2407.РФ</span>
-            </button>
             <ThemeToggle />
             <button className="md:hidden p-2 rounded-md hover:bg-muted" onClick={() => setMenuOpen(!menuOpen)}>
               <Icon name={menuOpen ? "X" : "Menu"} size={22} />
