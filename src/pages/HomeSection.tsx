@@ -321,7 +321,7 @@ export function HomeSection({ onNav }: { onNav: (s: string, category?: string) =
   return (
     <div className="animate-fade-in">
       {/* Hero */}
-      <div className="bg-gradient-to-br from-[#0376BB] to-[#025a90] text-white py-16 px-4 relative">
+      <div className="bg-gradient-to-b from-[#0376BB] via-[#04568a] to-background text-white py-16 px-4 relative">
         <div className="max-w-3xl mx-auto text-center">
 
           <h1 className="font-display text-4xl md:text-5xl font-bold mb-4 leading-tight">Короткие номера и быстрые ответы</h1>
