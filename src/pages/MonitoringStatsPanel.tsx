@@ -91,18 +91,18 @@ export function MonitoringStatsPanel({ stats, intervalActive = 5, intervalNew = 
       )}
 
       {/* Forecast */}
-      <div className="px-4 py-3 bg-blue-50/50">
+      <div className="px-4 py-3 bg-blue-50/50 dark:bg-blue-950/30">
         <p className="text-xs font-medium text-muted-foreground font-body uppercase tracking-wide mb-2 flex items-center gap-1.5">
           <Icon name="TrendingUp" size={12} />
           Прогноз расхода при текущих настройках — в месяц
         </p>
         <div className="grid grid-cols-2 gap-3">
-          <div className="bg-white rounded-lg border border-border px-3 py-2">
+          <div className="bg-card rounded-lg border border-border px-3 py-2">
             <p className="text-xs text-muted-foreground font-body mb-1">Мониторинг включён (каждые {intervalActive} мин)</p>
             <p className="text-lg font-bold font-display text-foreground">{hoursPerMonthActive} ч</p>
             <p className="text-xs text-muted-foreground font-body">{callsPerDayActive.toLocaleString("ru-RU")} вызовов/день × {FUNC_TIMEOUT} с таймаут</p>
           </div>
-          <div className="bg-white rounded-lg border border-border px-3 py-2">
+          <div className="bg-card rounded-lg border border-border px-3 py-2">
             <p className="text-xs text-muted-foreground font-body mb-1">Мониторинг отключён (опрос каждые {intervalNew} мин)</p>
             <p className="text-lg font-bold font-display text-foreground">{hoursPerMonthNew} ч</p>
             <p className="text-xs text-muted-foreground font-body">{callsPerDayNew.toLocaleString("ru-RU")} вызовов/день × {FUNC_TIMEOUT} с таймаут</p>

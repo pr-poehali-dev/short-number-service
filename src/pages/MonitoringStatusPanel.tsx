@@ -4,20 +4,20 @@ import { Incident, ServiceResult, formatDate, exportCsv } from "./incidents.type
 function StatusBadge({ status }: { status: string }) {
   if (status === "ok")
     return (
-      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-green-50 text-green-700 border border-green-200">
+      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-green-50 dark:bg-green-950/40 text-green-700 dark:text-green-400 border border-green-200 dark:border-green-900">
         <span className="w-1.5 h-1.5 rounded-full bg-green-500 inline-block" />
         Работает
       </span>
     );
   if (status === "degraded")
     return (
-      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-yellow-50 text-yellow-700 border border-yellow-200">
+      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-yellow-50 dark:bg-yellow-950/40 text-yellow-700 dark:text-yellow-400 border border-yellow-200 dark:border-yellow-900">
         <span className="w-1.5 h-1.5 rounded-full bg-yellow-500 inline-block" />
         Сбои
       </span>
     );
   return (
-    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-red-50 text-red-700 border border-red-200">
+    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-red-50 dark:bg-red-950/40 text-red-700 dark:text-red-400 border border-red-200 dark:border-red-900">
       <span className="w-1.5 h-1.5 rounded-full bg-red-500 inline-block" />
       Недоступен
     </span>
@@ -44,7 +44,7 @@ export function MonitoringStatusPanel({
   return (
     <>
       {/* Enable / Disable toggle */}
-      <div className={`flex items-center justify-between px-4 py-3 rounded-xl border font-body ${enabled ? "bg-green-50 border-green-200" : "bg-muted border-border"}`}>
+      <div className={`flex items-center justify-between px-4 py-3 rounded-xl border font-body ${enabled ? "bg-green-50 dark:bg-green-950/40 border-green-200 dark:border-green-900" : "bg-muted border-border"}`}>
         <div className="flex items-center gap-3">
           <div className={`w-2 h-2 rounded-full ${enabled ? "bg-green-500" : "bg-muted-foreground"}`} />
           <div>
@@ -63,7 +63,7 @@ export function MonitoringStatusPanel({
           disabled={toggling || loading}
           className={`flex items-center gap-1.5 text-sm px-4 py-1.5 rounded-lg font-body font-medium transition-colors disabled:opacity-50 ${
             enabled
-              ? "bg-red-50 text-red-600 border border-red-200 hover:bg-red-100"
+              ? "bg-red-50 dark:bg-red-950/40 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-900 hover:bg-red-100 dark:hover:bg-red-900/50"
               : "bg-primary text-primary-foreground hover:bg-primary/90"
           }`}
         >
@@ -74,7 +74,7 @@ export function MonitoringStatusPanel({
 
       {/* Current status */}
       {Object.keys(services).length > 0 && (
-        <div className="bg-white rounded-xl border border-border overflow-hidden">
+        <div className="bg-card rounded-xl border border-border overflow-hidden">
           <div className="px-4 py-3 border-b border-border bg-muted/30">
             <h3 className="font-body font-semibold text-foreground text-sm flex items-center gap-2">
               <Icon name="Activity" size={15} />
@@ -107,7 +107,7 @@ export function MonitoringStatusPanel({
       )}
 
       {/* Incidents log */}
-      <div className="bg-white rounded-xl border border-border overflow-hidden">
+      <div className="bg-card rounded-xl border border-border overflow-hidden">
         <div className="px-4 py-3 border-b border-border bg-muted/30 flex items-center justify-between">
           <h3 className="font-body font-semibold text-foreground text-sm flex items-center gap-2">
             <Icon name="ClipboardList" size={15} />

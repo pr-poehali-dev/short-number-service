@@ -201,7 +201,7 @@ export function EnDirectorySection({
                   key={d.val}
                   onClick={() => setCommDevice(d.val)}
                   className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-body font-medium transition-colors border ${
-                    commDevice === d.val ? "bg-amber-50 border-amber-300 text-amber-700" : "bg-card border-border text-muted-foreground hover:border-amber-200"
+                    commDevice === d.val ? "bg-amber-50 dark:bg-amber-950/40 border-amber-300 dark:border-amber-800 text-amber-700 dark:text-amber-400" : "bg-card border-border text-muted-foreground hover:border-amber-200"
                   }`}
                 >
                   <Icon name={d.icon as Parameters<typeof Icon>[0]["name"]} size={13} />
@@ -221,8 +221,8 @@ export function EnDirectorySection({
                     onClick={() => onSelect(n, en)}
                     className="number-card w-full text-left bg-card border border-border rounded-xl p-4 flex items-start gap-3 cursor-pointer"
                   >
-                    <div className="w-14 h-14 rounded-xl bg-amber-50 flex items-center justify-center flex-shrink-0">
-                      <span className="font-display font-bold text-amber-700 text-sm leading-tight text-center px-1">{n.number}</span>
+                    <div className="w-14 h-14 rounded-xl bg-amber-50 dark:bg-amber-950/40 flex items-center justify-center flex-shrink-0">
+                      <span className="font-display font-bold text-amber-700 dark:text-amber-400 text-sm leading-tight text-center px-1">{n.number}</span>
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-start justify-between gap-2 mb-1">
@@ -231,12 +231,12 @@ export function EnDirectorySection({
                         </h3>
                         <div className="flex-shrink-0 flex items-center gap-1">
                           {n.industry && (
-                            <span className="text-xs px-2 py-0.5 rounded-full font-body font-medium border bg-amber-50 text-amber-700 border-amber-200">
+                            <span className="text-xs px-2 py-0.5 rounded-full font-body font-medium border bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-400 border-amber-200 dark:border-amber-900">
                               {INDUSTRY_MAP_EN[n.industry] ?? n.industry}
                             </span>
                           )}
                           {n.deviceAccess !== "any" && (
-                            <span className="inline-flex items-center gap-1 text-xs text-blue-700 bg-blue-50 border border-blue-200 rounded-full px-2 py-0.5 font-body">
+                            <span className="inline-flex items-center gap-1 text-xs text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-900 rounded-full px-2 py-0.5 font-body">
                               <Icon name="Smartphone" size={11} /> <span className="hidden sm:inline">Smartphone only</span>
                             </span>
                           )}

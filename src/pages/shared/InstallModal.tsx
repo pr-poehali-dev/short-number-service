@@ -50,22 +50,22 @@ export function InstallModal({ onClose, pwaPrompt }: { onClose: () => void; pwaP
         <p className="text-xs text-muted-foreground font-body mb-3">Открывается в браузере, требует интернет при первом запуске, а затем сможет работать и без него.</p>
 
         <div className="space-y-3">
-          <div className="bg-blue-50 border border-blue-100 rounded-xl p-3.5">
-            <p className="text-sm font-body font-semibold text-blue-800 mb-1.5 flex items-center gap-1.5">
+          <div className="bg-blue-50 dark:bg-blue-950/40 border border-blue-100 dark:border-blue-900 rounded-xl p-3.5">
+            <p className="text-sm font-body font-semibold text-blue-800 dark:text-blue-300 mb-1.5 flex items-center gap-1.5">
               <Icon name="Apple" size={14} /> iOS (Safari)
             </p>
-            <ol className="text-sm text-blue-700 font-body space-y-1 list-decimal list-inside">
+            <ol className="text-sm text-blue-700 dark:text-blue-200 font-body space-y-1 list-decimal list-inside">
               <li>Нажмите кнопку «Поделиться» внизу экрана</li>
               <li>Выберите «На экран "Домой"»</li>
               <li>Нажмите «Добавить»</li>
             </ol>
           </div>
 
-          <div className="bg-green-50 border border-green-100 rounded-xl p-3.5">
-            <p className="text-sm font-body font-semibold text-green-800 mb-1.5 flex items-center gap-1.5">
+          <div className="bg-green-50 dark:bg-green-950/40 border border-green-100 dark:border-green-900 rounded-xl p-3.5">
+            <p className="text-sm font-body font-semibold text-green-800 dark:text-green-300 mb-1.5 flex items-center gap-1.5">
               <Icon name="Smartphone" size={14} /> Android (Chrome)
             </p>
-            <ol className="text-sm text-green-700 font-body space-y-1 list-decimal list-inside">
+            <ol className="text-sm text-green-700 dark:text-green-200 font-body space-y-1 list-decimal list-inside">
               <li>Нажмите меню <strong>⋮</strong> в правом верхнем углу</li>
               <li>Выберите «Добавить на главный экран»</li>
               <li>Подтвердите добавление</li>

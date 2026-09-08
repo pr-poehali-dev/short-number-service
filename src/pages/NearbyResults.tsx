@@ -109,14 +109,14 @@ export function NearbyResults({
               </button>
             </div>
             {!city && manualAddress.trim() && (
-              <p className="text-xs font-body text-amber-600 text-center flex items-center justify-center gap-1">
+              <p className="text-xs font-body text-amber-600 dark:text-amber-400 text-center flex items-center justify-center gap-1">
                 <Icon name="AlertTriangle" size={12} />
                 Сначала укажите город — нажмите <button onClick={onOpenSettings} className="underline font-semibold">«Город не задан»</button>
               </p>
             )}
 
             {remainingRequests !== null && (
-              <p className={`text-xs font-body text-center ${remainingRequests <= 1 ? "text-amber-600" : "text-muted-foreground"}`}>
+              <p className={`text-xs font-body text-center ${remainingRequests <= 1 ? "text-amber-600 dark:text-amber-400" : "text-muted-foreground"}`}>
                 Осталось запросов сегодня: <span className="font-semibold">{remainingRequests} из 5</span>
               </p>
             )}
@@ -137,19 +137,19 @@ export function NearbyResults({
       )}
 
       {status === "error" && (
-        <div className="relative bg-red-50 border border-red-200 rounded-2xl p-6 text-center">
+        <div className="relative bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900 rounded-2xl p-6 text-center">
           <button
             onClick={onReset}
-            className="absolute top-3 right-3 p-1.5 rounded-lg hover:bg-red-100 text-red-400 hover:text-red-600 transition-colors"
+            className="absolute top-3 right-3 p-1.5 rounded-lg hover:bg-red-100 dark:hover:bg-red-900/50 text-red-400 dark:text-red-400 hover:text-red-600 dark:hover:text-red-300 transition-colors"
             title="Закрыть"
           >
             <Icon name="X" size={16} />
           </button>
           {rateLimited ? (
             <>
-              <Icon name="Clock" size={32} className="text-amber-500 mx-auto mb-3" />
-              <p className="font-body text-red-700 font-semibold mb-1">{errorMsg}</p>
-              <p className="text-sm text-red-500 font-body mb-4">Лимит сбрасывается в полночь по московскому времени.</p>
+              <Icon name="Clock" size={32} className="text-amber-500 dark:text-amber-400 mx-auto mb-3" />
+              <p className="font-body text-red-700 dark:text-red-400 font-semibold mb-1">{errorMsg}</p>
+              <p className="text-sm text-red-500 dark:text-red-400 font-body mb-4">Лимит сбрасывается в полночь по московскому времени.</p>
               <button
                 onClick={onReset}
                 className="inline-flex items-center gap-2 px-5 py-2.5 bg-muted text-foreground rounded-xl font-body font-semibold hover:bg-muted/80 transition-colors text-sm border border-border"
@@ -160,8 +160,8 @@ export function NearbyResults({
             </>
           ) : (
             <>
-              <Icon name="AlertCircle" size={32} className="text-red-500 mx-auto mb-3" />
-              <p className="font-body text-red-700 font-semibold mb-4">{errorMsg}</p>
+              <Icon name="AlertCircle" size={32} className="text-red-500 dark:text-red-400 mx-auto mb-3" />
+              <p className="font-body text-red-700 dark:text-red-400 font-semibold mb-4">{errorMsg}</p>
               <button
                 onClick={onFind}
                 className="inline-flex items-center gap-2 px-5 py-2.5 bg-primary text-primary-foreground rounded-xl font-body font-semibold hover:bg-primary/90 transition-colors text-sm"
@@ -172,15 +172,15 @@ export function NearbyResults({
             </>
           )}
           {!rateLimited && (
-            <div className="mt-5 pt-5 border-t border-red-200">
-              <p className="text-xs text-red-500 font-body mb-2">Или введите координаты вручную</p>
+            <div className="mt-5 pt-5 border-t border-red-200 dark:border-red-900">
+              <p className="text-xs text-red-500 dark:text-red-400 font-body mb-2">Или введите координаты вручную</p>
               <div className="flex gap-2 max-w-xs mx-auto">
                 <input
                   type="text"
                   value={manualCoords}
                   onChange={e => onManualCoordsChange(e.target.value)}
                   placeholder="59.9311, 30.3609"
-                  className="flex-1 text-sm border border-red-200 rounded-lg px-3 py-2 font-body bg-card focus:outline-none focus:border-primary"
+                  className="flex-1 text-sm border border-red-200 dark:border-red-900 rounded-lg px-3 py-2 font-body bg-card focus:outline-none focus:border-primary"
                   onKeyDown={e => e.key === 'Enter' && onFindByManualCoords()}
                 />
                 <button

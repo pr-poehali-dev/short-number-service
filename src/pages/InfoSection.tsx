@@ -46,9 +46,9 @@ export function ProceduresSection() {
         ))}
       </div>
 
-      <div className="mt-5 bg-amber-50 border border-amber-200 rounded-xl p-4 flex items-start gap-3">
-        <Icon name="AlertCircle" size={18} className="text-amber-600 flex-shrink-0 mt-0.5" />
-        <p className="text-sm text-amber-800 font-body">
+      <div className="mt-5 bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900 rounded-xl p-4 flex items-start gap-3">
+        <Icon name="AlertCircle" size={18} className="text-amber-600 dark:text-amber-400 flex-shrink-0 mt-0.5" />
+        <p className="text-sm text-amber-800 dark:text-amber-300 font-body">
           Процедуры могут меняться. Перед подачей документов уточняйте актуальные требования на официальных сайтах операторов и Роскомнадзора.
         </p>
       </div>

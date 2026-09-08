@@ -125,9 +125,9 @@ export default function SubscribeModal({ mode, cooldownHours = 24, onConfirmSubs
           </>
         ) : (
           <div className="px-5 py-5 space-y-3">
-            <div className="flex items-center gap-2 p-3 bg-green-50 border border-green-200 rounded-xl">
-              <Icon name="CheckCircle" size={18} className="text-green-600 flex-shrink-0" />
-              <p className="text-sm font-body text-green-800">
+            <div className="flex items-center gap-2 p-3 bg-green-50 dark:bg-green-950/40 border border-green-200 dark:border-green-900 rounded-xl">
+              <Icon name="CheckCircle" size={18} className="text-green-600 dark:text-green-400 flex-shrink-0" />
+              <p className="text-sm font-body text-green-800 dark:text-green-300">
                 Вы перешли в <span className="font-semibold">{clicked}</span>. Подписались?
               </p>
             </div>

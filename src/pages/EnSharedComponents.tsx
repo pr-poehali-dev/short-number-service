@@ -100,12 +100,12 @@ export function NumberCardEn({ num, enNum, onClick }: {
           <h3 className="font-display font-semibold text-foreground text-base leading-tight truncate">{name}</h3>
           <div className="flex-shrink-0 flex items-center gap-1">
             {num.industry && (
-              <span className="text-xs px-2 py-0.5 rounded-full font-body font-medium border bg-amber-50 text-amber-700 border-amber-200">
+              <span className="text-xs px-2 py-0.5 rounded-full font-body font-medium border bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-400 border-amber-200 dark:border-amber-900">
                 {INDUSTRY_MAP_EN[num.industry] ?? num.industry}
               </span>
             )}
             {num.category === "Коммерческие" && num.deviceAccess !== "any" && (
-              <span className="inline-flex items-center gap-1 text-xs text-blue-700 bg-blue-50 border border-blue-200 rounded-full px-2 py-0.5 font-body">
+              <span className="inline-flex items-center gap-1 text-xs text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-900 rounded-full px-2 py-0.5 font-body">
                 <Icon name="Smartphone" size={11} /> <span className="hidden sm:inline">Smartphone only</span>
               </span>
             )}
@@ -124,7 +124,7 @@ export function NumberCardEn({ num, enNum, onClick }: {
         )}
         <p className="text-sm text-muted-foreground font-body line-clamp-2">{desc}</p>
         {num.regions && num.regions.length > 0 && (
-          <p className="text-xs text-amber-600 font-body mt-1 truncate flex items-center gap-1">
+          <p className="text-xs text-amber-600 dark:text-amber-400 font-body mt-1 truncate flex items-center gap-1">
             <Icon name="MapPin" size={11} className="flex-shrink-0" />
             {num.regions.slice(0, 2).map((r) => REGION_MAP_EN[r] ?? r).join(", ")}{num.regions.length > 2 ? "…" : ""}
           </p>
@@ -188,7 +188,7 @@ export function NumberModalEn({
               <button
                 onClick={onAddFavorite}
                 disabled={isFavorite || maxReached}
-                className="p-2 rounded-lg hover:bg-yellow-50 disabled:opacity-40 disabled:cursor-default transition-colors"
+                className="p-2 rounded-lg hover:bg-yellow-50 dark:hover:bg-yellow-950/40 disabled:opacity-40 disabled:cursor-default transition-colors"
                 title={isFavorite ? "Already in favorites" : maxReached ? "Favorites full (max 6)" : "Add to favorites"}
               >
                 <Icon name="Star" size={18} className={isFavorite ? "text-yellow-400 fill-yellow-400" : "text-muted-foreground"} />
@@ -207,18 +207,18 @@ export function NumberModalEn({
           </div>
           {num.regions && num.regions.length > 0 && (
             <div className="flex items-start gap-1.5">
-              <Icon name="MapPin" size={14} className="text-amber-500 flex-shrink-0 mt-0.5" />
-              <p className="text-sm text-amber-700 font-body leading-snug">
+              <Icon name="MapPin" size={14} className="text-amber-500 dark:text-amber-400 flex-shrink-0 mt-0.5" />
+              <p className="text-sm text-amber-700 dark:text-amber-400 font-body leading-snug">
                 Available in regions: <span className="font-semibold">{num.regions.map((r) => REGION_MAP_EN[r] ?? r).join(", ")}</span>
               </p>
             </div>
           )}
           {procedure && (
-            <div className="bg-blue-50 rounded-xl p-3.5 border border-blue-100">
-              <p className="text-sm font-body font-semibold text-blue-700 mb-1 flex items-center gap-1.5">
+            <div className="bg-blue-50 dark:bg-blue-950/40 rounded-xl p-3.5 border border-blue-100 dark:border-blue-900">
+              <p className="text-sm font-body font-semibold text-blue-700 dark:text-blue-300 mb-1 flex items-center gap-1.5">
                 <Icon name="Info" size={14} /> How to use
               </p>
-              <p className="text-sm text-blue-800 font-body">{procedure}</p>
+              <p className="text-sm text-blue-800 dark:text-blue-200 font-body">{procedure}</p>
             </div>
           )}
 

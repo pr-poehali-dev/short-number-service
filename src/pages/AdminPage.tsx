@@ -212,7 +212,7 @@ export default function AdminPage() {
             </a>
             <button
               onClick={() => { sessionStorage.removeItem(SESSION_KEY); sessionStorage.removeItem("admin_token"); setAuthed(false); }}
-              className="text-sm px-3 py-1.5 rounded-lg bg-red-50 text-red-600 border border-red-200 hover:bg-red-100 font-body"
+              className="text-sm px-3 py-1.5 rounded-lg bg-red-50 dark:bg-red-950/40 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-900 hover:bg-red-100 dark:hover:bg-red-900/50 font-body"
             >
               Выйти
             </button>

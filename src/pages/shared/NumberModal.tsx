@@ -133,18 +133,18 @@ export function NumberModal({ num, onClose, onAddFavorite, isFavorite, maxReache
           </div>
           {num.regions && num.regions.length > 0 && (
             <div className="flex items-start gap-1.5">
-              <Icon name="MapPin" size={14} className="text-amber-500 flex-shrink-0 mt-0.5" />
-              <p className="text-sm text-amber-700 font-body leading-snug">
+              <Icon name="MapPin" size={14} className="text-amber-500 dark:text-amber-400 flex-shrink-0 mt-0.5" />
+              <p className="text-sm text-amber-700 dark:text-amber-400 font-body leading-snug">
                 Доступен в регионах: <span className="font-semibold">{num.regions.join(", ")}</span>
               </p>
             </div>
           )}
           {num.procedure && (
-            <div className="bg-blue-50 rounded-xl p-3.5 border border-blue-100">
-              <p className="text-sm font-body font-semibold text-blue-700 mb-1 flex items-center gap-1.5">
+            <div className="bg-blue-50 dark:bg-blue-950/40 rounded-xl p-3.5 border border-blue-100 dark:border-blue-900">
+              <p className="text-sm font-body font-semibold text-blue-700 dark:text-blue-300 mb-1 flex items-center gap-1.5">
                 <Icon name="Info" size={14} /> Как воспользоваться
               </p>
-              <p className="text-sm text-blue-800 font-body">{num.procedure}</p>
+              <p className="text-sm text-blue-800 dark:text-blue-200 font-body">{num.procedure}</p>
             </div>
           )}
 

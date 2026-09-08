@@ -48,11 +48,11 @@ export const NUMBERS: PhoneNumber[] = [
 export const LAST_UPDATED = "08.06.2026";
 
 export const OPERATOR_COLORS: Record<Operator, { bg: string; text: string; border: string }> = {
-  "МТС":           { bg: "bg-red-50",    text: "text-red-700",    border: "border-red-200" },
-  "Билайн":        { bg: "bg-yellow-50", text: "text-yellow-700", border: "border-yellow-200" },
-  "МегаФон":       { bg: "bg-green-50",  text: "text-green-700",  border: "border-green-200" },
-  "Т2":            { bg: "bg-sky-50",    text: "text-sky-700",    border: "border-sky-200" },
-  "Универсальный": { bg: "bg-purple-50", text: "text-purple-700", border: "border-purple-200" },
+  "МТС":           { bg: "bg-red-50 dark:bg-red-950/40",       text: "text-red-700 dark:text-red-400",       border: "border-red-200 dark:border-red-900" },
+  "Билайн":        { bg: "bg-yellow-50 dark:bg-yellow-950/40", text: "text-yellow-700 dark:text-yellow-400", border: "border-yellow-200 dark:border-yellow-900" },
+  "МегаФон":       { bg: "bg-green-50 dark:bg-green-950/40",   text: "text-green-700 dark:text-green-400",   border: "border-green-200 dark:border-green-900" },
+  "Т2":            { bg: "bg-sky-50 dark:bg-sky-950/40",       text: "text-sky-700 dark:text-sky-400",       border: "border-sky-200 dark:border-sky-900" },
+  "Универсальный": { bg: "bg-purple-50 dark:bg-purple-950/40", text: "text-purple-700 dark:text-purple-400", border: "border-purple-200 dark:border-purple-900" },
 };
 
 export const FAQ_ITEMS = [

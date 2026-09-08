@@ -33,8 +33,8 @@ export default function NearbyVoteModal({ onClose }: Props) {
         {step === "vote" && (
           <div className="p-6">
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 rounded-xl bg-amber-100 flex items-center justify-center flex-shrink-0">
-                <Icon name="MapPin" size={20} className="text-amber-600" />
+              <div className="w-10 h-10 rounded-xl bg-amber-100 dark:bg-amber-900/50 flex items-center justify-center flex-shrink-0">
+                <Icon name="MapPin" size={20} className="text-amber-600 dark:text-amber-400" />
               </div>
               <div>
                 <h2 className="font-display font-bold text-foreground text-lg leading-tight">Раздел в разработке</h2>
@@ -54,8 +54,8 @@ export default function NearbyVoteModal({ onClose }: Props) {
 
         {step === "pending" && (
           <div className="p-6 text-center">
-            <div className="w-14 h-14 rounded-2xl bg-green-100 flex items-center justify-center mx-auto mb-4">
-              <Icon name="Mail" size={28} className="text-green-600" />
+            <div className="w-14 h-14 rounded-2xl bg-green-100 dark:bg-green-900/50 flex items-center justify-center mx-auto mb-4">
+              <Icon name="Mail" size={28} className="text-green-600 dark:text-green-400" />
             </div>
             <h2 className="font-display font-bold text-foreground text-lg mb-2">Почти готово!</h2>
             <p className="text-sm font-body text-muted-foreground leading-relaxed mb-5">

@@ -110,7 +110,7 @@ export function EditModal({
           </Field>
 
           {form.category === "Коммерческие" && (
-            <div className="grid grid-cols-2 gap-3 p-3 rounded-xl bg-amber-50 border border-amber-200">
+            <div className="grid grid-cols-2 gap-3 p-3 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900">
               <Field label="Индустрия">
                 <select value={form.industry ?? ""} onChange={(e) => set("industry", e.target.value)} className={inputCls}>
                   <option value="">— не выбрано —</option>
@@ -162,9 +162,9 @@ export function EditModal({
           </Field>
 
           {allRegions.length > 0 && (
-            <div className="p-3 rounded-xl bg-orange-50 border border-orange-200">
+            <div className="p-3 rounded-xl bg-orange-50 dark:bg-orange-950/40 border border-orange-200 dark:border-orange-900">
               <label className="block text-xs font-body font-semibold text-muted-foreground mb-2">
-                Регионы <span className="font-normal text-orange-600">(оставьте пустым для федерального номера)</span>
+                Регионы <span className="font-normal text-orange-600 dark:text-orange-400">(оставьте пустым для федерального номера)</span>
               </label>
               <div className="flex flex-wrap gap-1.5">
                 {allRegions.map((r) => {

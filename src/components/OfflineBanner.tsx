@@ -21,7 +21,7 @@ export default function OfflineBanner() {
     return (
       <button
         onClick={() => setCollapsed(false)}
-        className="fixed top-2 left-1/2 -translate-x-1/2 z-[100] flex items-center gap-1.5 bg-amber-500 text-white text-xs font-body font-semibold px-3 py-1.5 rounded-full shadow-lg"
+        className="fixed top-2 left-1/2 -translate-x-1/2 z-[100] flex items-center gap-1.5 bg-amber-500 dark:bg-amber-600 text-white text-xs font-body font-semibold px-3 py-1.5 rounded-full shadow-lg"
       >
         <Icon name="WifiOff" size={13} />
         Офлайн-режим
@@ -30,7 +30,7 @@ export default function OfflineBanner() {
   }
 
   return (
-    <div className="fixed top-0 left-0 right-0 z-[100] bg-amber-500 text-white px-4 py-2.5 shadow-md">
+    <div className="fixed top-0 left-0 right-0 z-[100] bg-amber-500 dark:bg-amber-600 text-white px-4 py-2.5 shadow-md">
       <div className="flex items-center justify-between gap-3">
         <div className="flex items-center gap-2.5 min-w-0">
           <Icon name="WifiOff" size={18} className="shrink-0" />

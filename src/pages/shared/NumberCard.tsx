@@ -35,12 +35,12 @@ export function NumberCard({ num, onClick }: { num: PhoneNumber; onClick: (n: Ph
           <h3 className="font-display font-semibold text-foreground text-base leading-tight truncate">{num.name}</h3>
           <div className="flex-shrink-0 flex items-center gap-1">
             {num.industry && (
-              <span className="text-xs px-2 py-0.5 rounded-full font-body font-medium border bg-amber-50 text-amber-700 border-amber-200">
+              <span className="text-xs px-2 py-0.5 rounded-full font-body font-medium border bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-400 border-amber-200 dark:border-amber-900">
                 {num.industry}
               </span>
             )}
             {num.category === "Коммерческие" && num.deviceAccess !== "any" && (
-              <span className="inline-flex items-center gap-1 text-xs text-blue-700 bg-blue-50 border border-blue-200 rounded-full px-2 py-0.5 font-body">
+              <span className="inline-flex items-center gap-1 text-xs text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-900 rounded-full px-2 py-0.5 font-body">
                 <Icon name="Smartphone" size={11} /> <span className="hidden sm:inline">Смартфон</span>
               </span>
             )}
@@ -59,7 +59,7 @@ export function NumberCard({ num, onClick }: { num: PhoneNumber; onClick: (n: Ph
         )}
         <p className="text-sm text-muted-foreground font-body line-clamp-2">{num.description}</p>
         {num.regions && num.regions.length > 0 && (
-          <p className="text-xs text-amber-600 font-body mt-1 truncate flex items-center gap-1">
+          <p className="text-xs text-amber-600 dark:text-amber-400 font-body mt-1 truncate flex items-center gap-1">
             <Icon name="MapPin" size={11} className="flex-shrink-0" />
             {num.regions.slice(0, 2).join(", ")}{num.regions.length > 2 ? "…" : ""}
           </p>

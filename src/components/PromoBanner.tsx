@@ -98,10 +98,10 @@ function VoteBanner({ settings, onClose }: { settings: BannerSettings; onClose: 
   }
 
   return (
-    <div className="relative bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-200 rounded-2xl p-5 mb-4 animate-fade-in">
+    <div className="relative bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-950/40 dark:to-orange-950/30 border border-amber-200 dark:border-amber-900 rounded-2xl p-5 mb-4 animate-fade-in">
       <button
         onClick={onClose}
-        className="absolute top-3 right-3 w-6 h-6 flex items-center justify-center rounded-full hover:bg-amber-100 text-muted-foreground hover:text-foreground transition-colors"
+        className="absolute top-3 right-3 w-6 h-6 flex items-center justify-center rounded-full hover:bg-amber-100 dark:hover:bg-amber-900/50 text-muted-foreground hover:text-foreground transition-colors"
         title="Скрыть"
       >
         <Icon name="X" size={14} />
@@ -110,8 +110,8 @@ function VoteBanner({ settings, onClose }: { settings: BannerSettings; onClose: 
       {step === "vote" && (
         <div className="pr-6">
           <div className="flex items-start gap-3 mb-4">
-            <div className="w-9 h-9 rounded-xl bg-amber-100 flex items-center justify-center flex-shrink-0">
-              <Icon name="MapPin" size={18} className="text-amber-600" />
+            <div className="w-9 h-9 rounded-xl bg-amber-100 dark:bg-amber-900/50 flex items-center justify-center flex-shrink-0">
+              <Icon name="MapPin" size={18} className="text-amber-600 dark:text-amber-400" />
             </div>
             <div>
               <h3 className="font-display font-bold text-foreground text-base leading-snug mb-1">
@@ -156,7 +156,7 @@ function VoteBanner({ settings, onClose }: { settings: BannerSettings; onClose: 
             onChange={(e) => setComment(e.target.value)}
             placeholder="Напишите, что было бы полезно..."
             rows={3}
-            className="w-full px-3 py-2.5 border border-amber-200 rounded-xl font-body text-sm focus:outline-none focus:ring-2 focus:ring-amber-300 focus:border-amber-400 resize-none bg-card mb-3"
+            className="w-full px-3 py-2.5 border border-amber-200 dark:border-amber-900 rounded-xl font-body text-sm focus:outline-none focus:ring-2 focus:ring-amber-300 dark:focus:ring-amber-800 focus:border-amber-400 resize-none bg-card mb-3"
           />
           <div className="flex gap-2 flex-nowrap overflow-x-auto scrollbar-none pb-1">
             <button
@@ -180,8 +180,8 @@ function VoteBanner({ settings, onClose }: { settings: BannerSettings; onClose: 
 
       {step === "done" && (
         <div className="pr-6 flex items-start gap-3">
-          <div className="w-9 h-9 rounded-xl bg-green-100 flex items-center justify-center flex-shrink-0">
-            <Icon name="Check" size={18} className="text-green-600" />
+          <div className="w-9 h-9 rounded-xl bg-green-100 dark:bg-green-900/50 flex items-center justify-center flex-shrink-0">
+            <Icon name="Check" size={18} className="text-green-600 dark:text-green-400" />
           </div>
           <div>
             <p className="font-display font-bold text-foreground text-sm mb-0.5">Спасибо за голос!</p>
@@ -243,10 +243,10 @@ export default function PromoBanner({ section }: Props) {
 
   if (isSubscribe) {
     return (
-      <div className="relative bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-100 rounded-2xl p-6 mb-4 mt-4 animate-fade-in">
+      <div className="relative bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/40 dark:to-indigo-950/30 border border-blue-100 dark:border-blue-900 rounded-2xl p-6 mb-4 mt-4 animate-fade-in">
         <button
           onClick={handleClose}
-          className="absolute top-3 right-3 w-6 h-6 flex items-center justify-center rounded-full hover:bg-blue-100 text-muted-foreground hover:text-foreground transition-colors"
+          className="absolute top-3 right-3 w-6 h-6 flex items-center justify-center rounded-full hover:bg-blue-100 dark:hover:bg-blue-900/50 text-muted-foreground hover:text-foreground transition-colors"
           title="Скрыть"
         >
           <Icon name="X" size={14} />
@@ -292,7 +292,7 @@ export default function PromoBanner({ section }: Props) {
   }
 
   return (
-    <div className="relative bg-gradient-to-br from-primary/8 to-primary/5 border border-primary/20 rounded-2xl p-4 mb-4 animate-fade-in">
+    <div className="relative bg-gradient-to-br from-primary/10 to-primary/5 dark:from-primary/20 dark:to-primary/10 border border-primary/20 rounded-2xl p-4 mb-4 animate-fade-in">
       <button
         onClick={handleClose}
         className="absolute top-3 right-3 w-6 h-6 flex items-center justify-center rounded-full hover:bg-primary/10 text-muted-foreground hover:text-foreground transition-colors"
