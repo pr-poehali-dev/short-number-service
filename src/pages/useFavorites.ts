@@ -8,7 +8,7 @@ export interface Favorite {
 }
 
 const STORAGE_KEY = "favorites";
-const MAX_FAVORITES = 6;
+export const FAVORITES_BAR_LIMIT = 6;
 
 function load(): Favorite[] {
   try {
@@ -27,10 +27,7 @@ export function useFavorites() {
 
   function addFavorite(num: PhoneNumber) {
     if (favorites.find((f) => f.id === num.id)) return;
-    setFavorites((prev) => {
-      const next = [...prev, { id: num.id, number: num.number, name: num.name }];
-      return next.length > MAX_FAVORITES ? next.slice(next.length - MAX_FAVORITES) : next;
-    });
+    setFavorites((prev) => [...prev, { id: num.id, number: num.number, name: num.name }]);
   }
 
   function removeFavorite(id: number) {
@@ -41,5 +38,5 @@ export function useFavorites() {
     return favorites.some((f) => f.id === id);
   }
 
-  return { favorites, addFavorite, removeFavorite, isFavorite, maxReached: favorites.length >= MAX_FAVORITES };
+  return { favorites, addFavorite, removeFavorite, isFavorite, maxReached: false };
 }

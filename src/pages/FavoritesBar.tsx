@@ -1,5 +1,5 @@
 import Icon from "@/components/ui/icon";
-import { Favorite } from "./useFavorites";
+import { Favorite, FAVORITES_BAR_LIMIT } from "./useFavorites";
 
 interface Props {
   favorites: Favorite[];
@@ -8,25 +8,27 @@ interface Props {
 }
 
 export function FavoritesBar({ favorites, onRemove, onSelect }: Props) {
+  const shown = favorites.slice(favorites.length - FAVORITES_BAR_LIMIT);
+
   return (
     <div className="max-w-6xl mx-auto px-4 pt-8 pb-2">
       <div className="flex items-center gap-2 mb-3">
         <Icon name="Star" size={15} className="text-primary" />
         <span className="font-display font-semibold text-foreground text-sm">Избранное</span>
-        <span className="text-xs font-body text-muted-foreground ml-auto">макс. 6</span>
+        <span className="text-xs font-body text-muted-foreground ml-auto">макс. {FAVORITES_BAR_LIMIT}</span>
       </div>
 
-      {favorites.length === 0 ? (
+      {shown.length === 0 ? (
         <div className="border-2 border-dashed border-border rounded-xl p-5 text-center">
           <Icon name="Star" size={28} className="text-muted-foreground/40 mx-auto mb-2" />
           <p className="text-sm font-body text-muted-foreground">Избранных номеров пока нет</p>
           <p className="text-xs font-body text-muted-foreground/70 mt-1 max-w-xs mx-auto">
-            Откройте карточку номера и нажмите <Icon name="Star" size={11} className="inline mx-0.5 relative -top-px" />, чтобы сохранить здесь. Здесь будут отображаться 6 последних номеров.
+            Откройте карточку номера и нажмите <Icon name="Star" size={11} className="inline mx-0.5 relative -top-px" />, чтобы сохранить здесь. Здесь будут отображаться {FAVORITES_BAR_LIMIT} последних номеров.
           </p>
         </div>
       ) : (
         <div className="grid grid-cols-2 sm:flex sm:flex-wrap gap-2">
-          {favorites.map((fav) => (
+          {shown.map((fav) => (
             <div
               key={fav.id}
               className="flex items-center gap-1.5 pl-3 pr-1 py-1.5 bg-card border border-border rounded-lg shadow-sm hover:border-primary/40 transition-colors min-w-0"

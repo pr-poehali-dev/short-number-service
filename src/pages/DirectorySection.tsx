@@ -272,7 +272,7 @@ export function DirectorySection({ numbers, onSelect, initialCategory, favorites
             <div className="text-center py-16 text-muted-foreground font-body">
               <Icon name="Star" size={40} className="mx-auto mb-3 opacity-40" />
               <p>Избранных номеров пока нет</p>
-              <p className="text-xs mt-1 opacity-70">Откройте карточку номера и нажмите на звезду, чтобы сохранить здесь. До 6 номеров.</p>
+              <p className="text-xs mt-1 opacity-70">Откройте карточку номера и нажмите на звезду, чтобы сохранить здесь.</p>
             </div>
           ) : (
             <div className="text-center py-16 text-muted-foreground font-body">
