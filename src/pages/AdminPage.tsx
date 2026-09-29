@@ -11,6 +11,7 @@ import { AdminFaqTab } from "./AdminFaqTab";
 
 const SESSION_KEY = "admin_auth_v1";
 const NEARBY_URL = "https://functions.poehali.dev/d4b08b1e-6bd7-4d3b-81cf-02b5e4c6447f";
+const PWA_INSTALLS_URL = "https://functions.poehali.dev/57074bf1-c5f2-4712-b344-405222f47416";
 
 export function loadNumbers(): PhoneNumber[] {
   return NUMBERS;
@@ -30,6 +31,8 @@ export default function AdminPage() {
   const [enNumbers, setEnNumbers] = useState<PhoneNumberEn[]>([]);
   const [enLoading, setEnLoading] = useState(true);
   const [enSearch, setEnSearch] = useState("");
+
+  const [pwaInstalls, setPwaInstalls] = useState<number | null>(null);
 
   function getToken() {
     return sessionStorage.getItem("admin_token") || "";
@@ -68,6 +71,10 @@ export default function AdminPage() {
       fetch(NEARBY_URL, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ _action: "get_regions" }) })
         .then((r) => r.json())
         .then((data) => { if (data.regions) setAllRegions(data.regions.map((r: { name: string }) => r.name)); });
+      fetch(PWA_INSTALLS_URL)
+        .then((r) => r.json())
+        .then((data) => { if (typeof data.count === "number") setPwaInstalls(data.count); })
+        .catch(() => {});
     }
   }, [authed]);
 
@@ -186,6 +193,15 @@ export default function AdminPage() {
             <span className="font-display font-bold text-foreground">Администратор справочника</span>
           </div>
           <div className="flex items-center gap-2">
+            {pwaInstalls !== null && (
+              <span
+                className="flex items-center gap-1.5 text-sm px-3 py-1.5 rounded-lg bg-primary/5 border border-primary/20 text-primary font-body font-medium"
+                title="Сколько раз сайт установили как приложение на телефон"
+              >
+                <Icon name="Smartphone" size={14} />
+                {pwaInstalls.toLocaleString("ru-RU")}
+              </span>
+            )}
             {saved && (
               <span className="text-sm text-green-600 font-body flex items-center gap-1">
                 <Icon name="Check" size={14} /> Сохранено

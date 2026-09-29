@@ -3,6 +3,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import UpdateBanner from "@/components/UpdateBanner";
 import OfflineBanner from "@/components/OfflineBanner";
+import PwaInstallTracker from "@/components/PwaInstallTracker";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
@@ -22,6 +23,7 @@ const App = () => (
       <Sonner />
       <OfflineBanner />
       <UpdateBanner />
+      <PwaInstallTracker />
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
