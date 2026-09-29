@@ -3,7 +3,7 @@
   "short_name": "Справочник",
   "description": "Справочник коротких телефонных номеров России — работает без интернета",
   "start_url": "/",
-  "display": "standalone",
+  "display": "browser",
   "background_color": "#ffffff",
   "theme_color": "#1d4ed8",
   "lang": "ru",
