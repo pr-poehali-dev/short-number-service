@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'v7';
+const CACHE_VERSION = 'v8';
 const CACHE_NAME = `spravochnik-${CACHE_VERSION}`;
 const FONT_CACHE = 'fonts-v1';
 
