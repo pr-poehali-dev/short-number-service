@@ -324,7 +324,7 @@ export function DirectorySection({ numbers, onSelect, initialCategory, favorites
       {tab === "operators" && (
         <>
           {filtersVisible && (
-            <div className="flex flex-nowrap gap-2 mb-6 overflow-x-auto scrollbar-none pb-1">
+            <div className="flex flex-nowrap gap-2 mb-4 overflow-x-auto scrollbar-none pb-1">
               {(["Все", "МТС", "Билайн", "МегаФон", "Т2"] as (Operator | "Все")[]).map((op) => {
                 const c = op === "Все" ? { bg: "bg-primary", text: "text-white", border: "border-primary" } : OPERATOR_COLORS[op as Operator];
                 return (
@@ -365,7 +365,7 @@ export function DirectorySection({ numbers, onSelect, initialCategory, favorites
       {tab === "commercial" && (
         <>
           {filtersVisible && (
-            <div className="flex flex-nowrap items-center gap-2 mb-6 overflow-x-auto scrollbar-none pb-1">
+            <div className="flex flex-nowrap items-center gap-2 mb-4 overflow-x-auto scrollbar-none pb-1">
               {COMMERCIAL_INDUSTRIES.map((ind) => (
                 <button
                   key={ind}
