@@ -4,11 +4,10 @@ import { PhoneNumberEn, NUMBERS_EN_DEFAULT } from "./data-en";
 
 const NEARBY_URL = "https://functions.poehali.dev/d4b08b1e-6bd7-4d3b-81cf-02b5e4c6447f";
 
-import { Link } from "react-router-dom";
+import { Link } from "@/lib/router-compat";
 import { NumberModalEn } from "./EnSharedComponents";
 import { EnHeroSection } from "./EnHeroSection";
 import { EnDirectorySection } from "./EnDirectorySection";
-import { EnInfoSection } from "./EnInfoSection";
 import { EnFavoritesBar } from "./EnFavoritesBar";
 import { useFavoritesEn } from "./useFavoritesEn";
 import ThemeToggle from "@/components/ThemeToggle";

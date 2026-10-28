@@ -73,10 +73,10 @@ export function OperatorBadgeEn({ operator }: { operator: string }) {
   );
 }
 
-export function NumberCardEn({ num, enNum, onClick }: {
+export function NumberCardEn<E extends { name: string; description: string }>({ num, enNum, onClick }: {
   num: PhoneNumber;
-  enNum: { name: string; description: string } | undefined;
-  onClick: (n: PhoneNumber, enN: typeof enNum) => void;
+  enNum: E | undefined;
+  onClick: (n: PhoneNumber, enN: E | undefined) => void;
 }) {
   const short = isShortNumber(num.number);
   const name = enNum?.name ?? num.name;

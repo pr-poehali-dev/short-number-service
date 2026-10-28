@@ -61,9 +61,11 @@ interface Props {
 }
 
 function VoteBanner({ settings, onClose }: { settings: BannerSettings; onClose: () => void }) {
-  const [step, setStep] = useState<"vote" | "form" | "done">(() =>
-    localStorage.getItem(voteKey("nearby")) === "1" ? "done" : "vote"
-  );
+  const [step, setStep] = useState<"vote" | "form" | "done">("vote");
+
+  useEffect(() => {
+    if (localStorage.getItem(voteKey("nearby")) === "1") setStep("done");
+  }, []);
   const [count, setCount] = useState<number | null>(null);
   const [comment, setComment] = useState("");
   const [sending, setSending] = useState(false);

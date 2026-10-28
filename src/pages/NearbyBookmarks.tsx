@@ -150,14 +150,23 @@ function TypeGroupCard({ type, bookmarks, onRemove }: { type: string; bookmarks:
 
 // ─── Collections view ────────────────────────────────────────────────────────
 function CollectionsView({ bookmarks, onRemove }: { bookmarks: Bookmark[]; onRemove: (id: string) => void }) {
-  const [collections, setCollections] = useState<BookmarkCollection[]>(loadCollections);
+  const [collections, setCollections] = useState<BookmarkCollection[]>([]);
+  const [collectionsLoaded, setCollectionsLoaded] = useState(false);
   const [creating, setCreating] = useState(false);
   const [newName, setNewName] = useState("");
   const [newColor, setNewColor] = useState("blue");
   const [draggingId, setDraggingId] = useState<string | null>(null);
   const [openCols, setOpenCols] = useState<Record<string, boolean>>({});
 
-  useEffect(() => { saveCollections(collections); }, [collections]);
+  useEffect(() => {
+    setCollections(loadCollections());
+    setCollectionsLoaded(true);
+  }, []);
+
+  useEffect(() => {
+    if (!collectionsLoaded) return;
+    saveCollections(collections);
+  }, [collections, collectionsLoaded]);
 
   function createCollection() {
     if (!newName.trim()) return;
@@ -329,9 +338,12 @@ export function NearbyBookmarks({
   bookmarks, advice, adviceError, adviceLoading,
   onRemove, onAnalyze, onDismissAdvice, coords,
 }: Props) {
-  const [view, setView] = useState<BookmarkView>(() => {
-    return (localStorage.getItem(BOOKMARK_VIEW_KEY) as BookmarkView) ?? "default";
-  });
+  const [view, setView] = useState<BookmarkView>("default");
+
+  useEffect(() => {
+    const saved = localStorage.getItem(BOOKMARK_VIEW_KEY) as BookmarkView | null;
+    if (saved) setView(saved);
+  }, []);
   const [showViewPicker, setShowViewPicker] = useState(false);
 
   function changeView(v: BookmarkView) {

@@ -14,9 +14,17 @@ function applyTheme(theme: Theme) {
   document.documentElement.classList.toggle("dark", theme === "dark");
 }
 
-let currentTheme: Theme = getInitialTheme();
-applyTheme(currentTheme);
+// Browser-only state: assigned only inside effects and event handlers.
+let currentTheme: Theme | null = null;
 const listeners = new Set<(t: Theme) => void>();
+
+function ensureTheme(): Theme {
+  if (currentTheme === null) {
+    currentTheme = getInitialTheme();
+    applyTheme(currentTheme);
+  }
+  return currentTheme;
+}
 
 function setGlobalTheme(theme: Theme) {
   currentTheme = theme;
@@ -26,15 +34,16 @@ function setGlobalTheme(theme: Theme) {
 }
 
 export function useTheme() {
-  const [theme, setTheme] = useState<Theme>(currentTheme);
+  const [theme, setTheme] = useState<Theme>("light");
 
   useEffect(() => {
+    setTheme(ensureTheme());
     listeners.add(setTheme);
     return () => { listeners.delete(setTheme); };
   }, []);
 
   function toggleTheme() {
-    setGlobalTheme(currentTheme === "dark" ? "light" : "dark");
+    setGlobalTheme(ensureTheme() === "dark" ? "light" : "dark");
   }
 
   return { theme, toggleTheme };

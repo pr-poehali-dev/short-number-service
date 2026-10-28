@@ -19,7 +19,6 @@ function getAdminHeaders(): Record<string, string> {
   return token ? { "X-Admin-Token": token } : {};
 }
 
-const IS_IFRAME = window.self !== window.top;
 
 const NEARBY_CACHE_TTL = 5 * 60 * 1000;
 const nearbyCache = new Map<string, { places: Place[]; ts: number }>();
@@ -64,7 +63,8 @@ export function NearbySection() {
   const [city, setCity] = useState("");
   const [promptLoading, setPromptLoading] = useState(false);
   const [promptSaved, setPromptSaved] = useState(false);
-  const [bookmarks, setBookmarks] = useState<Bookmark[]>(() => loadBookmarks());
+  const [bookmarks, setBookmarks] = useState<Bookmark[]>([]);
+  const [bookmarksLoaded, setBookmarksLoaded] = useState(false);
   const [savedId, setSavedId] = useState<string | null>(null);
   const [advice, setAdvice] = useState<string>("");
   const [adviceLoading, setAdviceLoading] = useState(false);
@@ -77,8 +77,14 @@ export function NearbySection() {
   const { check, consume, confirmSubscriber, cooldownMs } = useAdviceLimit();
 
   useEffect(() => {
+    setBookmarks(loadBookmarks());
+    setBookmarksLoaded(true);
+  }, []);
+
+  useEffect(() => {
+    if (!bookmarksLoaded) return;
     saveBookmarks(bookmarks);
-  }, [bookmarks]);
+  }, [bookmarks, bookmarksLoaded]);
 
   useEffect(() => {
     fetch(VOTE_URL)
@@ -140,7 +146,7 @@ export function NearbySection() {
     setPlaces([]);
     setErrorMsg("");
 
-    if (IS_IFRAME) {
+    if (window.self !== window.top) {
       setCoords({ lat: 55.7558, lon: 37.6173 });
       setPlaces(MOCK_PLACES);
       setStatus("done");

@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "@/lib/router-compat";
 import Icon from "@/components/ui/icon";
 import { ServiceStatusBanner } from "@/components/ServiceStatusBanner";
 import ThemeToggle from "@/components/ThemeToggle";
@@ -15,7 +15,7 @@ export function Header({
   const [menuOpen, setMenuOpen] = useState(false);
   const [installOpen, setInstallOpen] = useState(false);
   const [pwaPrompt, setPwaPrompt] = useState<BeforeInstallPromptEvent | null>(null);
-  const [isAdminAuthed, setIsAdminAuthed] = useState(() => sessionStorage.getItem("admin_auth_v1") === "1");
+  const [isAdminAuthed, setIsAdminAuthed] = useState(false);
   const tapCount = useRef(0);
   const tapTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const navigate = useNavigate();
@@ -55,6 +55,7 @@ export function Header({
 
   useEffect(() => {
     const check = () => setIsAdminAuthed(sessionStorage.getItem("admin_auth_v1") === "1");
+    check();
     window.addEventListener("focus", check);
     window.addEventListener("popstate", check);
     const id = setInterval(check, 1000);

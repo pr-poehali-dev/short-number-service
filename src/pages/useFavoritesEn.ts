@@ -20,11 +20,18 @@ function load(): FavoriteEn[] {
 }
 
 export function useFavoritesEn() {
-  const [favorites, setFavorites] = useState<FavoriteEn[]>(() => load());
+  const [favorites, setFavorites] = useState<FavoriteEn[]>([]);
+  const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
+    setFavorites(load());
+    setLoaded(true);
+  }, []);
+
+  useEffect(() => {
+    if (!loaded) return;
     localStorage.setItem(STORAGE_KEY, JSON.stringify(favorites));
-  }, [favorites]);
+  }, [favorites, loaded]);
 
   function addFavorite(num: PhoneNumber, enNum: PhoneNumberEn | undefined) {
     if (favorites.length >= MAX_FAVORITES) return;

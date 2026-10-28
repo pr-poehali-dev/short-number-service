@@ -19,11 +19,18 @@ function load(): Favorite[] {
 }
 
 export function useFavorites() {
-  const [favorites, setFavorites] = useState<Favorite[]>(() => load());
+  const [favorites, setFavorites] = useState<Favorite[]>([]);
+  const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
+    setFavorites(load());
+    setLoaded(true);
+  }, []);
+
+  useEffect(() => {
+    if (!loaded) return;
     localStorage.setItem(STORAGE_KEY, JSON.stringify(favorites));
-  }, [favorites]);
+  }, [favorites, loaded]);
 
   function addFavorite(num: PhoneNumber) {
     if (favorites.find((f) => f.id === num.id)) return;

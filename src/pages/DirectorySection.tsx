@@ -70,7 +70,11 @@ export function DirectorySection({ numbers, onSelect, initialCategory, favorites
   const [commIndustry, setCommIndustry] = useState("Все");
   const [commDevice, setCommDevice] = useState<"all" | "mobile">("all");
   const [regionFilter, setRegionFilter] = useState("Все регионы");
-  const [filtersVisible, setFiltersVisible] = useState(() => getCookie(FILTERS_VISIBLE_COOKIE) !== "0");
+  const [filtersVisible, setFiltersVisible] = useState(true);
+
+  useEffect(() => {
+    setFiltersVisible(getCookie(FILTERS_VISIBLE_COOKIE) !== "0");
+  }, []);
 
   function toggleFilters() {
     const next = !filtersVisible;

@@ -16,19 +16,14 @@ const NEARBY_URL = "https://functions.poehali.dev/d4b08b1e-6bd7-4d3b-81cf-02b5e4
 
 const DEFAULT_SECTION_COOKIE = "default_section";
 
-function getCookie(name: string): string | null {
-  const match = document.cookie.match(new RegExp("(?:^|; )" + name + "=([^;]*)"));
-  return match ? decodeURIComponent(match[1]) : null;
-}
-
 function setCookie(name: string, value: string, days = 365) {
   const expires = new Date(Date.now() + days * 864e5).toUTCString();
   document.cookie = `${name}=${encodeURIComponent(value)}; expires=${expires}; path=/`;
 }
 
-export default function Index() {
+export default function Index({ initialSection }: { initialSection?: string }) {
   const [section, setSection] = useState(() => {
-    return getCookie(DEFAULT_SECTION_COOKIE) || "home";
+    return initialSection || "home";
   });
   const [selected, setSelected] = useState<PhoneNumber | null>(null);
   const [directoryCategory, setDirectoryCategory] = useState<string | undefined>(undefined);

@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 
 const STORAGE_KEY = "advice_limit";
 const FREE_LIMIT = 1;
@@ -45,7 +45,11 @@ function save(state: AdviceLimitState) {
 export type AdviceGateResult = "ok" | "show_subscribe" | "show_plans";
 
 export function useAdviceLimit() {
-  const [state, setState] = useState<AdviceLimitState>(load);
+  const [state, setState] = useState<AdviceLimitState>({ count: 0, isSubscriber: false, usedOnDay: null });
+
+  useEffect(() => {
+    setState(load());
+  }, []);
 
   const check = useCallback((): AdviceGateResult => {
     const s = load();
